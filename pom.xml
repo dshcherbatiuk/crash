@@ -4,10 +4,6 @@
   <artifactId>crash.parent</artifactId>
   <packaging>pom</packaging>
   <version>1.7.4-SNAPSHOT</version>
-  <!-- To update project version run the following:
-    mvn versions:set -DnewVersion=<new version>
-    mvn versions:commit # Necessary to remove the backup file pom.xml
-   -->
 
   <parent>
     <groupId>org.sonatype.oss</groupId>
@@ -36,10 +32,6 @@
     <developerConnection>scm:git:ssh://git@github.com/corda/crash.git</developerConnection>
     <url>http://www.corda.net</url>
   </scm>
-
-  <prerequisites>
-    <maven>3.0.0</maven>
-  </prerequisites>
 
   <developers>
     <developer>
@@ -521,14 +513,14 @@
   <modules>
     <module>cli</module>
     <module>shell</module>
-    <module>connectors</module>
-    <module>embed</module>
-    <module>packaging</module>
-    <module>doc</module>
+<!--    <module>connectors</module>-->
+<!--    <module>embed</module>-->
+<!--    <module>packaging</module>-->
+<!--    <module>doc</module>-->
     <module>plugins</module>
-    <module>distrib</module>
+<!--    <module>distrib</module>-->
   </modules>
-  
+
   <build>
     <pluginManagement>
       <plugins>
@@ -855,27 +847,27 @@
                 </execution>
               </executions>
             </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>exec-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>default-java</id>
-                  <goals>
-                    <goal>java</goal>
-                  </goals>
-                  <phase>test</phase>
-                  <configuration>
-                    <mainClass>org.crsh.standalone.CRaSH</mainClass>
-                    <classpathScope>test</classpathScope>
-                    <arguments>
-                      <argument>--property</argument>
-                      <argument>crash.vfs.refresh_period=1</argument>
-                    </arguments>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--              <groupId>org.codehaus.mojo</groupId>-->
+<!--              <artifactId>exec-maven-plugin</artifactId>-->
+<!--              <executions>-->
+<!--                <execution>-->
+<!--                  <id>default-java</id>-->
+<!--                  <goals>-->
+<!--                    <goal>java</goal>-->
+<!--                  </goals>-->
+<!--                  <phase>test</phase>-->
+<!--                  <configuration>-->
+<!--                    <mainClass>org.crsh.standalone.CRaSH</mainClass>-->
+<!--                    <classpathScope>test</classpathScope>-->
+<!--                    <arguments>-->
+<!--                      <argument>&#45;&#45;property</argument>-->
+<!--                      <argument>crash.vfs.refresh_period=1</argument>-->
+<!--                    </arguments>-->
+<!--                  </configuration>-->
+<!--                </execution>-->
+<!--              </executions>-->
+<!--            </plugin>-->
           </plugins>
         </pluginManagement>
         <plugins>
