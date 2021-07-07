@@ -27,21 +27,21 @@ import org.crsh.console.KeyStrokes;
  */
 public abstract class AbstractPasteTestCase extends AbstractConsoleTestCase {
 
-  public void doTest(Operation op) {
-    console.on(op);
-    assertEquals("", getCurrentLine());
-    assertEquals(0, getCurrentCursor());
-    setClipboard("foobar");
-    console.on(op);
-    assertEquals("foobar", getCurrentLine());
-    assertEquals(6, getCurrentCursor());
-    console.on(KeyStrokes.LEFT);
-    console.on(KeyStrokes.LEFT);
-    console.on(KeyStrokes.LEFT);
-    setClipboard("juu");
-    console.on(op);
-    assertEquals("foojuubar", getCurrentLine());
-    assertEquals(6, getCurrentCursor());
-  }
+    public void doTest(Operation op) {
+        console.on(op);
+        assertEquals("", getCurrentLine());
+        assertEquals(0, getCurrentCursor());
+        setClipboard("foobar");
+        console.on(op);
+        assertEquals("foobar", getCurrentLine());
+        assertEquals(6, getCurrentCursor());
+        console.on(KeyStrokes.LEFT);
+        console.on(KeyStrokes.LEFT);
+        console.on(KeyStrokes.LEFT);
+        setClipboard("juu");
+        console.on(op);
+        assertEquals("foojuubar", getCurrentLine());
+        assertEquals(6, getCurrentCursor());
+    }
 
 }

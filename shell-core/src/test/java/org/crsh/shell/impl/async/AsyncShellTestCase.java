@@ -114,7 +114,7 @@ public class AsyncShellTestCase extends AbstractTestCase {
 
   public void testDirect() throws Exception {
     Shell shell = new BaseShell(BaseProcessFactory.ECHO);
-    AsyncShell  asyncShell = new AsyncShell(MoreExecutors.sameThreadExecutor(), shell);
+    AsyncShell  asyncShell = new AsyncShell(MoreExecutors.newDirectExecutorService(), shell);
 
     //
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "hello").execute();

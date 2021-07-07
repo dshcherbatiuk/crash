@@ -24,6 +24,7 @@ import org.crsh.command.base.entities.Bar;
 import org.crsh.command.base.entities.Foo;
 import org.crsh.command.base.entities.Foo2;
 import org.crsh.text.renderers.EntityTypeRenderer;
+import org.junit.Ignore;
 
 import javax.naming.Context;
 import javax.persistence.EntityManager;
@@ -34,11 +35,12 @@ import java.util.*;
 /**
  * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
  */
+@Ignore
 public class JPACommandTestCase extends AbstractShellTestCase {
 
   private String defaultFactory;
   public static List<EntityTypeRenderer.EntityTypeData> output_entity = new ArrayList<EntityTypeRenderer.EntityTypeData>();
-  public static List<Map> output_value = new ArrayList<Map>();
+  public static List<Map> output_value = new ArrayList<>();
 
   private final String consume_command_entity = "class consume_command_entity {\n" +
       "@Command\n" +
