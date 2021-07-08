@@ -7,3 +7,10 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
     mavenCentral()
 }
+
+dependencies {
+    // https://github.com/n0mer/gradle-git-properties
+    implementation "com.gorylenko.gradle-git-properties:gradle-git-properties:2.3.1"
+    // https://plugins.gradle.org/plugin/me.champeau.gradle.jmh
+    implementation "me.champeau.gradle:jmh-gradle-plugin:0.5.3"
+}

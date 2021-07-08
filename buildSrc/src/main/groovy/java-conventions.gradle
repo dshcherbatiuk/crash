@@ -1,14 +1,13 @@
 plugins {
     id 'java'
     id 'application'
-    // https://github.com/n0mer/gradle-git-properties
-//    id "com.gorylenko.gradle-git-properties" version "2.3.1"
+    id "com.gorylenko.gradle-git-properties"
     id 'jacoco'
     id 'maven-publish'
     // https://pmd.github.io/pmd-6.17.0/index.html
     id 'pmd'
     // https://github.com/melix/jmh-gradle-plugin#using-jmh-gradle-plugin-with-shadow-plugin
-//    id "me.champeau.jmh" version "0.6.5"
+//    id "me.champeau.gradle.jmh"
     // https://github.com/unbroken-dome/gradle-testsets-plugin
     //id "org.unbroken-dome.test-sets" version "4.0.0"
 }
