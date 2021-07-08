@@ -9,6 +9,9 @@ dependencies {
 
     implementation 'org.codehaus.groovy:groovy-all:3.0.7'
     implementation 'com.github.corda:jline2:5ed980ec0c314d68c47b2481e19e7e3a3013f82f'
+    // https://mvnrepository.com/artifact/org.jline/jline
+//    implementation group: 'org.jline', name: 'jline', version: '3.1.3'
+
 //     https://mvnrepository.com/artifact/javax.servlet/servlet-api
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
     implementation files("${System.getProperty('java.home')}/../lib/tools.jar")
