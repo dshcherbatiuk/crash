@@ -1,15 +1,7 @@
 plugins {
     id 'java-conventions'
-    // https://imperceptiblethoughts.com/shadow/getting-started/
-    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 dependencies {
     implementation 'org.codehaus.groovy:groovy-all:3.0.7'
-}
-
-mainClassName = 'org.crsh.cli.impl.bootstrap.Main'
-
-shadowJar {
-    mergeServiceFiles()
 }
