@@ -1,0 +1,94 @@
+allprojects {
+    group = 'org.shell'
+    description = 'shell'
+
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+
+dependencies {
+//    // https://mvnrepository.com/artifact/com.google.inject/guice
+////    implementation "com.google.inject:guice:${gradle.googleGuiceVersion}"
+//
+//    // https://mvnrepository.com/artifact/commons-io/commons-io
+//    implementation "commons-io:commons-io:2.8.0"
+//    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+//    implementation "org.apache.commons:commons-lang3:3.12.0"
+//    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+//    implementation "ch.qos.logback:logback-classic:${gradle.logbackVersion}"
+//    // https://mvnrepository.com/artifact/ch.qos.logback/logback-core
+//    implementation "ch.qos.logback:logback-core:${gradle.logbackVersion}"
+//    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+//    implementation "org.slf4j:slf4j-api:${gradle.slf4jApiVersion}"
+//
+//    // https://mvnrepository.com/artifact/org.immutables/value
+//    annotationProcessor "org.immutables:value:${gradle.immutablesVersion}"
+//    compileOnly "org.immutables:value:${gradle.immutablesVersion}"
+//    // https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
+//    implementation "org.mapstruct:mapstruct-processor:${gradle.mapstructVersion}"
+//    annotationProcessor "org.mapstruct:mapstruct-processor:${gradle.mapstructVersion}"
+//    // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
+//    implementation "org.mapstruct:mapstruct:${gradle.mapstructVersion}"
+//
+//    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+//    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.3"
+//
+//    // https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core
+//    testImplementation "org.openjdk.jmh:jmh-core:${gradle.jmhVersion}"
+//    // https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess
+//    testImplementation "org.openjdk.jmh:jmh-generator-annprocess:${gradle.jmhVersion}"
+//    annotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${gradle.jmhVersion}"
+}
+
+//testSets { integrationTest { dirName = 'test-integration' } }
+//
+//check.dependsOn integrationTest
+//integrationTest.mustRunAfter test
+//
+//test {
+//    useTestNG()
+//
+//    maxParallelForks = 4
+//    maxHeapSize = "1024m"
+//
+//    testLogging {
+//        events "PASSED", "FAILED", "SKIPPED"
+//        // show standard out and standard error of the test JVM(s) on the console
+//        showStandardStreams = false
+//    }
+//
+//    finalizedBy jacocoTestReport
+//}
+//jacocoTestReport.dependsOn test
+//
+//jacocoTestCoverageVerification.violationRules.rule {
+//    limit {
+//        minimum = 0.5
+//    }
+//}
+//check.dependsOn jacocoTestCoverageVerification
+//
+//tasks.jacocoTestReport.reports {
+//    csv.enabled = true
+//}
+//
+//jmh {
+//    warmupIterations = 2
+//    iterations = 5
+//    fork = 1
+//    humanOutputFile = project.file("${project.buildDir}/reports/jmh/human.txt")
+//    resultsFile = project.file("${project.buildDir}/reports/jmh/results.json")
+//    resultFormat = 'JSON'
+//}
+//
+//
+//integrationTest {
+//    useTestNG()
+//
+//    testLogging {
+//        events "PASSED", "FAILED", "SKIPPED"
+//        // show standard out and standard error of the test JVM(s) on the console
+//        showStandardStreams = true
+//    }
+//}

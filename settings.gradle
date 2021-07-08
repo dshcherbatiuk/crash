@@ -1,0 +1,24 @@
+rootProject.name = "shell"
+
+gradle.ext.googleGuiceVersion = "5.0.1"
+gradle.ext.googleAutoVersion = "1.0"
+gradle.ext.logbackVersion = "1.2.3"
+gradle.ext.slf4jApiVersion = "1.7.30"
+gradle.ext.immutablesVersion = "2.8.8"
+gradle.ext.mapstructVersion = "1.4.2.Final"
+gradle.ext.jmhVersion = "1.31"
+gradle.ext.mockitoVersion = "3.11.0"
+
+rootDir.listFiles(new FileFilter() {
+    boolean accept(File file) {
+        if (!file.isDirectory()) {
+            return false
+        }
+        if (file.name == 'buildSrc') {
+            return false
+        }
+        return new File(file, 'build.gradle').isFile()
+    }
+}).each { File dir -> include dir.name }
+
+//includeBuild('../project')
