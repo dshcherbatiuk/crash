@@ -19,18 +19,17 @@
 
 package org.crsh.shell.impl.async;
 
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.crsh.AbstractTestCase;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellResponse;
+import test.CommandQueue;
 import test.shell.base.BaseProcess;
 import test.shell.base.BaseProcessContext;
 import test.shell.base.BaseProcessFactory;
 import test.shell.base.BaseShell;
-import test.CommandQueue;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellResponse;
-
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FailureTestCase extends AbstractTestCase {
 
@@ -39,30 +38,32 @@ public class FailureTestCase extends AbstractTestCase {
     final AtomicInteger cancelCount = new AtomicInteger(0);
 
     //
-    BaseProcessFactory factory = new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
+    BaseProcessFactory factory =
+        new BaseProcessFactory() {
           @Override
-          protected ShellResponse execute(String request) {
-            throw new RuntimeException();
-          }
-          @Override
-          public void cancel() {
-            failure.set(failure("Was expecting no cancel callback"));
+          public BaseProcess create(String request) {
+            return new BaseProcess(request) {
+              @Override
+              protected ShellResponse execute(String request) {
+                throw new RuntimeException();
+              }
+
+              @Override
+              public void cancel() {
+                failure.set(failure("Was expecting no cancel callback"));
+              }
+            };
           }
         };
-      }
-    };
 
     //
     Shell shell = new BaseShell(factory);
     CommandQueue commands = new CommandQueue();
-    AsyncShell  asyncShell = new AsyncShell(commands, shell);
+    AsyncShell asyncShell = new AsyncShell(commands, shell);
 
     //
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "foo").execute();
-    assertEquals(Status.QUEUED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.QUEUED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(0, cancelCount.get());
     assertEquals(1, commands.getSize());
 

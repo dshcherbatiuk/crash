@@ -18,9 +18,9 @@
  */
 package org.crsh.lang.impl.java;
 
+import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-import java.util.List;
 
 /** @author Julien Viet */
 public class CompilationFailureException extends Exception {

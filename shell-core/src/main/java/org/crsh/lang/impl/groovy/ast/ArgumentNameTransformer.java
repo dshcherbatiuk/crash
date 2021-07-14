@@ -19,6 +19,7 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
+import java.util.List;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -34,13 +35,11 @@ import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.crsh.cli.Argument;
 
-import java.util.List;
-
-@GroovyASTTransformation(phase= CompilePhase.INSTRUCTION_SELECTION)
+@GroovyASTTransformation(phase = CompilePhase.INSTRUCTION_SELECTION)
 public class ArgumentNameTransformer implements ASTTransformation {
 
   public void visit(ASTNode[] nodes, final SourceUnit source) {
-    for (ClassNode classNode : (List<ClassNode>)source.getAST().getClasses()) {
+    for (ClassNode classNode : source.getAST().getClasses()) {
 
       //
       for (FieldNode field : classNode.getFields()) {
@@ -59,7 +58,7 @@ public class ArgumentNameTransformer implements ASTTransformation {
   }
 
   private void handle(String name, AnnotatedNode annotated) {
-    for (AnnotationNode ann : (List<AnnotationNode>)annotated.getAnnotations()) {
+    for (AnnotationNode ann : annotated.getAnnotations()) {
       if (ann.getClassNode().getName().endsWith(Argument.class.getName())) {
         Expression expr = ann.getMember("name");
         if (expr == null) {

@@ -69,11 +69,11 @@ public class LabelElement extends Element {
   }
 
   public LabelElement(String value) {
-    this((Object)value);
+    this((Object) value);
   }
 
   public LabelElement(String value, int minWidth) {
-    this((Object)value, minWidth);
+    this((Object) value, minWidth);
   }
 
   public LabelElement(Object value) {
@@ -95,6 +95,6 @@ public class LabelElement extends Element {
 
   @Override
   public LabelElement style(Style.Composite style) {
-    return (LabelElement)super.style(style);
+    return (LabelElement) super.style(style);
   }
 }

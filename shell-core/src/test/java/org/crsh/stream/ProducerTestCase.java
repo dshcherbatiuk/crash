@@ -18,15 +18,13 @@
  */
 package org.crsh.stream;
 
-import org.crsh.AbstractTestCase;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import org.crsh.AbstractTestCase;
 
 /** @author Julien Viet */
 public class ProducerTestCase extends AbstractTestCase {
-
 
   static class ConsumerImpl<C> extends LinkedList<C> implements Consumer<C> {
 
@@ -82,7 +80,8 @@ public class ProducerTestCase extends AbstractTestCase {
 
   public void testSuperType() throws Exception {
     Consumer<Object> consumer = new ConsumerImpl<Object>(Object.class);
-    ProducerImpl<String, Consumer<Object>> producer = new ProducerImpl<String, Consumer<Object>>(String.class);
+    ProducerImpl<String, Consumer<Object>> producer =
+        new ProducerImpl<String, Consumer<Object>>(String.class);
     producer.open(consumer);
     producer.provide("foo");
     assertEquals(Arrays.<Object>asList("foo"), consumer);
@@ -90,7 +89,8 @@ public class ProducerTestCase extends AbstractTestCase {
 
   public void testSameType() throws Exception {
     Consumer<String> consumer = new ConsumerImpl<String>(String.class);
-    ProducerImpl<String, Consumer<String>> producer = new ProducerImpl<String, Consumer<String>>(String.class);
+    ProducerImpl<String, Consumer<String>> producer =
+        new ProducerImpl<String, Consumer<String>>(String.class);
     producer.open(consumer);
     producer.provide("foo");
     assertEquals(Arrays.<Object>asList("foo"), consumer);

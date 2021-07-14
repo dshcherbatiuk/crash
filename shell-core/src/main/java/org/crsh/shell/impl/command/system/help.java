@@ -18,6 +18,7 @@
  */
 package org.crsh.shell.impl.command.system;
 
+import java.util.Map;
 import org.crsh.cli.Command;
 import org.crsh.cli.Usage;
 import org.crsh.command.BaseCommand;
@@ -29,8 +30,6 @@ import org.crsh.text.Decoration;
 import org.crsh.text.Style;
 import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.TableElement;
-
-import java.util.Map;
 
 /** @author Julien Viet */
 public class help extends BaseCommand {
@@ -48,20 +47,22 @@ public class help extends BaseCommand {
 
     TableElement table = new TableElement().rightCellPadding(1);
     table.row(
-      new LabelElement("NAME").style(Style.style(Decoration.bold)),
-      new LabelElement("DESCRIPTION")
-    );
+        new LabelElement("NAME").style(Style.style(Decoration.bold)),
+        new LabelElement("DESCRIPTION"));
 
-    //
-    CRaSH crash = (CRaSH)context.getSession().get("crash");
+    CRaSH crash = (CRaSH) context.getSession().get("crash");
     java.util.ArrayList<Map.Entry<String, String>> commands = new java.util.ArrayList<>();
     crash.getCommandsSafetyCheck(shellSafety).iterator().forEachRemaining(commands::add);
     commands.sort(java.util.Comparator.comparing(Map.Entry::getKey));
 
-    Color col =   sshMode    ? (safeShell ? Color.yellow : Color.red)
-                : standAlone ? (safeShell ? Color.cyan   : Color.red)
-                : internal   ? (safeShell ? Color.green  : Color.red)
-                :              (safeShell ? Color.red    : Color.red);
+    Color col =
+        sshMode
+            ? (safeShell ? Color.yellow : Color.red)
+            : standAlone
+                ? (safeShell ? Color.cyan : Color.red)
+                : internal
+                    ? (safeShell ? Color.green : Color.red)
+                    : (safeShell ? Color.red : Color.red);
     for (Map.Entry<String, String> command : commands) {
       try {
         String desc = command.getValue();
@@ -69,8 +70,8 @@ public class help extends BaseCommand {
           desc = "";
         }
         table.row(
-          new LabelElement(command.getKey()).style(Style.style(Decoration.bold, col)),
-          new LabelElement(desc));
+            new LabelElement(command.getKey()).style(Style.style(Decoration.bold, col)),
+            new LabelElement(desc));
       } catch (Exception ignore) {
         //
       }
@@ -82,7 +83,8 @@ public class help extends BaseCommand {
     String intStr = internal ? "Internal-" : "";
     String manStr = manAllowed ? "ManAllowed-" : "";
     String pref = "[" + safeStr + saStr + intStr + sshStr + manStr + "Shell]: ";
-    context.provide(new LabelElement(pref + "Try one of these commands with the -h or --help switch:\n"));
+    context.provide(
+        new LabelElement(pref + "Try one of these commands with the -h or --help switch:\n"));
 
     context.provide(table);
   }

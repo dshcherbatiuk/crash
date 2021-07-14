@@ -19,34 +19,33 @@
 
 package org.crsh.cli.impl.type;
 
-import org.crsh.cli.type.ValueType;
-import org.crsh.cli.type.ValueTypeFactory;
-import junit.framework.TestCase;
-import org.crsh.cli.impl.matcher.Custom;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import junit.framework.TestCase;
+import org.crsh.cli.impl.matcher.Custom;
+import org.crsh.cli.type.ValueType;
+import org.crsh.cli.type.ValueTypeFactory;
 
 public class MissingValueTypeTestCase extends TestCase {
 
   public void testFoo() {
     final URL url = MissingValueTypeTestCase.class.getResource("InvalidValueType");
     assertNotNull(url);
-    ClassLoader cl = new ClassLoader(MissingValueTypeTestCase.class.getClassLoader()) {
-      @Override
-      public Enumeration<URL> getResources(String name) throws IOException {
-        if (name.equals("META-INF/services/" + ValueType.class.getName())) {
-          return Collections.enumeration(Collections.singleton(url));
-        } else {
-          return super.getResources(name);
-        }
-      }
-    };
+    ClassLoader cl =
+        new ClassLoader(MissingValueTypeTestCase.class.getClassLoader()) {
+          @Override
+          public Enumeration<URL> getResources(String name) throws IOException {
+            if (name.equals("META-INF/services/" + ValueType.class.getName())) {
+              return Collections.enumeration(Collections.singleton(url));
+            } else {
+              return super.getResources(name);
+            }
+          }
+        };
     ValueTypeFactory factory = new ValueTypeFactory(cl);
     ValueType<Custom> custom = factory.get(Custom.class);
     assertNotNull(custom);
   }
-
 }

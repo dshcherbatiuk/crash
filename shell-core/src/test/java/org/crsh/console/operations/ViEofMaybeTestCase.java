@@ -18,36 +18,34 @@
  */
 package org.crsh.console.operations;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
-import test.shell.sync.SyncProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import test.shell.sync.SyncProcess;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViEofMaybeTestCase extends AbstractConsoleTestCase {
 
   public void testCtrlD1() throws Exception {
     final ArrayBlockingQueue<String> requests = new ArrayBlockingQueue<String>(1);
-    SyncProcess process = new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        requests.add(request);
-        context.end(ShellResponse.ok());
-      }
-    };
+    SyncProcess process =
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            requests.add(request);
+            context.end(ShellResponse.ok());
+          }
+        };
     console.init();
     console.toInsert();
-    for (int i = 0;i < 4;i++) {
+    for (int i = 0; i < 4; i++) {
       shell.addProcess(process);
       console.on(KeyStrokes.of("abc"));
-      for (int j = 0;j < i;j++) {
+      for (int j = 0; j < i; j++) {
         console.on(KeyStrokes.LEFT);
       }
       console.on(Operation.VI_EOF_MAYBE);

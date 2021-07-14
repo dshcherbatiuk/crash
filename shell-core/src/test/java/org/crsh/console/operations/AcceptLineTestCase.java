@@ -18,19 +18,16 @@
  */
 package org.crsh.console.operations;
 
+import java.util.concurrent.atomic.AtomicReference;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
-import test.shell.sync.SyncProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import test.shell.sync.SyncProcess;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class AcceptLineTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {
@@ -46,13 +43,14 @@ public class AcceptLineTestCase extends AbstractConsoleTestCase {
 
   private void doTest(Mode expected) {
     final AtomicReference<String> calls = new AtomicReference<String>();
-    shell.addProcess(new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        calls.set(request);
-        context.end(ShellResponse.ok());
-      }
-    });
+    shell.addProcess(
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            calls.set(request);
+            context.end(ShellResponse.ok());
+          }
+        });
     console.on(KeyStrokes.of("abc def"));
     console.on(Operation.ACCEPT_LINE);
     assertEquals("abc def", calls.get());

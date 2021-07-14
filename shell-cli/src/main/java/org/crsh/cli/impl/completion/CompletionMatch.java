@@ -19,10 +19,9 @@
 
 package org.crsh.cli.impl.completion;
 
+import java.io.Serializable;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.spi.Completion;
-
-import java.io.Serializable;
 
 public final class CompletionMatch implements Serializable {
 
@@ -59,7 +58,7 @@ public final class CompletionMatch implements Serializable {
       return true;
     }
     if (obj instanceof CompletionMatch) {
-      CompletionMatch that = (CompletionMatch)obj;
+      CompletionMatch that = (CompletionMatch) obj;
       return delimiter.equals(that.delimiter) && value.equals(that.value);
     }
     return false;

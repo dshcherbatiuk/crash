@@ -8,21 +8,17 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.util.Utils;
 
-/**
-* @author Julien Viet
-*/
+/** @author Julien Viet */
 class CRaSHCommandProcess extends CRaSHProcess {
 
-  /** . */
   private final CRaSHSession session;
 
-  /** . */
   private final CommandInvoker<Void, ?> command;
 
-  public CRaSHCommandProcess(CRaSHSession session, String request, CommandInvoker<Void, ?> command) {
+  public CRaSHCommandProcess(
+      CRaSHSession session, String request, CommandInvoker<Void, ?> command) {
     super(session, request);
 
-    //
     this.session = session;
     this.command = command;
   }
@@ -38,8 +34,7 @@ class CRaSHCommandProcess extends CRaSHProcess {
     try {
       command.invoke(invocationContext);
       return ShellResponse.ok();
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       return build(e);
     } catch (Throwable t) {
       return build(t);
@@ -51,7 +46,7 @@ class CRaSHCommandProcess extends CRaSHProcess {
   private ShellResponse.Error build(Throwable throwable) {
     ErrorKind errorType;
     if (throwable instanceof CommandException) {
-      CommandException ce = (CommandException)throwable;
+      CommandException ce = (CommandException) throwable;
       errorType = ce.getErrorKind();
       Throwable cause = throwable.getCause();
       if (cause != null) {

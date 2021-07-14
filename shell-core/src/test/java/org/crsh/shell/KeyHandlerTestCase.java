@@ -18,51 +18,49 @@
  */
 package org.crsh.shell;
 
-import test.shell.base.BaseProcessContext;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import test.shell.base.BaseProcessContext;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class KeyHandlerTestCase extends AbstractShellTestCase {
 
   public void testCommand() throws Exception {
-    testKeyHandler("public class foo implements org.crsh.keyboard.KeyHandler {\n" +
-        "public void handle(org.crsh.keyboard.KeyType type, int[] sequence) { queue.add(sequence); latch2.countDown(); }\n" +
-        "@Command\n" +
-        "public void main() {\n" +
-        "latch1.countDown();" +
-        "latch2.await(10, java.util.concurrent.TimeUnit.SECONDS);" +
-        "}\n" +
-        "}\n");
-
+    testKeyHandler(
+        "public class foo implements org.crsh.keyboard.KeyHandler {\n"
+            + "public void handle(org.crsh.keyboard.KeyType type, int[] sequence) { queue.add(sequence); latch2.countDown(); }\n"
+            + "@Command\n"
+            + "public void main() {\n"
+            + "latch1.countDown();"
+            + "latch2.await(10, java.util.concurrent.TimeUnit.SECONDS);"
+            + "}\n"
+            + "}\n");
   }
 
   public void testPipeCommand() throws Exception {
-    testKeyHandler("public class foo {\n" +
-        "  static class PipeImpl extends org.crsh.command.Pipe<Object, String> implements org.crsh.keyboard.KeyHandler {\n" +
-        "    java.util.concurrent.CountDownLatch l1\n" +
-        "    java.util.concurrent.CountDownLatch l2\n" +
-        "    java.util.concurrent.ArrayBlockingQueue q\n" +
-        "    PipeImpl(java.util.concurrent.ArrayBlockingQueue queue, java.util.concurrent.CountDownLatch latch1, java.util.concurrent.CountDownLatch latch2) {\n" +
-        "      q = queue;\n" +
-        "      l1 = latch1;\n" +
-        "      l2 = latch2;\n" +
-        "    }\n" +
-        "    public void handle(org.crsh.keyboard.KeyType type, int[] sequence) { q.add(sequence); l2.countDown(); }\n" +
-        "    public void close() {\n" +
-        "      l1.countDown();" +
-        "      l2.await(10, java.util.concurrent.TimeUnit.SECONDS);" +
-        "    }\n" +
-        "  }\n" +
-        "  @Command\n" +
-        "  public org.crsh.command.Pipe<Object, String> main() {\n" +
-        "    return new PipeImpl(queue, latch1, latch2);\n" +
-        "  }\n" +
-        "}\n");
+    testKeyHandler(
+        "public class foo {\n"
+            + "  static class PipeImpl extends org.crsh.command.Pipe<Object, String> implements org.crsh.keyboard.KeyHandler {\n"
+            + "    java.util.concurrent.CountDownLatch l1\n"
+            + "    java.util.concurrent.CountDownLatch l2\n"
+            + "    java.util.concurrent.ArrayBlockingQueue q\n"
+            + "    PipeImpl(java.util.concurrent.ArrayBlockingQueue queue, java.util.concurrent.CountDownLatch latch1, java.util.concurrent.CountDownLatch latch2) {\n"
+            + "      q = queue;\n"
+            + "      l1 = latch1;\n"
+            + "      l2 = latch2;\n"
+            + "    }\n"
+            + "    public void handle(org.crsh.keyboard.KeyType type, int[] sequence) { q.add(sequence); l2.countDown(); }\n"
+            + "    public void close() {\n"
+            + "      l1.countDown();"
+            + "      l2.await(10, java.util.concurrent.TimeUnit.SECONDS);"
+            + "    }\n"
+            + "  }\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Object, String> main() {\n"
+            + "    return new PipeImpl(queue, latch1, latch2);\n"
+            + "  }\n"
+            + "}\n");
   }
 
   private void testKeyHandler(String command) throws Exception {
@@ -80,7 +78,7 @@ public class KeyHandlerTestCase extends AbstractShellTestCase {
       }
     }.start();
     latch1.await(10, TimeUnit.SECONDS);
-    process.on(null, new int[]{'a'});
+    process.on(null, new int[] {'a'});
     ShellResponse response = process.getResponse();
     assertInstance(ShellResponse.Ok.class, response);
     int[] event = queue.poll(10, TimeUnit.SECONDS);

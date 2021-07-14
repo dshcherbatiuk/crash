@@ -25,14 +25,12 @@ import groovy.lang.MissingMethodException;
 import groovy.lang.MissingPropertyException;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.crsh.command.BaseCommand;
-import org.crsh.lang.impl.groovy.Helper;
 import org.crsh.command.InvocationContext;
 import org.crsh.command.ScriptException;
+import org.crsh.lang.impl.groovy.Helper;
 import org.crsh.lang.impl.groovy.closure.PipeLineClosure;
 
-/**
- * The base command for Groovy class based commands.
- */
+/** The base command for Groovy class based commands. */
 public abstract class GroovyCommand extends BaseCommand implements GroovyObject {
 
   // never persist the MetaClass
@@ -59,7 +57,7 @@ public abstract class GroovyCommand extends BaseCommand implements GroovyObject 
 
   public static Exception unwrap(Exception cause) {
     if (cause instanceof groovy.util.ScriptException) {
-      return unwrap((groovy.util.ScriptException)cause);
+      return unwrap((groovy.util.ScriptException) cause);
     } else {
       return cause;
     }
@@ -68,23 +66,21 @@ public abstract class GroovyCommand extends BaseCommand implements GroovyObject 
   public final Object invokeMethod(String name, Object args) {
     try {
       return getMetaClass().invokeMethod(this, name, args);
-    }
-    catch (MissingMethodException missing) {
+    } catch (MissingMethodException missing) {
       return Helper.invokeMethod(context, name, args, missing);
     }
   }
 
   public final Object getProperty(String property) {
     if (context instanceof InvocationContext<?>) {
-      PipeLineClosure ret = Helper.resolveProperty((InvocationContext)context, property);
+      PipeLineClosure ret = Helper.resolveProperty((InvocationContext) context, property);
       if (ret != null) {
         return ret;
       }
     }
     try {
       return getMetaClass().getProperty(this, property);
-    }
-    catch (MissingPropertyException e) {
+    } catch (MissingPropertyException e) {
       return context.getSession().get(property);
     }
   }
@@ -92,8 +88,7 @@ public abstract class GroovyCommand extends BaseCommand implements GroovyObject 
   public final void setProperty(String property, Object newValue) {
     try {
       getMetaClass().setProperty(this, property, newValue);
-    }
-    catch (MissingPropertyException e) {
+    } catch (MissingPropertyException e) {
       context.getSession().put(property, newValue);
     }
   }

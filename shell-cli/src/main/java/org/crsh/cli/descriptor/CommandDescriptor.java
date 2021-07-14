@@ -19,13 +19,6 @@
 
 package org.crsh.cli.descriptor;
 
-import org.crsh.cli.impl.completion.CompletionMatcher;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.cli.impl.Multiplicity;
-import org.crsh.cli.impl.invocation.CommandInvoker;
-import org.crsh.cli.impl.invocation.InvocationMatch;
-import org.crsh.cli.impl.invocation.InvocationMatcher;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +29,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import org.crsh.cli.impl.Multiplicity;
+import org.crsh.cli.impl.completion.CompletionMatcher;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.cli.impl.invocation.CommandInvoker;
+import org.crsh.cli.impl.invocation.InvocationMatch;
+import org.crsh.cli.impl.invocation.InvocationMatcher;
 
 public abstract class CommandDescriptor<T> {
 
@@ -91,15 +90,23 @@ public abstract class CommandDescriptor<T> {
     if (nameLength == 0) {
       throw new IntrospectionException("Command name cannot be null");
     } else {
-      for (int i = 0;i < nameLength;i++) {
+      for (int i = 0; i < nameLength; i++) {
         char c = name.charAt(i);
         if (i == 0) {
           if (!Character.isLetter(c)) {
-            throw new IntrospectionException("Invalid command name <" + name + "> does not start with a letter");
+            throw new IntrospectionException(
+                "Invalid command name <" + name + "> does not start with a letter");
           }
         } else {
           if (!Character.isLetter(c) && !Character.isDigit(c) && c != '_' && c != '-') {
-            throw new IntrospectionException("Invalid command name <" + name + "> char " + c + " at position " + i + " is now allowed");
+            throw new IntrospectionException(
+                "Invalid command name <"
+                    + name
+                    + "> char "
+                    + c
+                    + " at position "
+                    + i
+                    + " is now allowed");
           }
         }
       }
@@ -129,11 +136,13 @@ public abstract class CommandDescriptor<T> {
    * Add a parameter to the command.
    *
    * @param parameter the parameter to add
-   * @throws IntrospectionException any introspection exception that would prevent the parameter to be added
+   * @throws IntrospectionException any introspection exception that would prevent the parameter to
+   *     be added
    * @throws NullPointerException if the parameter is null
    * @throws IllegalArgumentException if the parameter is already associated with another command
    */
-  protected void addParameter(ParameterDescriptor parameter) throws IntrospectionException, NullPointerException, IllegalArgumentException {
+  protected void addParameter(ParameterDescriptor parameter)
+      throws IntrospectionException, NullPointerException, IllegalArgumentException {
 
     //
     if (parameter == null) {
@@ -142,7 +151,7 @@ public abstract class CommandDescriptor<T> {
 
     //
     if (parameter instanceof OptionDescriptor) {
-      OptionDescriptor option = (OptionDescriptor)parameter;
+      OptionDescriptor option = (OptionDescriptor) parameter;
       for (String optionName : option.getNames()) {
         String name;
         if (optionName.length() == 1) {
@@ -173,7 +182,7 @@ public abstract class CommandDescriptor<T> {
       }
       i.add(parameter);
     } else if (parameter instanceof ArgumentDescriptor) {
-      ArgumentDescriptor argument = (ArgumentDescriptor)parameter;
+      ArgumentDescriptor argument = (ArgumentDescriptor) parameter;
       if (argument.getMultiplicity() == Multiplicity.MULTI) {
         if (listArgument) {
           throw new IntrospectionException();
@@ -194,7 +203,6 @@ public abstract class CommandDescriptor<T> {
     return owner == null ? 0 : 1 + owner.getDepth();
   }
 
-
   public final void printUsage(Appendable to) throws IOException {
     print(Format.USAGE, to);
   }
@@ -207,9 +215,7 @@ public abstract class CommandDescriptor<T> {
     format.print(this, to);
   }
 
-  /**
-   * @return the command subordinates as a map.
-   */
+  /** @return the command subordinates as a map. */
   public abstract Map<String, ? extends CommandDescriptor<T>> getSubordinates();
 
   /**
@@ -223,8 +229,8 @@ public abstract class CommandDescriptor<T> {
   }
 
   /**
-   * Returns the command parameters, the returned collection contains the command options and
-   * the command arguments.
+   * Returns the command parameters, the returned collection contains the command options and the
+   * command arguments.
    *
    * @return the command parameters
    */
@@ -340,8 +346,8 @@ public abstract class CommandDescriptor<T> {
   }
 
   /**
-   * Returns the command usage, shortcut for invoking <code>getDescription().getUsage()</code> on this
-   * object.
+   * Returns the command usage, shortcut for invoking <code>getDescription().getUsage()</code> on
+   * this object.
    *
    * @return the command usage
    */
@@ -358,5 +364,4 @@ public abstract class CommandDescriptor<T> {
   public final CompletionMatcher<T> completer() {
     return new CompletionMatcher<T>(this);
   }
-
 }

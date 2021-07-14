@@ -35,7 +35,7 @@ class LoadingClassLoader extends SecureClassLoader {
     super(parent);
 
     //
-    HashMap<String, byte[]> definitions = new HashMap<String,byte[]>();
+    HashMap<String, byte[]> definitions = new HashMap<>();
     for (JavaClassFileObject definition : files) {
       definitions.put(definition.getClassName(), definition.getBytes());
     }

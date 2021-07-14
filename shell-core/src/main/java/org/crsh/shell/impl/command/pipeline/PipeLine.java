@@ -19,20 +19,17 @@
 
 package org.crsh.shell.impl.command.pipeline;
 
+import java.io.IOException;
 import org.crsh.command.CommandContext;
+import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.keyboard.KeyHandler;
 
-import java.io.IOException;
+public class PipeLine extends CommandInvoker<Void, Object> {
 
-public class  PipeLine extends CommandInvoker<Void, Object> {
-
-  /** . */
   private final CommandInvoker[] invokers;
 
-  /** . */
   private CommandContext<?> current;
 
   public PipeLine(CommandInvoker[] invokers) {
@@ -52,21 +49,19 @@ public class  PipeLine extends CommandInvoker<Void, Object> {
     open(0, consumer);
   }
 
-  private CommandContext open(final int index, final CommandContext last) throws IOException, CommandException {
+  private CommandContext open(final int index, final CommandContext last)
+      throws CommandException {
     if (index < invokers.length) {
 
-      //
       final CommandInvoker invoker = invokers[index];
       CommandContext next = open(index + 1, last);
 
-      //
       Class produced = invoker.getProducedType();
       Class<?> consumed = invoker.getConsumedType();
       CommandInvokerAdapter filterContext = new CommandInvokerAdapter(invoker, consumed, produced);
       try {
         filterContext.open(next);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new CommandException(ErrorKind.EVALUATION, e);
       }
 
@@ -104,8 +99,7 @@ public class  PipeLine extends CommandInvoker<Void, Object> {
   public void close() throws IOException, CommandException {
     try {
       current.close();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new CommandException(ErrorKind.EVALUATION, e);
     }
   }

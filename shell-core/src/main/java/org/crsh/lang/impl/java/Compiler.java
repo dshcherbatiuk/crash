@@ -18,17 +18,17 @@
  */
 package org.crsh.lang.impl.java;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 
 /** @author Julien Viet */
 class Compiler {
@@ -44,7 +44,8 @@ class Compiler {
     this.classLoader = classLoader;
   }
 
-  List<JavaClassFileObject> compile(String className, String source) throws IOException, CompilationFailureException {
+  List<JavaClassFileObject> compile(String className, String source)
+      throws IOException, CompilationFailureException {
 
     // Get compiler
     JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -53,26 +54,28 @@ class Compiler {
     DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 
     // The compiler
-    JavaFileManagerImpl fileManager = new JavaFileManagerImpl(
-        compiler.getStandardFileManager(diagnostics, null, Charset.defaultCharset()),
-        new ClasspathResolver(classLoader));
+    JavaFileManagerImpl fileManager =
+        new JavaFileManagerImpl(
+            compiler.getStandardFileManager(diagnostics, null, Charset.defaultCharset()),
+            new ClasspathResolver(classLoader));
 
-    //
     List<JavaFileObject> sources;
     try {
-      sources = Collections.<JavaFileObject>singletonList(new JavaSourceFileObject(className, source));
-    }
-    catch (URISyntaxException e) {
+      sources =
+          Collections.singletonList(new JavaSourceFileObject(className, source));
+    } catch (URISyntaxException e) {
       throw new IOException(e);
     }
 
     // Compile
-    JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null, sources);
+    JavaCompiler.CompilationTask task =
+        compiler.getTask(null, fileManager, diagnostics, null, null, sources);
 
     //
     Boolean ok = task.call();
     if (!ok) {
-      ArrayList<Diagnostic<? extends JavaFileObject>> errors = new ArrayList<Diagnostic<? extends JavaFileObject>>();
+      ArrayList<Diagnostic<? extends JavaFileObject>> errors =
+          new ArrayList<>();
       for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
         if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
           errors.add(diagnostic);
@@ -80,8 +83,7 @@ class Compiler {
       }
       throw new CompilationFailureException(errors);
     } else {
-      return new ArrayList<JavaClassFileObject>(fileManager.getClasses());
+      return new ArrayList<>(fileManager.getClasses());
     }
   }
-
 }

@@ -18,16 +18,13 @@
  */
 package org.crsh.vfs.spi.servlet;
 
+import java.io.IOException;
+import javax.servlet.ServletContext;
 import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.Mount;
 
-import javax.servlet.ServletContext;
-import java.io.IOException;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class WarMountFactory implements FSMountFactory<String> {
 
   /** . */
@@ -39,6 +36,8 @@ public class WarMountFactory implements FSMountFactory<String> {
 
   @Override
   public Mount<String> create(Path path) throws IOException {
-    return new Mount<String>(new ServletContextDriver(context, path.absolute().getValue()), "war:" + path.absolute().getValue());
+    return new Mount<>(
+        new ServletContextDriver(context, path.absolute().getValue()),
+        "war:" + path.absolute().getValue());
   }
 }

@@ -18,6 +18,8 @@
  */
 package org.crsh.shell.impl.command.system;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Usage;
@@ -26,8 +28,8 @@ import org.crsh.cli.spi.Completion;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
 import org.crsh.command.ScriptException;
-import org.crsh.lang.spi.Language;
 import org.crsh.lang.impl.script.ScriptRepl;
+import org.crsh.lang.spi.Language;
 import org.crsh.lang.spi.Repl;
 import org.crsh.shell.impl.command.ShellSession;
 import org.crsh.text.Color;
@@ -36,9 +38,6 @@ import org.crsh.text.Style;
 import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.TableElement;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /** @author Julien Viet */
 public class repl extends BaseCommand implements ReplCompleter {
 
@@ -46,10 +45,9 @@ public class repl extends BaseCommand implements ReplCompleter {
   @Command
   public void main(
       InvocationContext<Object> context,
-      @Argument(completer = ReplCompleter.class)
-      @Usage("the optional repl name")
-      String name) throws Exception {
-    ShellSession session = (ShellSession)context.getSession();
+      @Argument(completer = ReplCompleter.class) @Usage("the optional repl name") String name)
+      throws Exception {
+    ShellSession session = (ShellSession) context.getSession();
     Repl current = session.getRepl();
     if (name != null) {
       if (name.equals(current.getLanguage().getName())) {
@@ -92,33 +90,32 @@ public class repl extends BaseCommand implements ReplCompleter {
       //
       TableElement table = new TableElement().rightCellPadding(1);
       table.row(
-        new LabelElement("NAME").style(Style.style(Decoration.bold)),
-        new LabelElement("DISPLAY NAME"),
-        new LabelElement("DESCRIPTION"),
-        new LabelElement("ACTIVE")
-      );
+          new LabelElement("NAME").style(Style.style(Decoration.bold)),
+          new LabelElement("DISPLAY NAME"),
+          new LabelElement("DESCRIPTION"),
+          new LabelElement("ACTIVE"));
       for (Map.Entry<Repl, Boolean> entry : repls.entrySet()) {
         Boolean active = entry.getValue();
         String langDescription = entry.getKey().getDescription();
         String langDisplayName = entry.getKey().getLanguage().getDisplayName();
         String langName = entry.getKey().getLanguage().getName();
         table.row(
-          new LabelElement(langName).style(Style.style(Color.red)),
-          new LabelElement(langDisplayName != null ? langDisplayName : ""),
-          new LabelElement(langDescription != null ? langDescription : ""),
-          new LabelElement(active)
-        );
+            new LabelElement(langName).style(Style.style(Color.red)),
+            new LabelElement(langDisplayName != null ? langDisplayName : ""),
+            new LabelElement(langDescription != null ? langDescription : ""),
+            new LabelElement(active));
       }
 
-      //
-      context.provide(new LabelElement("Current repl is " + current.getLanguage().getName() + "available repl are:\n"));
+      context.provide(
+          new LabelElement(
+              "Current repl is " + current.getLanguage().getName() + "available repl are:\n"));
       context.provide(table);
     }
   }
 
   @Override
   public Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
-    ShellSession session = (ShellSession)context.getSession();
+    ShellSession session = (ShellSession) context.getSession();
     Completion.Builder builder = Completion.builder(prefix);
     for (Language lang : session.getContext().getPlugins(Language.class)) {
       if (lang.isActive()) {

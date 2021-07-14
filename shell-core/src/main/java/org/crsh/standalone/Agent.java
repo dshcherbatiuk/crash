@@ -18,18 +18,24 @@
  */
 package org.crsh.standalone;
 
-import org.crsh.cli.Required;
-import org.crsh.cli.Usage;
-import org.crsh.cli.descriptor.CommandDescriptor;
+import java.lang.instrument.Instrumentation;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
-import org.crsh.cli.impl.lang.CommandFactory;
+import org.crsh.cli.Required;
+import org.crsh.cli.Usage;
+import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.InvocationMatcher;
+import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.Util;
-import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellFactory;
@@ -39,43 +45,28 @@ import org.crsh.vfs.FS;
 import org.crsh.vfs.spi.file.FileMountFactory;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
 
-import java.lang.instrument.Instrumentation;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class Agent {
 
-  /** . */
-  private static Logger log = Logger.getLogger(Agent.class.getName());
+  private static Logger LOGGER = Logger.getLogger(Agent.class.getName());
 
-  public static void agentmain(final String agentArgs, final Instrumentation inst) throws Exception {
-    log.log(Level.INFO, "CRaSH agent loaded");
+  public static void agentmain(final String agentArgs, final Instrumentation inst) {
+    LOGGER.log(Level.INFO, "CRaSH agent loaded");
 
-    //
-    Thread t = new Thread() {
-      @Override
-      public void run() {
-        try {
-          CommandDescriptor<Instance<Agent>> c = CommandFactory.DEFAULT.create(Agent.class);
-          InvocationMatcher<Instance<Agent>> matcher = c.matcher();
-          InvocationMatch<Instance<Agent>> match = matcher.parse(agentArgs);
-          match.invoke(Util.wrap(new Agent(inst)));
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    };
+    Thread t = new Thread(() -> {
+          try {
+            CommandDescriptor<Instance<Agent>> c = CommandFactory.DEFAULT.create(Agent.class);
+            InvocationMatcher<Instance<Agent>> matcher = c.matcher();
+            InvocationMatch<Instance<Agent>> match = matcher.parse(agentArgs);
+            match.invoke(Util.wrap(new Agent(inst)));
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        });
 
-    //
     t.start();
-    log.log(Level.INFO, "Spawned CRaSH thread " + t.getId() + " for further processing");
+    LOGGER.log(Level.INFO, "Spawned CRaSH thread " + t.getId() + " for further processing");
   }
 
-  /** . */
   private final Instrumentation instrumentation;
 
   public Agent(Instrumentation instrumentation) {
@@ -84,30 +75,32 @@ public class Agent {
 
   @Command
   public void main(
-      @Required
-      @Option(names={"c","cmd"})
-      @Usage("the command path")
-      String cmd,
-      @Required
-      @Option(names={"conf"})
-      @Usage("the conf path")
-      String conf,
-      @Option(names={"p","property"})
-      @Usage("set a property of the form a=b")
-      List<String> properties,
-      @Argument(name = "port")
-      Integer port) throws Exception {
+      @Required @Option(names = {"c", "cmd"}) @Usage("the command path") String cmd,
+      @Required @Option(names = {"conf"}) @Usage("the conf path") String conf,
+      @Option(names = {"p", "property"}) @Usage("set a property of the form a=b")
+          List<String> properties,
+      @Argument(name = "port") Integer port)
+      throws Exception {
 
-    //
     FileMountFactory fileDriver = new FileMountFactory(Utils.getCurrentDirectory());
-    ClassPathMountFactory classpathDriver = new ClassPathMountFactory(Thread.currentThread().getContextClassLoader());
+    ClassPathMountFactory classpathDriver =
+        new ClassPathMountFactory(Thread.currentThread().getContextClassLoader());
 
-    //
-    FS cmdFS = new FS.Builder().register("file", fileDriver).register("classpath", classpathDriver).mount(cmd).build();
-    FS confFS = new FS.Builder().register("file", fileDriver).register("classpath", classpathDriver).mount(conf).build();
-    Bootstrap bootstrap = new Bootstrap(Thread.currentThread().getContextClassLoader(), confFS, cmdFS);
+    FS cmdFS =
+        new FS.Builder()
+            .register("file", fileDriver)
+            .register("classpath", classpathDriver)
+            .mount(cmd)
+            .build();
+    FS confFS =
+        new FS.Builder()
+            .register("file", fileDriver)
+            .register("classpath", classpathDriver)
+            .mount(conf)
+            .build();
+    Bootstrap bootstrap =
+        new Bootstrap(Thread.currentThread().getContextClassLoader(), confFS, cmdFS);
 
-    //
     if (properties != null) {
       Properties config = new Properties();
       for (String property : properties) {
@@ -122,7 +115,8 @@ public class Agent {
     }
 
     // Set the instrumentation available as an attribute
-    Map<String, Object> attributes = Collections.<String, Object>singletonMap("instrumentation", instrumentation);
+    Map<String, Object> attributes =
+        Collections.singletonMap("instrumentation", instrumentation);
     bootstrap.setAttributes(attributes);
 
     // Do bootstrap
@@ -132,13 +126,12 @@ public class Agent {
     if (port != null) {
       try {
         ShellFactory factory = bootstrap.getContext().getPlugin(ShellFactory.class);
-        Shell shell = factory.create(null,null, ShellSafetyFactory.getCurrentThreadShellSafety());
+        Shell shell = factory.create(null, null, ShellSafetyFactory.getCurrentThreadShellSafety());
         RemoteClient client = new RemoteClient(port, shell);
-        log.log(Level.INFO, "Callback back remote on port " + port);
+        LOGGER.log(Level.INFO, "Callback back remote on port " + port);
         client.connect();
         client.getRunnable().run();
-      }
-      finally {
+      } finally {
         bootstrap.shutdown();
       }
     }

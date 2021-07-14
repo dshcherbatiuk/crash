@@ -19,10 +19,6 @@
 
 package org.crsh.vfs.spi.url;
 
-import org.crsh.util.InputStreamFactory;
-import org.crsh.util.Utils;
-import org.crsh.util.ZipIterator;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,8 +32,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.zip.ZipEntry;
+import org.crsh.util.InputStreamFactory;
+import org.crsh.util.Utils;
+import org.crsh.util.ZipIterator;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class Node implements Iterable<Resource> {
@@ -68,7 +66,7 @@ public class Node implements Iterable<Resource> {
   void merge(ClassLoader loader) throws IOException, URISyntaxException {
 
     // Get the root class path files
-    for (Enumeration<URL> i = loader.getResources("");i.hasMoreElements();) {
+    for (Enumeration<URL> i = loader.getResources(""); i.hasMoreElements(); ) {
       URL url = i.nextElement();
       // In some case we can get null (Tomcat 8)
       if (url != null) {
@@ -82,16 +80,15 @@ public class Node implements Iterable<Resource> {
         int pos = path.lastIndexOf("!/");
         URL url = new URL("jar:" + path.substring(0, pos + 2));
         mergeEntries(url);
-      }
-      else {
+      } else {
         //
       }
     }
   }
 
   /**
-   * Rewrite an URL by analysing the serie of trailing <code>!/</code>. The number of <code>jar:</code> prefixes
-   * does not have to be equals to the number of separators.
+   * Rewrite an URL by analysing the serie of trailing <code>!/</code>. The number of <code>jar:
+   * </code> prefixes does not have to be equals to the number of separators.
    *
    * @param url the url to rewrite
    * @return the rewritten URL
@@ -135,7 +132,8 @@ public class Node implements Iterable<Resource> {
 
   void mergeEntries(URL url) throws IOException, URISyntaxException {
     // We handle a special case of spring-boot URLs here before diving in the recursive analysis
-    // see https://github.com/spring-projects/spring-boot/tree/master/spring-boot-tools/spring-boot-loader#urls
+    // see
+    // https://github.com/spring-projects/spring-boot/tree/master/spring-boot-tools/spring-boot-loader#urls
     if (url.getProtocol().equals("jar")) {
       url = new URL(rewrite(url.toString()));
     }
@@ -153,12 +151,10 @@ public class Node implements Iterable<Resource> {
         } else {
           // WTF ?
         }
-      }
-      catch (URISyntaxException e) {
+      } catch (URISyntaxException e) {
         throw new IOException(e);
       }
-    }
-    else if (url.getProtocol().equals("jar")) {
+    } else if (url.getProtocol().equals("jar")) {
       int pos = url.getPath().lastIndexOf("!/");
       URL jarURL = new URL(url.getPath().substring(0, pos));
       String path = url.getPath().substring(pos + 2);
@@ -170,12 +166,10 @@ public class Node implements Iterable<Resource> {
             addEntry(url, entry.getName().substring(path.length()), i.getStreamFactory());
           }
         }
-      }
-      finally {
+      } finally {
         Utils.close(i);
       }
-    }
-    else {
+    } else {
       if (url.getPath().endsWith(".jar")) {
         mergeEntries(new URL("jar:" + url + "!/"));
       } else {
@@ -203,26 +197,29 @@ public class Node implements Iterable<Resource> {
             children.put(name, child = new Node(name));
           }
           child.resources.add(
-              new Resource(file.toURI().toURL(),
+              new Resource(
+                  file.toURI().toURL(),
                   new InputStreamFactory() {
                     public InputStream open() throws IOException {
                       return new FileInputStream(file);
                     }
-                  }, file.lastModified()
-              )
-          );
+                  },
+                  file.lastModified()));
         }
       }
     }
   }
 
-  private void addEntry(URL baseURL, String entryName, InputStreamFactory resolver) throws IOException {
+  private void addEntry(URL baseURL, String entryName, InputStreamFactory resolver)
+      throws IOException {
     if (entryName.length() > 0 && entryName.charAt(entryName.length() - 1) != '/') {
       addEntry(baseURL, 0, entryName, 1, resolver);
     }
   }
 
-  private void addEntry(URL baseURL, int index, String entryName, long lastModified, InputStreamFactory resolver) throws IOException {
+  private void addEntry(
+      URL baseURL, int index, String entryName, long lastModified, InputStreamFactory resolver)
+      throws IOException {
     int next = entryName.indexOf('/', index);
     if (next == -1) {
       String name = entryName.substring(index);
@@ -231,8 +228,7 @@ public class Node implements Iterable<Resource> {
         children.put(name, child = new Node(name));
       }
       child.resources.add(new Resource(new URL(baseURL + entryName), resolver, lastModified));
-    }
-    else {
+    } else {
       String name = entryName.substring(index, next);
       Node child = children.get(name);
       if (child == null) {

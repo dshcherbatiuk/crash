@@ -19,13 +19,6 @@
 
 package org.crsh.vfs;
 
-import org.crsh.vfs.spi.FSDriver;
-import org.crsh.vfs.spi.FSMountFactory;
-import org.crsh.vfs.spi.Mount;
-import org.crsh.vfs.spi.file.FileDriver;
-import org.crsh.vfs.spi.url.ClassPathMountFactory;
-import org.crsh.vfs.spi.url.URLDriver;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,10 +26,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import org.crsh.vfs.spi.FSDriver;
+import org.crsh.vfs.spi.FSMountFactory;
+import org.crsh.vfs.spi.Mount;
+import org.crsh.vfs.spi.file.FileDriver;
+import org.crsh.vfs.spi.url.ClassPathMountFactory;
+import org.crsh.vfs.spi.url.URLDriver;
 
-/**
- * The file system provides a federated view of {@link org.crsh.vfs.spi.FSDriver} mounts.
- */
+/** The file system provides a federated view of {@link org.crsh.vfs.spi.FSDriver} mounts. */
 public class FS {
 
   public static class Builder {
@@ -116,7 +113,7 @@ public class FS {
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
-      for (Iterator<Mount<?>> i = mounts.iterator();i.hasNext();) {
+      for (Iterator<Mount<?>> i = mounts.iterator(); i.hasNext(); ) {
         Mount<?> mount = i.next();
         sb.append(mount.getValue());
         if (i.hasNext()) {

@@ -19,24 +19,23 @@
 
 package org.crsh.cli.impl.matcher;
 
-import junit.framework.TestCase;
-import org.crsh.cli.impl.CLIException;
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.Argument;
-import org.crsh.cli.Command;
-import org.crsh.cli.Option;
-import org.crsh.cli.Required;
-import org.crsh.cli.impl.invocation.InvocationMatch;
-import org.crsh.cli.impl.lang.CommandFactory;
-import org.crsh.cli.impl.invocation.InvocationMatcher;
-import org.crsh.cli.impl.lang.Instance;
-import org.crsh.cli.impl.lang.Util;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import junit.framework.TestCase;
+import org.crsh.cli.Argument;
+import org.crsh.cli.Command;
+import org.crsh.cli.Option;
+import org.crsh.cli.Required;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.impl.CLIException;
+import org.crsh.cli.impl.SyntaxException;
+import org.crsh.cli.impl.invocation.InvocationMatch;
+import org.crsh.cli.impl.invocation.InvocationMatcher;
+import org.crsh.cli.impl.lang.CommandFactory;
+import org.crsh.cli.impl.lang.Instance;
+import org.crsh.cli.impl.lang.Util;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -44,12 +43,12 @@ import java.util.Locale;
  */
 public class MatcherTestCase extends TestCase {
 
-
   public void testRequiredClassOption() throws Exception {
-    class A implements Runnable{
+    class A implements Runnable {
       @Option(names = "o")
       @Required
       String s;
+
       public void run() {}
     }
     CommandDescriptor<Instance<A>> desc = CommandFactory.DEFAULT.create(A.class);
@@ -63,8 +62,7 @@ public class MatcherTestCase extends TestCase {
       a = new A();
       analyzer.parse("").invoke(Util.wrap(a));
       fail();
-    }
-    catch (SyntaxException e) {
+    } catch (SyntaxException e) {
     }
   }
 
@@ -72,6 +70,7 @@ public class MatcherTestCase extends TestCase {
     class A implements Runnable {
       @Option(names = "o")
       String s;
+
       public void run() {}
     }
     CommandDescriptor<Instance<A>> desc = CommandFactory.DEFAULT.create(A.class);
@@ -88,8 +87,8 @@ public class MatcherTestCase extends TestCase {
 
   public void testPrimitiveClassArgument() throws Exception {
     class A implements Runnable {
-      @Argument
-      int i;
+      @Argument int i;
+
       public void run() {}
     }
     CommandDescriptor<Instance<A>> desc = CommandFactory.DEFAULT.create(A.class);
@@ -108,14 +107,14 @@ public class MatcherTestCase extends TestCase {
     try {
       analyzer.parse("").invoke(Util.wrap(a));
       fail();
-    }
-    catch (SyntaxException e) {
+    } catch (SyntaxException e) {
     }
     assertEquals(-3, a.i);
   }
 
   public static class PMA {
     int i;
+
     @Command
     public void m(@Argument int i) {
       this.i = i;
@@ -138,15 +137,14 @@ public class MatcherTestCase extends TestCase {
     try {
       analyzer.parse("m").invoke(Util.wrap(a));
       fail();
-    }
-    catch (SyntaxException e) {
+    } catch (SyntaxException e) {
     }
   }
 
   public void testOptionalClassArgument() throws Exception {
     class A implements Runnable {
-      @Argument
-      String s;
+      @Argument String s;
+
       public void run() {}
     }
     CommandDescriptor<Instance<A>> desc = CommandFactory.DEFAULT.create(A.class);
@@ -167,41 +165,48 @@ public class MatcherTestCase extends TestCase {
 
   public static class BC1 {
     List<String> s;
+
     @Command
-    public void main(@Argument List<String> s) { this.s = s; }
+    public void main(@Argument List<String> s) {
+      this.s = s;
+    }
   }
 
   public static class BC2 implements Runnable {
-    @Argument
-    List<String> s;
+    @Argument List<String> s;
+
     public void run() {}
   }
 
   public void testOptionalArgumentList() throws Exception {
 
     abstract class Tester {
-      abstract List<String> invoke(String line) throws Exception ;
+      abstract List<String> invoke(String line) throws Exception;
     }
 
-    Tester t1 = new Tester() {
-      CommandDescriptor<Instance<BC1>> desc1 = CommandFactory.DEFAULT.create(BC1.class);
-      @Override
-      List<String> invoke(String line) throws Exception {
-        BC1 object = new BC1();
-        desc1.matcher().parse(line).invoke(Util.wrap(object));
-        return object.s;
-      }
-    };
+    Tester t1 =
+        new Tester() {
+          CommandDescriptor<Instance<BC1>> desc1 = CommandFactory.DEFAULT.create(BC1.class);
 
-    Tester t2 = new Tester() {
-      CommandDescriptor<Instance<BC2>> desc2 = CommandFactory.DEFAULT.create(BC2.class);
-      @Override
-      List<String> invoke(String line) throws Exception {
-        BC2 object = new BC2();
-        desc2.matcher().parse(line).invoke(Util.wrap(object));
-        return object.s;
-      }
-    };
+          @Override
+          List<String> invoke(String line) throws Exception {
+            BC1 object = new BC1();
+            desc1.matcher().parse(line).invoke(Util.wrap(object));
+            return object.s;
+          }
+        };
+
+    Tester t2 =
+        new Tester() {
+          CommandDescriptor<Instance<BC2>> desc2 = CommandFactory.DEFAULT.create(BC2.class);
+
+          @Override
+          List<String> invoke(String line) throws Exception {
+            BC2 object = new BC2();
+            desc2.matcher().parse(line).invoke(Util.wrap(object));
+            return object.s;
+          }
+        };
 
     for (Tester s : Arrays.asList(t1, t2)) {
       assertEquals(null, s.invoke(""));
@@ -214,13 +219,14 @@ public class MatcherTestCase extends TestCase {
   public class OptionSyntaxException {
     @Option(names = "o")
     int option;
+
     @Command
-    public void main() {
-    }
+    public void main() {}
   }
 
   public void testOptionSyntaxException() throws Exception {
-    CommandDescriptor<Instance<OptionSyntaxException>> desc = CommandFactory.DEFAULT.create(OptionSyntaxException.class);
+    CommandDescriptor<Instance<OptionSyntaxException>> desc =
+        CommandFactory.DEFAULT.create(OptionSyntaxException.class);
     InvocationMatcher<Instance<OptionSyntaxException>> analyzer = desc.matcher();
     OptionSyntaxException cmd = new OptionSyntaxException();
 
@@ -228,24 +234,21 @@ public class MatcherTestCase extends TestCase {
     try {
       analyzer.parse("-o").invoke(Util.wrap(cmd));
       fail();
-    }
-    catch (SyntaxException ignore) {
+    } catch (SyntaxException ignore) {
     }
 
     //
     try {
       analyzer.parse("-o 0 -o 1").invoke(Util.wrap(cmd));
       fail();
-    }
-    catch (SyntaxException ignore) {
+    } catch (SyntaxException ignore) {
     }
 
     //
     try {
       analyzer.parse("-o a").invoke(Util.wrap(cmd));
       fail();
-    }
-    catch (SyntaxException ignore) {
+    } catch (SyntaxException ignore) {
     }
 
     //
@@ -255,9 +258,8 @@ public class MatcherTestCase extends TestCase {
 
   public void testRequiredArgumentList() throws Exception {
     class A implements Runnable {
-      @Argument
-      @Required
-      List<String> s;
+      @Argument @Required List<String> s;
+
       public void run() {}
     }
     CommandDescriptor<Instance<A>> desc = CommandFactory.DEFAULT.create(A.class);
@@ -267,8 +269,7 @@ public class MatcherTestCase extends TestCase {
     try {
       analyzer.parse("").invoke(Util.wrap(a));
       fail();
-    }
-    catch (SyntaxException expected) {
+    } catch (SyntaxException expected) {
     }
 
     a = new A();
@@ -283,13 +284,16 @@ public class MatcherTestCase extends TestCase {
   public static class A {
     @Option(names = "s")
     String s;
+
     @Command
     public void m(@Option(names = "o") String o, @Argument String a) {
       this.o = o;
       this.a = a;
     }
+
     String o;
     String a;
+
     @Command
     public void dummy() {}
   }
@@ -373,19 +377,21 @@ public class MatcherTestCase extends TestCase {
 
     //
     final C c = new C();
-    Instance<C> context = new Instance<C>() {
-      @Override
-      public C get() {
-        return c;
-      }
-      public <T> T resolve(Class<T> type) {
-        if (type.equals(Locale.class)) {
-          return type.cast(Locale.FRENCH);
-        } else {
-          return null;
-        }
-      }
-    };
+    Instance<C> context =
+        new Instance<C>() {
+          @Override
+          public C get() {
+            return c;
+          }
+
+          public <T> T resolve(Class<T> type) {
+            if (type.equals(Locale.class)) {
+              return type.cast(Locale.FRENCH);
+            } else {
+              return null;
+            }
+          }
+        };
     analyzer.parse("").invoke(context);
     assertEquals(Locale.FRENCH, c.locale);
   }
@@ -412,12 +418,12 @@ public class MatcherTestCase extends TestCase {
     //
     D d = new D();
     desc.matcher().parse("a -o 5").invoke(Util.wrap(d));
-    assertEquals((Integer)5, d.i);
+    assertEquals((Integer) 5, d.i);
 
     //
     d = new D();
     desc.matcher().parse("b -o 5").invoke(Util.wrap(d));
-    assertEquals((Integer)5, d.i);
+    assertEquals((Integer) 5, d.i);
   }
 
   public static class E {
@@ -447,8 +453,11 @@ public class MatcherTestCase extends TestCase {
 
   public static class F {
     List<String> s;
+
     @Command
-    public void foo(@Option(names = "o") List<String> s) { this.s = s; }
+    public void foo(@Option(names = "o") List<String> s) {
+      this.s = s;
+    }
   }
 
   public void testOptionList() throws Exception {
@@ -460,7 +469,11 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("foo -o a").invoke(Util.wrap(f));
     assertEquals(Arrays.asList("a"), f.s);
     f = new F();
-    desc.matcher().subordinate("foo").option("o", Collections.singletonList("a")).arguments(Collections.emptyList()).invoke(Util.wrap(f));
+    desc.matcher()
+        .subordinate("foo")
+        .option("o", Collections.singletonList("a"))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(f));
     assertEquals(Arrays.asList("a"), f.s);
 
     //
@@ -468,33 +481,47 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("foo -o a -o b").invoke(Util.wrap(f));
     assertEquals(Arrays.asList("a", "b"), f.s);
     f = new F();
-    desc.matcher().subordinate("foo").option("o", Arrays.asList("a", "b")).arguments(Collections.emptyList()).invoke(Util.wrap(f));
+    desc.matcher()
+        .subordinate("foo")
+        .option("o", Arrays.asList("a", "b"))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(f));
     assertEquals(Arrays.asList("a", "b"), f.s);
   }
 
   public static class G {
     Custom o;
+
     @Command
-    public void foo(@Option(names = "o") Custom o) { this.o = o; }
+    public void foo(@Option(names = "o") Custom o) {
+      this.o = o;
+    }
   }
 
   public void testValue() throws Exception {
 
     //
-    CommandDescriptor<Instance<G>> desc = new CommandFactory(MatcherTestCase.class.getClassLoader()).create(G.class);
+    CommandDescriptor<Instance<G>> desc =
+        new CommandFactory(MatcherTestCase.class.getClassLoader()).create(G.class);
 
     //
     G g = new G();
     desc.matcher().parse("foo -o a").invoke(Util.wrap(g));
     assertEquals(new Custom("a"), g.o);
     g = new G();
-    desc.matcher().subordinate("foo").option("o", Collections.singletonList("a")).arguments(Collections.emptyList()).invoke(Util.wrap(g));
+    desc.matcher()
+        .subordinate("foo")
+        .option("o", Collections.singletonList("a"))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(g));
     assertEquals(new Custom("a"), g.o);
   }
 
   public static class H {
     @Command
-    public void foo()  throws Exception { throw new Exception("fooexception"); }
+    public void foo() throws Exception {
+      throw new Exception("fooexception");
+    }
   }
 
   public void testException() throws Exception {
@@ -515,7 +542,9 @@ public class MatcherTestCase extends TestCase {
 
   public static class I {
     @Command
-    public void foo() { throw new RuntimeException("fooruntimeexception"); }
+    public void foo() {
+      throw new RuntimeException("fooruntimeexception");
+    }
   }
 
   public void testRuntimeException() throws Exception {
@@ -536,7 +565,9 @@ public class MatcherTestCase extends TestCase {
 
   public static class J {
     @Command
-    public void foo() { throw new Error("fooerror"); }
+    public void foo() {
+      throw new Error("fooerror");
+    }
   }
 
   public void testError() throws Exception {
@@ -557,6 +588,7 @@ public class MatcherTestCase extends TestCase {
   public static class K {
     @Option(names = "o")
     String opt;
+
     @Command
     public void cmd() {}
   }
@@ -567,7 +599,11 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("-o foo cmd").invoke(Util.wrap(k));
     assertEquals("foo", k.opt);
     k = new K();
-    desc.matcher().option("o", Collections.singletonList("foo")).subordinate("cmd").arguments(Collections.emptyList()).invoke(Util.wrap(k));
+    desc.matcher()
+        .option("o", Collections.singletonList("foo"))
+        .subordinate("cmd")
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(k));
     assertEquals("foo", k.opt);
   }
 
@@ -577,14 +613,22 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("cmd -o foo").invoke(Util.wrap(k));
     assertEquals(null, k.opt);
     k = new K();
-    desc.matcher().subordinate("cmd").option("o", Collections.singletonList("foo")).arguments(Collections.emptyList()).invoke(Util.wrap(k));
+    desc.matcher()
+        .subordinate("cmd")
+        .option("o", Collections.singletonList("foo"))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(k));
     assertEquals(null, k.opt);
   }
 
   public static class L {
     String opt;
+
     @Command
-    public void cmd(@Option(names = "o") String opt) { this.opt = opt; }
+    public void cmd(@Option(names = "o") String opt) {
+      this.opt = opt;
+    }
+
     @Command
     public void dummy() {}
   }
@@ -595,7 +639,11 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("-o foo cmd").invoke(Util.wrap(l));
     assertEquals(null, l.opt);
     l = new L();
-    desc.matcher().option("o", Collections.singletonList("foo")).subordinate("cmd").arguments(Collections.emptyList()).invoke(Util.wrap(l));
+    desc.matcher()
+        .option("o", Collections.singletonList("foo"))
+        .subordinate("cmd")
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(l));
     assertEquals(null, l.opt);
   }
 
@@ -605,14 +653,21 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("cmd -o foo").invoke(Util.wrap(l));
     assertEquals("foo", l.opt);
     l = new L();
-    desc.matcher().subordinate("cmd").option("o", Collections.singletonList("foo")).arguments(Collections.emptyList()).invoke(Util.wrap(l));
+    desc.matcher()
+        .subordinate("cmd")
+        .option("o", Collections.singletonList("foo"))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(l));
     assertEquals("foo", l.opt);
   }
 
   public static class M {
     String opt;
+
     @Command
-    public void main(@Option(names = "o") String opt) { this.opt = opt; }
+    public void main(@Option(names = "o") String opt) {
+      this.opt = opt;
+    }
   }
 
   public void testImplicitSubordinateOption() throws Exception {
@@ -621,7 +676,10 @@ public class MatcherTestCase extends TestCase {
     desc.matcher().parse("-o foo").invoke(Util.wrap(m));
     assertEquals("foo", m.opt);
     m = new M();
-    desc.matcher().option("o", Collections.singletonList("foo")).arguments(Collections.emptyList()).invoke(Util.wrap(m));
+    desc.matcher()
+        .option("o", Collections.singletonList("foo"))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(m));
     assertEquals("foo", m.opt);
   }
 
@@ -629,6 +687,7 @@ public class MatcherTestCase extends TestCase {
     class A implements Runnable {
       @Option(names = "o")
       boolean o;
+
       public void run() {}
     }
     CommandDescriptor<Instance<A>> desc = CommandFactory.DEFAULT.create(A.class);
@@ -639,7 +698,10 @@ public class MatcherTestCase extends TestCase {
     analyzer.parse("-o").invoke(Util.wrap(a));
     assertEquals(true, a.o);
     a = new A();
-    analyzer.option("o", Collections.singletonList(true)).arguments(Collections.emptyList()).invoke(Util.wrap(a));
+    analyzer
+        .option("o", Collections.singletonList(true))
+        .arguments(Collections.emptyList())
+        .invoke(Util.wrap(a));
     assertEquals(true, a.o);
   }
 
@@ -647,9 +709,9 @@ public class MatcherTestCase extends TestCase {
     class SCP implements Runnable {
       @Option(names = "t")
       boolean t;
-      @Argument
-      @Required
-      String target;
+
+      @Argument @Required String target;
+
       public void run() {}
     }
     CommandDescriptor<Instance<SCP>> desc = CommandFactory.DEFAULT.create(SCP.class);
@@ -661,7 +723,10 @@ public class MatcherTestCase extends TestCase {
     assertEquals(true, scp.t);
     assertEquals("portal:collaboration:/Documents", scp.target);
     scp = new SCP();
-    matcher.option("t", Collections.singletonList(true)).arguments(Collections.singletonList("portal:collaboration:/Documents")).invoke(Util.wrap(scp));
+    matcher
+        .option("t", Collections.singletonList(true))
+        .arguments(Collections.singletonList("portal:collaboration:/Documents"))
+        .invoke(Util.wrap(scp));
     assertEquals(true, scp.t);
     assertEquals("portal:collaboration:/Documents", scp.target);
 
@@ -674,7 +739,10 @@ public class MatcherTestCase extends TestCase {
     }
     scp = new SCP();
     try {
-      matcher.option("t", Collections.singletonList(true)).arguments(Collections.emptyList()).invoke(Util.wrap(scp));
+      matcher
+          .option("t", Collections.singletonList(true))
+          .arguments(Collections.emptyList())
+          .invoke(Util.wrap(scp));
       fail();
     } catch (CLIException e) {
     }

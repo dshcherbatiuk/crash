@@ -20,9 +20,7 @@ package org.crsh.lang.impl.groovy;
 
 import org.crsh.lang.impl.LanguageProxy;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class GroovyLanguageProxy extends LanguageProxy {
 
   public GroovyLanguageProxy() {

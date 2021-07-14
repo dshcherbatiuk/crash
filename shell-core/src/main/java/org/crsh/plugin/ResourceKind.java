@@ -21,19 +21,12 @@ package org.crsh.plugin;
 
 public enum ResourceKind {
 
-  /**
-   * Configuration file.
-   */
+  /** Configuration file. */
   CONFIG,
 
-  /**
-   * Command script file.
-   */
+  /** Command script file. */
   COMMAND,
 
-  /**
-   * Lifecycle script file.
-   */
+  /** Lifecycle script file. */
   LIFECYCLE,
-
 }

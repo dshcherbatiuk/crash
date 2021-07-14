@@ -23,9 +23,7 @@ import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViEditingTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {

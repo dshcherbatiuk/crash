@@ -19,23 +19,22 @@
 
 package test.command;
 
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.command.*;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.lang.impl.java.ClassShellCommand;
-import org.crsh.shell.impl.command.RuntimeContextImpl;
-import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
-import org.crsh.lang.impl.groovy.command.GroovyScriptShellCommand;
-import org.crsh.text.CLS;
-import org.crsh.text.Screenable;
-import org.crsh.text.ScreenBuffer;
-import org.crsh.text.Style;
-
 import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.*;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.command.*;
+import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
+import org.crsh.lang.impl.groovy.command.GroovyScriptShellCommand;
+import org.crsh.lang.impl.java.ClassShellCommand;
+import org.crsh.shell.impl.command.RuntimeContextImpl;
+import org.crsh.shell.impl.command.spi.Command;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.crsh.text.CLS;
+import org.crsh.text.ScreenBuffer;
+import org.crsh.text.Screenable;
+import org.crsh.text.Style;
 
 public class TestInvocationContext<C> extends RuntimeContextImpl implements CommandContext<Object> {
 
@@ -135,11 +134,9 @@ public class TestInvocationContext<C> extends RuntimeContextImpl implements Comm
     }
   }
 
-  public void flush() throws IOException {
-  }
+  public void flush() throws IOException {}
 
-  public void close() throws IOException {
-  }
+  public void close() throws IOException {}
 
   public CommandInvoker<?, ?> resolve(String s) throws ScriptException, IOException {
     throw new UnsupportedOperationException();
@@ -153,15 +150,20 @@ public class TestInvocationContext<C> extends RuntimeContextImpl implements Comm
     return reader;
   }
 
-  public <B extends BaseCommand> String execute(Class<B> commandClass, String... args) throws IntrospectionException, IOException, CommandException  {
-    return execute(new ClassShellCommand<B>(commandClass, ShellSafetyFactory.getCurrentThreadShellSafety()), args);
+  public <B extends BaseCommand> String execute(Class<B> commandClass, String... args)
+      throws IntrospectionException, IOException, CommandException {
+    return execute(
+        new ClassShellCommand<B>(commandClass, ShellSafetyFactory.getCurrentThreadShellSafety()),
+        args);
   }
 
-  public <B extends GroovyScriptCommand> String execute2(Class<B> commandClass, String... args) throws IntrospectionException, IOException, UndeclaredThrowableException, CommandException {
+  public <B extends GroovyScriptCommand> String execute2(Class<B> commandClass, String... args)
+      throws IntrospectionException, IOException, UndeclaredThrowableException, CommandException {
     return execute(new GroovyScriptShellCommand<B>(commandClass), args);
   }
 
-  private String execute(Command<?> command, String... args) throws IOException, UndeclaredThrowableException, CommandException {
+  private String execute(Command<?> command, String... args)
+      throws IOException, UndeclaredThrowableException, CommandException {
     if (reader != null) {
       reader.clear();
     }
@@ -172,7 +174,8 @@ public class TestInvocationContext<C> extends RuntimeContextImpl implements Comm
       }
       sb.append(arg);
     }
-    CommandInvoker<C, Object> invoker = (CommandInvoker<C, Object>)command.resolveInvoker(sb.toString());
+    CommandInvoker<C, Object> invoker =
+        (CommandInvoker<C, Object>) command.resolveInvoker(sb.toString());
 
     invoker.open(this);
     invoker.flush();

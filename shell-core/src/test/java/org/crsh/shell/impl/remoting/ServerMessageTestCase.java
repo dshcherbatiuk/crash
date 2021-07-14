@@ -18,16 +18,15 @@
  */
 package org.crsh.shell.impl.remoting;
 
-import org.crsh.AbstractTestCase;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.ShellResponse;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import org.crsh.AbstractTestCase;
+import org.crsh.shell.ErrorKind;
+import org.crsh.shell.ShellResponse;
 
 /** @author Julien Viet */
 public class ServerMessageTestCase extends AbstractTestCase {
@@ -39,7 +38,8 @@ public class ServerMessageTestCase extends AbstractTestCase {
   }
 
   public void testErrorResponseSerialiation() throws Exception {
-    ShellResponse.Error expectedResponse = ShellResponse.error(ErrorKind.EVALUATION, "hell", new MyException());
+    ShellResponse.Error expectedResponse =
+        ShellResponse.error(ErrorKind.EVALUATION, "hell", new MyException());
     ServerMessage expectedMessage = new ServerMessage.End(expectedResponse);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -51,6 +51,8 @@ public class ServerMessageTestCase extends AbstractTestCase {
     ServerMessage.End message = assertInstance(ServerMessage.End.class, o);
     ShellResponse.Error response = assertInstance(ShellResponse.Error.class, message.response);
     assertEquals(expectedResponse.getMessage(), response.getMessage());
-    assertEquals(Arrays.asList(expectedResponse.getThrowable().getStackTrace()), Arrays.asList(response.getThrowable().getStackTrace()));
+    assertEquals(
+        Arrays.asList(expectedResponse.getThrowable().getStackTrace()),
+        Arrays.asList(response.getThrowable().getStackTrace()));
   }
 }

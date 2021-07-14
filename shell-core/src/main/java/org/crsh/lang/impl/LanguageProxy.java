@@ -18,15 +18,14 @@
  */
 package org.crsh.lang.impl;
 
+import java.lang.reflect.Constructor;
+import java.util.concurrent.atomic.AtomicReference;
 import org.crsh.lang.spi.Compiler;
 import org.crsh.lang.spi.Language;
 import org.crsh.lang.spi.Repl;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PluginContext;
 import org.crsh.shell.impl.command.ShellSession;
-
-import java.lang.reflect.Constructor;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A command manager that is able to load a command manager via reflection.
@@ -57,15 +56,13 @@ public class LanguageProxy extends CRaSHPlugin<Language> implements Language {
   @Override
   public void init() {
     try {
-      Class<Language> mgrClass = (Class<Language>)getClass().getClassLoader().loadClass(className);
+      Class<Language> mgrClass = (Class<Language>) getClass().getClassLoader().loadClass(className);
       Constructor<Language> mgrCtor = mgrClass.getConstructor(PluginContext.class);
       Language mgr = mgrCtor.newInstance(getContext());
       real.set(mgr);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       log.info("Plugin is inactive");
-    }
-    catch (NoClassDefFoundError e) {
+    } catch (NoClassDefFoundError e) {
       log.info("Plugin is inactive");
     }
   }

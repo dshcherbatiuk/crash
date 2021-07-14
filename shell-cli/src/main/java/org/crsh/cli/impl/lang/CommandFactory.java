@@ -19,17 +19,6 @@
 
 package org.crsh.cli.impl.lang;
 
-import org.crsh.cli.Named;
-import org.crsh.cli.descriptor.Description;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.impl.ParameterType;
-import org.crsh.cli.Argument;
-import org.crsh.cli.Command;
-import org.crsh.cli.Option;
-import org.crsh.cli.Required;
-import org.crsh.cli.type.ValueTypeFactory;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,6 +31,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.crsh.cli.Argument;
+import org.crsh.cli.Command;
+import org.crsh.cli.Named;
+import org.crsh.cli.Option;
+import org.crsh.cli.Required;
+import org.crsh.cli.descriptor.Description;
+import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.impl.ParameterType;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.cli.type.ValueTypeFactory;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class CommandFactory {
@@ -71,7 +70,6 @@ public class CommandFactory {
     //
     this.valueTypeFactory = valueTypeFactory;
   }
-
 
   private List<Method> findAllMethods(Class<?> introspected) throws IntrospectionException {
     List<Method> methods;
@@ -111,7 +109,8 @@ public class CommandFactory {
       return methodDescriptor;
     } else {
       Map<String, MethodDescriptor<T>> methodMap = new LinkedHashMap<String, MethodDescriptor<T>>();
-      ClassDescriptor<T> classDescriptor = new ClassDescriptor<T>(type, commandName, methodMap, new Description(type));
+      ClassDescriptor<T> classDescriptor =
+          new ClassDescriptor<T>(type, commandName, methodMap, new Description(type));
       for (Method method : methods) {
         String methodName;
         if (method.getAnnotation(Named.class) != null) {
@@ -129,35 +128,37 @@ public class CommandFactory {
     }
   }
 
-  private <T> MethodDescriptor<T> create(ClassDescriptor<T> classDescriptor, String name, Method method) throws IntrospectionException {
+  private <T> MethodDescriptor<T> create(
+      ClassDescriptor<T> classDescriptor, String name, Method method)
+      throws IntrospectionException {
     Description info = new Description(method);
-    MethodDescriptor<T> methodDescriptor = new MethodDescriptor<T>(
-        classDescriptor,
-        method,
-        name,
-        info);
+    MethodDescriptor<T> methodDescriptor =
+        new MethodDescriptor<T>(classDescriptor, method, name, info);
 
     Type[] parameterTypes = method.getGenericParameterTypes();
     Annotation[][] parameterAnnotationMatrix = method.getParameterAnnotations();
-    for (int i = 0;i < parameterAnnotationMatrix.length;i++) {
+    for (int i = 0; i < parameterAnnotationMatrix.length; i++) {
 
       Annotation[] parameterAnnotations = parameterAnnotationMatrix[i];
       Type parameterType = parameterTypes[i];
       Tuple tuple = get(parameterAnnotations);
 
       MethodArgumentBinding binding = new MethodArgumentBinding(i);
-      ParameterDescriptor parameter = create(
-          binding,
-          parameterType,
-          tuple.argumentAnn,
-          tuple.optionAnn,
-          tuple.required,
-          tuple.descriptionAnn,
-          tuple.ann);
+      ParameterDescriptor parameter =
+          create(
+              binding,
+              parameterType,
+              tuple.argumentAnn,
+              tuple.optionAnn,
+              tuple.required,
+              tuple.descriptionAnn,
+              tuple.ann);
       if (parameter != null) {
         methodDescriptor.addParameter(parameter);
       } else {
-        log.log(Level.FINE, "Method argument with index " + i + " of method " + method + " is not annotated");
+        log.log(
+            Level.FINE,
+            "Method argument with index " + i + " of method " + method + " is not annotated");
       }
     }
     return methodDescriptor;
@@ -170,7 +171,8 @@ public class CommandFactory {
       Option optionAnn,
       boolean required,
       Description info,
-      Annotation ann) throws IntrospectionException {
+      Annotation ann)
+      throws IntrospectionException {
 
     //
     if (argumentAnn != null) {
@@ -213,11 +215,11 @@ public class CommandFactory {
     Annotation info = null;
     for (Annotation parameterAnnotation : ab) {
       if (parameterAnnotation instanceof Option) {
-        optionAnn = (Option)parameterAnnotation;
+        optionAnn = (Option) parameterAnnotation;
       } else if (parameterAnnotation instanceof Argument) {
-        argumentAnn = (Argument)parameterAnnotation;
+        argumentAnn = (Argument) parameterAnnotation;
       } else if (parameterAnnotation instanceof Required) {
-        required = ((Required)parameterAnnotation).value();
+        required = ((Required) parameterAnnotation).value();
       } else if (info == null) {
 
         // Look at annotated annotations
@@ -226,7 +228,7 @@ public class CommandFactory {
           optionAnn = a.getAnnotation(Option.class);
           info = parameterAnnotation;
         } else if (a.getAnnotation(Argument.class) != null) {
-          argumentAnn =  a.getAnnotation(Argument.class);
+          argumentAnn = a.getAnnotation(Argument.class);
           info = parameterAnnotation;
         }
 
@@ -248,19 +250,23 @@ public class CommandFactory {
     }
 
     //
-    return new Tuple(argumentAnn, optionAnn, required != null && required,description, info);
+    return new Tuple(argumentAnn, optionAnn, required != null && required, description, info);
   }
 
-  /**
-   * Jus grouping some data for conveniency
-   */
+  /** Jus grouping some data for conveniency */
   protected static class Tuple {
     final Argument argumentAnn;
     final Option optionAnn;
     final boolean required;
     final Description descriptionAnn;
     final Annotation ann;
-    private Tuple(Argument argumentAnn, Option optionAnn, boolean required, Description info, Annotation ann) {
+
+    private Tuple(
+        Argument argumentAnn,
+        Option optionAnn,
+        boolean required,
+        Description info,
+        Annotation ann) {
       this.argumentAnn = argumentAnn;
       this.optionAnn = optionAnn;
       this.required = required;
@@ -269,7 +275,8 @@ public class CommandFactory {
     }
   }
 
-  private List<ParameterDescriptor> parameters(Class<?> introspected) throws IntrospectionException {
+  private List<ParameterDescriptor> parameters(Class<?> introspected)
+      throws IntrospectionException {
     List<ParameterDescriptor> parameters;
     Class<?> superIntrospected = introspected.getSuperclass();
     if (superIntrospected == null) {
@@ -279,14 +286,15 @@ public class CommandFactory {
       for (Field f : introspected.getDeclaredFields()) {
         Tuple tuple = get(f.getAnnotations());
         ClassFieldBinding binding = new ClassFieldBinding(f);
-        ParameterDescriptor parameter = create(
-            binding,
-            f.getGenericType(),
-            tuple.argumentAnn,
-            tuple.optionAnn,
-            tuple.required,
-            tuple.descriptionAnn,
-            tuple.ann);
+        ParameterDescriptor parameter =
+            create(
+                binding,
+                f.getGenericType(),
+                tuple.argumentAnn,
+                tuple.optionAnn,
+                tuple.required,
+                tuple.descriptionAnn,
+                tuple.ann);
         if (parameter != null) {
           parameters.add(parameter);
         }

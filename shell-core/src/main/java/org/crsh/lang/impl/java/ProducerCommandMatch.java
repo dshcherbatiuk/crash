@@ -18,6 +18,7 @@
  */
 package org.crsh.lang.impl.java;
 
+import java.io.IOException;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.lang.Instance;
@@ -30,11 +31,7 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.InvocationContextImpl;
 import org.crsh.shell.impl.command.spi.CommandException;
 
-import java.io.IOException;
-
-/**
-* @author Julien Viet
-*/
+/** @author Julien Viet */
 class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T, Void, P> {
 
   /** . */
@@ -45,9 +42,14 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
 
   /** . */
   private final String name;
+
   private ShellSafety shellSafety;
 
-  public ProducerCommandMatch(ClassShellCommand<T> shellCommand, CommandInvoker<Instance<T>, ?> invoker, Class<P> producedType, ShellSafety shellSafety) {
+  public ProducerCommandMatch(
+      ClassShellCommand<T> shellCommand,
+      CommandInvoker<Instance<T>, ?> invoker,
+      Class<P> producedType,
+      ShellSafety shellSafety) {
     super(shellCommand);
 
     //
@@ -86,7 +88,7 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
 
       public void open(CommandContext<? super P> consumer) {
         // Java is fine with that but not intellij....
-        CommandContext<P> consumer2 = (CommandContext<P>)consumer;
+        CommandContext<P> consumer2 = (CommandContext<P>) consumer;
         open2(consumer2);
       }
 
@@ -96,11 +98,10 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
         command.unmatched = invoker.getMatch().getRest();
       }
 
-
       @Override
       public KeyHandler getKeyHandler() {
         if (command instanceof KeyHandler) {
-          return (KeyHandler)command;
+          return (KeyHandler) command;
         } else {
           return null;
         }
@@ -110,19 +111,19 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
         // Drop everything
       }
 
-      public void flush() {
-      }
+      public void flush() {}
 
       public void close() throws IOException, CommandException {
         try {
           Object ret;
           try {
             ret = invoker.invoke(this);
-          }
-          catch (org.crsh.cli.impl.SyntaxException e) {
-            throw new CommandException(ErrorKind.SYNTAX, "Syntax exception when executing command " + name, e);
+          } catch (org.crsh.cli.impl.SyntaxException e) {
+            throw new CommandException(
+                ErrorKind.SYNTAX, "Syntax exception when executing command " + name, e);
           } catch (InvocationException e) {
-            throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e.getCause());
+            throw new CommandException(
+                ErrorKind.EVALUATION, "Command " + name + " failed", e.getCause());
           }
 
           // Anything returned compatible is then produced
@@ -130,20 +131,17 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
             P produced = producedType.cast(ret);
             try {
               invocationContext.provide(produced);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e);
             }
           }
         } finally {
           try {
             invocationContext.flush();
-          }
-          finally {
+          } finally {
             try {
               invocationContext.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e);
             } finally {
               command.unmatched = null;

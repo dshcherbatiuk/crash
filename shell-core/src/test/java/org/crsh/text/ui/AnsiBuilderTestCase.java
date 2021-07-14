@@ -63,9 +63,13 @@ public class AnsiBuilderTestCase extends TestCase {
 
   public void testMany() throws Exception {
     assertEquals("\u001B[34;40m", Style.style(null, Color.blue, Color.black).toAnsiSequence());
-    assertEquals("\u001B[4;40m", Style.style(Decoration.underline, null, Color.black).toAnsiSequence());
-    assertEquals("\u001B[4;34m", Style.style(Decoration.underline, Color.blue, null).toAnsiSequence());
-    assertEquals("\u001B[4;34;40m", Style.style(Decoration.underline, Color.blue, Color.black).toAnsiSequence());
+    assertEquals(
+        "\u001B[4;40m", Style.style(Decoration.underline, null, Color.black).toAnsiSequence());
+    assertEquals(
+        "\u001B[4;34m", Style.style(Decoration.underline, Color.blue, null).toAnsiSequence());
+    assertEquals(
+        "\u001B[4;34;40m",
+        Style.style(Decoration.underline, Color.blue, Color.black).toAnsiSequence());
   }
 
   public void testFluent() throws Exception {

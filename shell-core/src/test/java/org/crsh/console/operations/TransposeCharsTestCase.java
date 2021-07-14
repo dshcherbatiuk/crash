@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class TransposeCharsTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {
@@ -120,5 +118,4 @@ public class TransposeCharsTestCase extends AbstractConsoleTestCase {
     assertEquals("abcdef", getCurrentLine());
     assertEquals(5, getCurrentCursor());
   }
-
 }

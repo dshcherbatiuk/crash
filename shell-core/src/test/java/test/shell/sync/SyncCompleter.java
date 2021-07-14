@@ -20,9 +20,7 @@ package test.shell.sync;
 
 import org.crsh.cli.impl.completion.CompletionMatch;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class SyncCompleter {
 
   public CompletionMatch complete(String prefix) {

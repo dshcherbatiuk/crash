@@ -28,29 +28,30 @@ import java.util.logging.Logger;
 
 public class InterruptHandler {
 
-  /** . */
   private final Runnable runnable;
 
-  /** . */
   private final Logger log = Logger.getLogger(InterruptHandler.class.getName());
 
-  private final InvocationHandler handler = new InvocationHandler() {
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-      Class<?>[] parameterTypes = method.getParameterTypes();
-      if (method.getName().equals("hashCode") && parameterTypes.length == 0) {
-        return System.identityHashCode(runnable);
-      } else if (method.getName().equals("equals") && parameterTypes.length == 1 && parameterTypes[0] == Object.class) {
-        return runnable.equals(args[0]);
-      } else if (method.getName().equals("toString") && parameterTypes.length == 0) {
-        return runnable.toString();
-      } else if (method.getName().equals("handle")) {
-        runnable.run();
-        return null;
-      } else {
-        throw new UnsupportedOperationException("Method " + method + " not implemented");
-      }
-    }
-  };
+  private final InvocationHandler handler =
+      new InvocationHandler() {
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+          Class<?>[] parameterTypes = method.getParameterTypes();
+          if (method.getName().equals("hashCode") && parameterTypes.length == 0) {
+            return System.identityHashCode(runnable);
+          } else if (method.getName().equals("equals")
+              && parameterTypes.length == 1
+              && parameterTypes[0] == Object.class) {
+            return runnable.equals(args[0]);
+          } else if (method.getName().equals("toString") && parameterTypes.length == 0) {
+            return runnable.toString();
+          } else if (method.getName().equals("handle")) {
+            runnable.run();
+            return null;
+          } else {
+            throw new UnsupportedOperationException("Method " + method + " not implemented");
+          }
+        }
+      };
 
   public InterruptHandler(Runnable runnable) {
     this.runnable = runnable;
@@ -68,19 +69,19 @@ public class InterruptHandler {
       handle = signalClass.getDeclaredMethod("handle", signalClass, signalHandlerClass);
       Constructor ctor = signalClass.getConstructor(String.class);
       INT = ctor.newInstance("INT");
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return;
     }
 
-    //
-    Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[]{signalHandlerClass}, handler);
+    Object proxy =
+        Proxy.newProxyInstance(
+            Thread.currentThread().getContextClassLoader(),
+            new Class<?>[] {signalHandlerClass},
+            handler);
 
-    //
     try {
       handle.invoke(null, INT, proxy);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       log.log(Level.SEVERE, "Could not install signal handler", e);
     }
   }

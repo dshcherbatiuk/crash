@@ -19,11 +19,10 @@
 
 package org.crsh.cli.impl.invocation;
 
-import org.crsh.cli.impl.LiteralValue;
-import org.crsh.cli.descriptor.OptionDescriptor;
-
 import java.util.Collections;
 import java.util.List;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.impl.LiteralValue;
 
 public class OptionMatch extends ParameterMatch<OptionDescriptor> {
 

@@ -18,25 +18,20 @@
  */
 package org.crsh.shell.impl.command;
 
+import java.util.logging.Level;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
 
-import java.util.logging.Level;
-
 abstract class CRaSHProcess implements ShellProcess {
 
-  /** . */
   protected final CRaSHSession crash;
 
-  /** . */
   protected final String request;
 
-  /** . */
   private volatile Thread thread;
 
-  /** . */
   private volatile boolean cancelled;
 
   protected CRaSHProcess(CRaSHSession crash, String request) {
@@ -61,8 +56,7 @@ abstract class CRaSHProcess implements ShellProcess {
           if (Thread.interrupted() || cancelled) {
             throw new InterruptedException("like a goto");
           }
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
           // Preserve interrupt status
           Thread.currentThread().interrupt();
           resp = ShellResponse.cancelled();
@@ -73,21 +67,23 @@ abstract class CRaSHProcess implements ShellProcess {
         thread = null;
       }
 
-      //
       processContext.end(resp);
 
-      //
       if (resp instanceof ShellResponse.Error) {
-        ShellResponse.Error error = (ShellResponse.Error)resp;
+        ShellResponse.Error error = (ShellResponse.Error) resp;
         Throwable t = error.getThrowable();
         if (t != null) {
-          CRaSHSession.log.log(Level.SEVERE, "Error while evaluating request '" + request + "' " + error.getMessage(), t);
+          CRaSHSession.log.log(
+              Level.SEVERE,
+              "Error while evaluating request '" + request + "' " + error.getMessage(),
+              t);
         } else {
-          CRaSHSession.log.log(Level.SEVERE, "Error while evaluating request '" + request + "' " + error.getMessage());
+          CRaSHSession.log.log(
+              Level.SEVERE,
+              "Error while evaluating request '" + request + "' " + error.getMessage());
         }
       }
-    }
-    finally {
+    } finally {
       crash.setPreviousLoader(previous);
     }
   }
@@ -107,8 +103,7 @@ abstract class CRaSHProcess implements ShellProcess {
         t.interrupt();
       }
       cancelled = true;
-    }
-    finally {
+    } finally {
       crash.setPreviousLoader(previous);
     }
   }

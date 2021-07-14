@@ -18,13 +18,12 @@
  */
 package test.shell.base;
 
+import java.io.IOException;
 import junit.framework.AssertionFailedError;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
-
-import java.io.IOException;
 
 public class BaseProcess implements ShellProcess {
 
@@ -57,7 +56,8 @@ public class BaseProcess implements ShellProcess {
     return null;
   }
 
-  protected final String readLine(String msg, boolean echo) throws IOException, InterruptedException {
+  protected final String readLine(String msg, boolean echo)
+      throws IOException, InterruptedException {
     return processContext.readLine(msg, echo);
   }
 
@@ -65,14 +65,12 @@ public class BaseProcess implements ShellProcess {
     this.processContext = processContext;
     try {
       process(request, processContext);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       AssertionFailedError afe = new AssertionFailedError();
       afe.initCause(e);
       throw afe;
     }
   }
 
-  public void cancel() {
-  }
+  public void cancel() {}
 }

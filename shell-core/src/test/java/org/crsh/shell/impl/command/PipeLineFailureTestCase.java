@@ -38,7 +38,7 @@
 
 /*
  * Copyright (C) 2012 eXo Platform SAS.
- *  
+ *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation; either version 2.1 of
@@ -57,19 +57,17 @@
 
 package org.crsh.shell.impl.command;
 
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.naming.CommunicationException;
+import javax.naming.SizeLimitExceededException;
+import javax.naming.directory.AttributeInUseException;
+import javax.naming.directory.SchemaViolationException;
 import org.crsh.cli.Command;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.Pipe;
 import org.crsh.shell.AbstractShellTestCase;
 import org.crsh.shell.ErrorKind;
-
-import javax.naming.CommunicationException;
-import javax.naming.NamingException;
-import javax.naming.SizeLimitExceededException;
-import javax.naming.directory.AttributeInUseException;
-import javax.naming.directory.SchemaViolationException;
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class PipeLineFailureTestCase extends AbstractShellTestCase {
@@ -77,18 +75,23 @@ public class PipeLineFailureTestCase extends AbstractShellTestCase {
   public static class Counter extends Pipe<String, Object> {
 
     /** . */
-    final AtomicInteger openCount = new AtomicInteger(), provideCound = new AtomicInteger(),
-        flushCount = new AtomicInteger(), closeCount = new AtomicInteger();
+    final AtomicInteger openCount = new AtomicInteger(),
+        provideCound = new AtomicInteger(),
+        flushCount = new AtomicInteger(),
+        closeCount = new AtomicInteger();
 
     public void open() throws Exception {
       openCount.incrementAndGet();
     }
+
     public void provide(String element) throws Exception {
       provideCound.incrementAndGet();
     }
+
     public void flush() throws IOException {
       flushCount.incrementAndGet();
     }
+
     public void close() throws Exception {
       closeCount.incrementAndGet();
     }
@@ -142,13 +145,14 @@ public class PipeLineFailureTestCase extends AbstractShellTestCase {
     }
 
     /** . */
-    public static Counter counter = new Counter() {
-      @Override
-      public void open() throws Exception {
-        super.open();
-        throw new AttributeInUseException();
-      }
-    };
+    public static Counter counter =
+        new Counter() {
+          @Override
+          public void open() throws Exception {
+            super.open();
+            throw new AttributeInUseException();
+          }
+        };
 
     @Command
     public Pipe<String, Object> main() {
@@ -164,13 +168,14 @@ public class PipeLineFailureTestCase extends AbstractShellTestCase {
     }
 
     /** . */
-    public static Counter counter = new Counter() {
-      @Override
-      public void provide(String element) throws Exception {
-        super.provide(element);
-        throw new CommunicationException();
-      }
-    };
+    public static Counter counter =
+        new Counter() {
+          @Override
+          public void provide(String element) throws Exception {
+            super.provide(element);
+            throw new CommunicationException();
+          }
+        };
 
     @Command
     public Pipe<String, Object> main() {
@@ -186,13 +191,14 @@ public class PipeLineFailureTestCase extends AbstractShellTestCase {
     }
 
     /** . */
-    public static Counter counter = new Counter() {
-      @Override
-      public void close() throws Exception {
-        super.close();
-        throw new SizeLimitExceededException();
-      }
-    };
+    public static Counter counter =
+        new Counter() {
+          @Override
+          public void close() throws Exception {
+            super.close();
+            throw new SizeLimitExceededException();
+          }
+        };
 
     @Command
     public Pipe<String, Object> main() {
@@ -342,7 +348,8 @@ public class PipeLineFailureTestCase extends AbstractShellTestCase {
     assertEquals(1, FailOnClose.counter.closeCount.get());
     assertEquals(1, CallbackCounterCommand.counter.openCount.get());
     assertEquals(0, CallbackCounterCommand.counter.provideCound.get());
-    // assertEquals(1, CallbackCounterCommand.counter.flushCount.get()); <-- not passing at the moment
+    // assertEquals(1, CallbackCounterCommand.counter.flushCount.get()); <-- not passing at the
+    // moment
     assertEquals(1, CallbackCounterCommand.counter.closeCount.get());
   }
 

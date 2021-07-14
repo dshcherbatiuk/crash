@@ -31,9 +31,7 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.util.ClassCache;
 import org.crsh.util.TimestampedObject;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class GroovyLanguage implements Language {
 
   /** . */
@@ -48,7 +46,12 @@ public class GroovyLanguage implements Language {
   public GroovyLanguage(PluginContext context) {
     compiler = new GroovyCompiler(context);
     repl = new GroovyRepl(this);
-    scriptCache = new ClassCache<GroovyScript>(context, new GroovyClassFactory<GroovyScript>(context.getLoader(), GroovyScript.class, GroovyScript.class), ResourceKind.LIFECYCLE);
+    scriptCache =
+        new ClassCache<>(
+            context,
+            new GroovyClassFactory<>(
+                context.getLoader(), GroovyScript.class, GroovyScript.class),
+            ResourceKind.LIFECYCLE);
   }
 
   public String getName() {
@@ -83,8 +86,7 @@ public class GroovyLanguage implements Language {
         login.setBinding(new Binding(session));
         login.run();
       }
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       e.printStackTrace();
     }
   }
@@ -97,22 +99,22 @@ public class GroovyLanguage implements Language {
         logout.setBinding(new Binding(session));
         logout.run();
       }
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       e.printStackTrace();
     }
   }
 
-  public GroovyScript getLifeCycle(ShellSession session, String name) throws CommandException, NullPointerException {
+  public GroovyScript getLifeCycle(ShellSession session, String name)
+      throws CommandException, NullPointerException {
     TimestampedObject<Class<? extends GroovyScript>> ref = scriptCache.getClass(name);
     if (ref != null) {
       Class<? extends GroovyScript> scriptClass = ref.getObject();
-      GroovyScript script = (GroovyScript)InvokerHelper.createScript(scriptClass, new Binding(session));
+      GroovyScript script =
+          (GroovyScript) InvokerHelper.createScript(scriptClass, new Binding(session));
       script.setBinding(new Binding(session));
       return script;
     } else {
       return null;
     }
   }
-
 }

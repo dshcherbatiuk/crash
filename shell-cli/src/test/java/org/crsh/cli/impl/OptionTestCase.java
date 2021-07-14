@@ -19,20 +19,19 @@
 
 package org.crsh.cli.impl;
 
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.descriptor.OptionDescriptor;
-import junit.framework.TestCase;
-import org.crsh.cli.Option;
-import org.crsh.cli.impl.descriptor.IllegalParameterException;
-import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.cli.impl.lang.Instance;
-import org.crsh.cli.type.ValueType;
-import org.crsh.cli.impl.lang.CommandFactory;
-
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.List;
+import junit.framework.TestCase;
+import org.crsh.cli.Option;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.impl.descriptor.IllegalParameterException;
+import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.cli.impl.lang.CommandFactory;
+import org.crsh.cli.impl.lang.Instance;
+import org.crsh.cli.type.ValueType;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -79,7 +78,6 @@ public class OptionTestCase extends TestCase {
       List<Double> o;
     }
     assertIllegalValueType(E.class);
-
   }
 
   public void testOptionIntType() throws IntrospectionException {
@@ -257,8 +255,7 @@ public class OptionTestCase extends TestCase {
     try {
       CommandFactory.DEFAULT.create(type);
       fail();
-    }
-    catch (IllegalValueTypeException e) {
+    } catch (IllegalValueTypeException e) {
     }
   }
 
@@ -266,8 +263,7 @@ public class OptionTestCase extends TestCase {
     try {
       CommandFactory.DEFAULT.create(type);
       fail();
-    }
-    catch (IllegalParameterException e) {
+    } catch (IllegalParameterException e) {
     }
   }
 }

@@ -37,9 +37,7 @@ public class EmptyCompleter implements Completer {
     return instance;
   }
 
-  /**
-   * Returns the value returned by {@link java.util.Collections#emptyList()}.
-   */
+  /** Returns the value returned by {@link java.util.Collections#emptyList()}. */
   public Completion complete(ParameterDescriptor parameter, String prefix) {
     return Completion.create();
   }

@@ -18,8 +18,13 @@
  */
 package org.crsh.lang;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.crsh.command.ShellSafety;
 import org.crsh.lang.impl.script.ScriptCompiler;
+import org.crsh.lang.spi.CommandResolution;
 import org.crsh.lang.spi.Compiler;
 import org.crsh.lang.spi.Language;
 import org.crsh.plugin.PluginContext;
@@ -27,15 +32,8 @@ import org.crsh.plugin.ResourceKind;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandResolver;
-import org.crsh.lang.spi.CommandResolution;
 import org.crsh.util.TimestampedObject;
 import org.crsh.vfs.Resource;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A shell command resolver for languages.
@@ -44,13 +42,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LanguageCommandResolver implements CommandResolver {
 
-  /** . */
-  private final Map<String, TimestampedObject<CommandResolution>> commandCache = new ConcurrentHashMap<String, TimestampedObject<CommandResolution>>();
+  private final Map<String, TimestampedObject<CommandResolution>> commandCache =
+      new ConcurrentHashMap<>();
 
-  /** . */
-  final HashMap<String, Compiler> activeCompilers = new HashMap<String, Compiler>();
+  final HashMap<String, Compiler> activeCompilers = new HashMap<>();
 
-  /** . */
   final PluginContext context;
 
   final boolean isRestricted;
@@ -93,8 +89,7 @@ public class LanguageCommandResolver implements CommandResolver {
           if (resolution != null) {
             commands.put(name, resolution.getDescription());
           }
-        }
-        catch (CommandException e) {
+        } catch (CommandException e) {
           //
         }
       }
@@ -103,19 +98,22 @@ public class LanguageCommandResolver implements CommandResolver {
   }
 
   @Override
-  public Command<?> resolveCommand(String name, ShellSafety shellSafety) throws CommandException, NullPointerException {
+  public Command<?> resolveCommand(String name, ShellSafety shellSafety)
+      throws CommandException, NullPointerException {
     CommandResolution resolution = resolveCommand2(name, shellSafety);
     return resolution != null ? resolution.getCommand() : null;
   }
 
-  private CommandResolution resolveCommand2(String name, ShellSafety shellSafety) throws CommandException, NullPointerException {
+  private CommandResolution resolveCommand2(String name, ShellSafety shellSafety)
+      throws CommandException, NullPointerException {
     if (isRestricted && !isCommandAllowed(name, shellSafety)) {
       return null;
     }
 
     for (Compiler manager : activeCompilers.values()) {
       for (String ext : manager.getExtensions()) {
-        Iterable<Resource> resources = context.loadResources(name + "." + ext, ResourceKind.COMMAND);
+        Iterable<Resource> resources =
+            context.loadResources(name + "." + ext, ResourceKind.COMMAND);
         for (Resource resource : resources) {
           CommandResolution resolution = resolveCommand(manager, name, resource);
           if (resolution != null) {
@@ -135,7 +133,8 @@ public class LanguageCommandResolver implements CommandResolver {
     return false;
   }
 
-  private CommandResolution resolveCommand(org.crsh.lang.spi.Compiler manager, String name, Resource script) throws CommandException {
+  private CommandResolution resolveCommand(
+      org.crsh.lang.spi.Compiler manager, String name, Resource script) throws CommandException {
     TimestampedObject<CommandResolution> ref = commandCache.get(name);
     if (ref != null) {
       if (script.getTimestamp() != ref.getTimestamp()) {
@@ -146,12 +145,12 @@ public class LanguageCommandResolver implements CommandResolver {
     if (ref == null) {
       command = manager.compileCommand(name, script.getContent());
       if (command != null) {
-        commandCache.put(name, new TimestampedObject<CommandResolution>(script.getTimestamp(), command));
+        commandCache.put(
+            name, new TimestampedObject<>(script.getTimestamp(), command));
       }
     } else {
       command = ref.getObject();
     }
     return command;
   }
-
 }

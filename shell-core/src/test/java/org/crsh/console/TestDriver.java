@@ -18,10 +18,6 @@
  */
 package org.crsh.console;
 
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
-import org.crsh.text.Style;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,10 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
+import org.crsh.text.Style;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class TestDriver implements ConsoleDriver {
 
   /** . */
@@ -94,7 +91,7 @@ public class TestDriver implements ConsoleDriver {
   }
 
   public TestDriver assertChars(String s) {
-    for (int i = 0;i < s.length();i++) {
+    for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
       assertChar(c);
     }
@@ -158,22 +155,20 @@ public class TestDriver implements ConsoleDriver {
     try {
       StringBuilder sb = new StringBuilder();
       sb.append("[");
-      for (int i = 0;i < expected.length();i++) {
+      for (int i = 0; i < expected.length(); i++) {
         char c = expected.charAt(i);
         sb.append(c);
       }
       sb.append("]");
       String s = outter.take();
       Assert.assertEquals(sb.toString(), s);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       AssertionFailedError afe = new AssertionFailedError();
       afe.initCause(e);
       throw afe;
     }
     return this;
   }
-
 
   public TestDriver assertEmpty() {
     Assert.assertEquals(Collections.<String>emptyList(), new ArrayList<String>(outter));
@@ -194,7 +189,7 @@ public class TestDriver implements ConsoleDriver {
 
   @Override
   public void write(char c) throws IOException {
-    outter.add("[" + (char)c + "]");
+    outter.add("[" + (char) c + "]");
   }
 
   public void flush() throws IOException {

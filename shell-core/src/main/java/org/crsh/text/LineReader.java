@@ -19,9 +19,7 @@
 
 package org.crsh.text;
 
-/**
- * The line reader.
- */
+/** The line reader. */
 public interface LineReader {
 
   /**
@@ -38,5 +36,4 @@ public interface LineReader {
    * @throws IllegalStateException when there is no line to render
    */
   void renderLine(RenderAppendable to) throws IllegalStateException;
-
 }

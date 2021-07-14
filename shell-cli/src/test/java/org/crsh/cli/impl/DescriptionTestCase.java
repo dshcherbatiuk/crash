@@ -19,21 +19,20 @@
 
 package org.crsh.cli.impl;
 
-import org.crsh.cli.Named;
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.descriptor.Description;
-import org.crsh.cli.descriptor.OptionDescriptor;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import junit.framework.TestCase;
 import org.crsh.cli.Command;
 import org.crsh.cli.Man;
+import org.crsh.cli.Named;
 import org.crsh.cli.Option;
 import org.crsh.cli.Usage;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.Description;
+import org.crsh.cli.descriptor.OptionDescriptor;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -43,7 +42,7 @@ public class DescriptionTestCase extends TestCase {
 
   public void testNoDescription() throws Exception {
 
-    class A { }
+    class A {}
 
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals("", c.getUsage());
@@ -54,7 +53,7 @@ public class DescriptionTestCase extends TestCase {
 
     @Usage("class_usage")
     @Man("class_man")
-    class A { }
+    class A {}
 
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals("class_usage", c.getUsage());
@@ -67,7 +66,8 @@ public class DescriptionTestCase extends TestCase {
     class A {
       @Usage("method_usage")
       @Man("method_man")
-      @Command void m() {}
+      @Command
+      void m() {}
     }
 
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
@@ -78,13 +78,21 @@ public class DescriptionTestCase extends TestCase {
   }
 
   public void testClassNameOverride() throws Exception {
-    @Named("foo") class A { @Command public void main() {} }
+    @Named("foo")
+    class A {
+      @Command
+      public void main() {}
+    }
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals("foo", c.getName());
   }
 
   public void testMethodNameOverride() throws Exception {
-    class A { @Named("foo") @Command public void bar() {} }
+    class A {
+      @Named("foo")
+      @Command
+      public void bar() {}
+    }
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals("A", c.getName());
     assertNotNull(c.getSubordinate("foo"));
@@ -92,16 +100,31 @@ public class DescriptionTestCase extends TestCase {
   }
 
   public void testInvalidName() {
-    @Named("") class A { @Command public void main() {} }
-    @Named(" ") class B { @Command public void main() {} }
-    @Named("0a") class C { @Command public void main() {} }
-    @Named("a)") class D { @Command public void main() {} }
-    for (Class<?> clazz : new Class[]{A.class,B.class,C.class,D.class}) {
+    @Named("")
+    class A {
+      @Command
+      public void main() {}
+    }
+    @Named(" ")
+    class B {
+      @Command
+      public void main() {}
+    }
+    @Named("0a")
+    class C {
+      @Command
+      public void main() {}
+    }
+    @Named("a)")
+    class D {
+      @Command
+      public void main() {}
+    }
+    for (Class<?> clazz : new Class[] {A.class, B.class, C.class, D.class}) {
       try {
         CommandFactory.DEFAULT.create(clazz);
         fail();
-      }
-      catch (IntrospectionException ignore) {
+      } catch (IntrospectionException ignore) {
       }
     }
   }
@@ -109,10 +132,8 @@ public class DescriptionTestCase extends TestCase {
   public void testParameterDescription() throws Exception {
 
     class A {
-      @Command void m(
-        @Usage("option_usage")
-        @Man("option_man")
-        @Option(names = "a") String s) {}
+      @Command
+      void m(@Usage("option_usage") @Man("option_man") @Option(names = "a") String s) {}
     }
 
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
@@ -127,11 +148,11 @@ public class DescriptionTestCase extends TestCase {
   @Usage("foo_usage")
   @Man("foo_man")
   @Retention(RetentionPolicy.RUNTIME)
-  public static @interface Foo { }
+  public static @interface Foo {}
 
   @Option(names = "a")
   @Retention(RetentionPolicy.RUNTIME)
-  public static @interface Bar { }
+  public static @interface Bar {}
 
   public void testParameterMetaDescription1() throws Exception {
 
@@ -151,7 +172,8 @@ public class DescriptionTestCase extends TestCase {
   public void testParameterMetaDescription2() throws Exception {
 
     class A {
-      @Command void m(@Bar String s) {}
+      @Command
+      void m(@Bar String s) {}
     }
 
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
@@ -164,9 +186,8 @@ public class DescriptionTestCase extends TestCase {
   public void testParameterMetaDescription3() throws Exception {
 
     class A {
-      @Command void m(
-        @Usage("option_usage")
-        @Foo String s) {}
+      @Command
+      void m(@Usage("option_usage") @Foo String s) {}
     }
 
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);

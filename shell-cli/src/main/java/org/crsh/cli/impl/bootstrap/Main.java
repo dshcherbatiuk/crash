@@ -19,17 +19,16 @@
 
 package org.crsh.cli.impl.bootstrap;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.descriptor.HelpDescriptor;
-import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.InvocationMatcher;
+import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.ObjectCommandDescriptor;
 import org.crsh.cli.impl.lang.Util;
-
-import java.util.Iterator;
-import java.util.ServiceLoader;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class Main {
@@ -41,8 +40,8 @@ public class Main {
 
       //
       StringBuilder line = new StringBuilder();
-      for (int i = 0;i < args.length;i++) {
-        if (i  > 0) {
+      for (int i = 0; i < args.length; i++) {
+        if (i > 0) {
           line.append(' ');
         }
         Delimiter.EMPTY.escape(args[i], line);

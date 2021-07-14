@@ -19,8 +19,8 @@
 
 package test.plugin;
 
+import java.util.HashMap;
 import org.crsh.command.BaseCommand;
-import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.plugin.*;
 import org.crsh.shell.Shell;
@@ -28,8 +28,6 @@ import org.crsh.shell.impl.command.CRaSH;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.ram.RAMDriver;
-
-import java.util.HashMap;
 
 public class TestPluginLifeCycle extends PluginLifeCycle {
 
@@ -60,12 +58,13 @@ public class TestPluginLifeCycle extends PluginLifeCycle {
   private TestPluginLifeCycle(PluginDiscovery discovery, ClassLoader classLoader) throws Exception {
     this.attributes = new HashMap<String, Object>();
     this.commands = new RAMDriver();
-    this.context = new PluginContext(
-      discovery,
-      attributes,
-      new FS().mount(classLoader,Path.get("/crash/commands/")).mount(commands),
-      new FS().mount(classLoader,Path.get("/crash/")),
-      classLoader);
+    this.context =
+        new PluginContext(
+            discovery,
+            attributes,
+            new FS().mount(classLoader, Path.get("/crash/commands/")).mount(commands),
+            new FS().mount(classLoader, Path.get("/crash/")),
+            classLoader);
     this.crash = new CRaSH(context);
   }
 
@@ -125,5 +124,3 @@ public class TestPluginLifeCycle extends PluginLifeCycle {
     return crash.createSession(null, null, ShellSafetyFactory.getCurrentThreadShellSafety());
   }
 }
-
-

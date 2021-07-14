@@ -23,11 +23,9 @@ import java.io.Serializable;
 
 public abstract class ClientMessage implements Serializable {
 
-  public static class GetWelcome extends ClientMessage {
-  }
+  public static class GetWelcome extends ClientMessage {}
 
-  public static class GetPrompt extends ClientMessage {
-  }
+  public static class GetPrompt extends ClientMessage {}
 
   public static class GetCompletion extends ClientMessage {
 
@@ -71,9 +69,7 @@ public abstract class ClientMessage implements Serializable {
     }
   }
 
-  public static class Cancel extends ClientMessage {
-  }
+  public static class Cancel extends ClientMessage {}
 
-  public static class Close extends ClientMessage {
-  }
+  public static class Close extends ClientMessage {}
 }

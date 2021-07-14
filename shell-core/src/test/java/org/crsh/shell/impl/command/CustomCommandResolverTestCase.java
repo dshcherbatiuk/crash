@@ -18,6 +18,10 @@
  */
 package org.crsh.shell.impl.command;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.ShellSafety;
@@ -25,18 +29,11 @@ import org.crsh.lang.impl.java.ClassShellCommand;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.shell.AbstractShellTestCase;
 import org.crsh.shell.ErrorKind;
+import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandResolver;
-import org.crsh.shell.impl.command.spi.Command;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class CustomCommandResolverTestCase extends AbstractShellTestCase {
 
   public static class mycommand extends BaseCommand {
@@ -46,7 +43,8 @@ public class CustomCommandResolverTestCase extends AbstractShellTestCase {
     }
   }
 
-  static class CustomCommandResolver extends CRaSHPlugin<CommandResolver> implements CommandResolver {
+  static class CustomCommandResolver extends CRaSHPlugin<CommandResolver>
+      implements CommandResolver {
 
     @Override
     public CommandResolver getImplementation() {
@@ -59,12 +57,12 @@ public class CustomCommandResolverTestCase extends AbstractShellTestCase {
     }
 
     @Override
-    public Command<?> resolveCommand(String name, ShellSafety shellSafety) throws CommandException, NullPointerException {
+    public Command<?> resolveCommand(String name, ShellSafety shellSafety)
+        throws CommandException, NullPointerException {
       if ("mycommand".equals(name)) {
         try {
           return new ClassShellCommand<mycommand>(mycommand.class, shellSafety);
-        }
-        catch (IntrospectionException e) {
+        } catch (IntrospectionException e) {
           throw new CommandException(ErrorKind.EVALUATION, "Invalid cli annotations", e);
         }
       }
@@ -85,6 +83,7 @@ public class CustomCommandResolverTestCase extends AbstractShellTestCase {
     for (Map.Entry<String, String> entry : session.getCommands()) {
       commands.put(entry.getKey(), entry.getValue());
     }
-    assertTrue("Was expecting " + commands + " to contain mycommand", commands.containsKey("mycommand"));
+    assertTrue(
+        "Was expecting " + commands + " to contain mycommand", commands.containsKey("mycommand"));
   }
 }

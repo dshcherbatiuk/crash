@@ -18,15 +18,12 @@
  */
 package org.crsh.console.operations;
 
+import java.io.IOException;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-import java.io.IOException;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViEndWordTestCase extends AbstractConsoleTestCase {
 
   public void testEndWord1() throws IOException {
@@ -52,5 +49,4 @@ public class ViEndWordTestCase extends AbstractConsoleTestCase {
     assertEquals("    putri", getCurrentLine());
     assertEquals(8, getCurrentCursor());
   }
-
 }

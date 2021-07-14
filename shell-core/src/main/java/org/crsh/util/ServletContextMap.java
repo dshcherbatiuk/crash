@@ -19,13 +19,12 @@
 
 package org.crsh.util;
 
-import javax.servlet.ServletContext;
 import java.util.Enumeration;
 import java.util.Iterator;
+import javax.servlet.ServletContext;
 
 public class ServletContextMap extends SimpleMap<String, Object> {
 
-  /** . */
   private final ServletContext context;
 
   public ServletContextMap(ServletContext context) {
@@ -35,13 +34,16 @@ public class ServletContextMap extends SimpleMap<String, Object> {
   @Override
   protected Iterator<String> keys() {
     return new Iterator<String>() {
-      Enumeration<String> e = context.getAttributeNames();
+      final Enumeration<String> e = context.getAttributeNames();
+
       public boolean hasNext() {
         return e.hasMoreElements();
       }
+
       public String next() {
         return e.nextElement();
       }
+
       public void remove() {
         throw new UnsupportedOperationException();
       }
@@ -51,7 +53,7 @@ public class ServletContextMap extends SimpleMap<String, Object> {
   @Override
   public Object get(Object key) {
     if (key instanceof String) {
-      return context.getAttribute((String)key);
+      return context.getAttribute((String) key);
     } else {
       return null;
     }

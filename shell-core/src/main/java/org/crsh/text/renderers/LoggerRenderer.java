@@ -19,17 +19,15 @@
 
 package org.crsh.text.renderers;
 
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
-import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
-
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LoggerRenderer extends Renderer<Logger> {
 
@@ -43,9 +41,11 @@ public class LoggerRenderer extends Renderer<Logger> {
     TableElement table = new TableElement();
 
     // Header
-    table.add(new RowElement().style(Decoration.bold.fg(Color.black).bg(Color.white)).add("NAME", "LEVEL"));
+    table.add(
+        new RowElement()
+            .style(Decoration.bold.fg(Color.black).bg(Color.white))
+            .add("NAME", "LEVEL"));
 
-    //
     while (stream.hasNext()) {
       Logger logger = stream.next();
 
@@ -59,7 +59,7 @@ public class LoggerRenderer extends Renderer<Logger> {
         level = "INFO";
       } else if (logger.isLoggable(Level.WARNING)) {
         level = "WARN";
-      }  else if (logger.isLoggable(Level.SEVERE)) {
+      } else if (logger.isLoggable(Level.SEVERE)) {
         level = "ERROR";
       } else {
         level = "UNKNOWN";

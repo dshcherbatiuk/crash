@@ -19,18 +19,20 @@
 
 package org.crsh.command;
 
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-
 import java.io.IOException;
 import java.util.logging.Logger;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
 
 public abstract class BaseCommand extends AbstractCommand {
 
   /** Need to find a way to make not that public. */
   public final Logger log = Logger.getLogger(getClass().getName());
 
-  /** The unmatched text, only valid during an invocation - Need to find a way to make not that public. */
+  /**
+   * The unmatched text, only valid during an invocation - Need to find a way to make not that
+   * public.
+   */
   public String unmatched;
 
   protected BaseCommand() {
@@ -41,9 +43,10 @@ public abstract class BaseCommand extends AbstractCommand {
     return readLine(msg, true);
   }
 
-  protected final String readLine(String msg, boolean echo) throws IOException, InterruptedException {
+  protected final String readLine(String msg, boolean echo)
+      throws IOException, InterruptedException {
     if (context instanceof InvocationContext) {
-      return ((InvocationContext)context).readLine(msg, echo);
+      return ((InvocationContext) context).readLine(msg, echo);
     } else {
       throw new IllegalStateException("Cannot invoke read line without an invocation context");
     }
@@ -52,7 +55,6 @@ public abstract class BaseCommand extends AbstractCommand {
   public final String getUnmatched() {
     return unmatched;
   }
-
 
   public final void execute(String s) throws IOException, CommandException {
     InvocationContext<?> context = peekContext();

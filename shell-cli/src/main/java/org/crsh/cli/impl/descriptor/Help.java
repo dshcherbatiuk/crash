@@ -97,8 +97,7 @@ public class Help<T> {
       StringBuilder sb = new StringBuilder();
       descriptor.printUsage(sb);
       return sb.toString();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new AssertionError(e);
     }
   }

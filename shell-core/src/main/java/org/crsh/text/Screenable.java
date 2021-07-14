@@ -30,5 +30,4 @@ public interface Screenable extends Appendable {
   Screenable append(Style style) throws IOException;
 
   Screenable cls() throws IOException;
-
 }

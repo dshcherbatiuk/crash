@@ -26,5 +26,4 @@ public interface PluginDiscovery {
    * @return the plugins
    */
   Iterable<CRaSHPlugin<?>> getPlugins();
-
 }

@@ -19,21 +19,19 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.LineRenderer;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.crsh.text.LineRenderer;
 
 public class TreeElement extends Element {
 
   /** An optional value element. */
   Element value;
 
-  /** . */
   final List<Element> children = new ArrayList<Element>();
 
   public TreeElement() {
-    this((Element)null);
+    this((Element) null);
   }
 
   public TreeElement(Element value) {

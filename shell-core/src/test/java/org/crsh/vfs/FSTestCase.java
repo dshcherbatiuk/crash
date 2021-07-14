@@ -19,6 +19,9 @@
 
 package org.crsh.vfs;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Iterator;
 import org.crsh.AbstractTestCase;
 import org.crsh.util.Utils;
 import org.crsh.vfs.spi.ram.RAMDriver;
@@ -29,10 +32,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Iterator;
 
 public class FSTestCase extends AbstractTestCase {
 
@@ -147,9 +146,8 @@ public class FSTestCase extends AbstractTestCase {
   public void testBar() throws Exception {
 
     URLDriver driver = new URLDriver();
-    driver.merge(new URL("jar:" + warFile.toURI().toURL() + "!/WEB-INF/lib/foo.jar!/META-INF/crsh/"));
-
-
+    driver.merge(
+        new URL("jar:" + warFile.toURI().toURL() + "!/WEB-INF/lib/foo.jar!/META-INF/crsh/"));
   }
 
   public void testDuplicateResource() throws Exception {
@@ -161,7 +159,10 @@ public class FSTestCase extends AbstractTestCase {
     URLDriver driver = new URLDriver();
     driver.merge(file.toURI().toURL());
     driver.merge(file.toURI().toURL());
-    Node node = driver.child(driver.child(driver.child(driver.child(driver.root(), "org"), "crsh"), "vfs"), "FSTestCase.class");
+    Node node =
+        driver.child(
+            driver.child(driver.child(driver.child(driver.root(), "org"), "crsh"), "vfs"),
+            "FSTestCase.class");
     Iterator<InputStream> i = driver.open(node);
     assertTrue(i.hasNext());
     i.next();

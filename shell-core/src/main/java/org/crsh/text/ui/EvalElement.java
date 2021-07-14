@@ -20,29 +20,29 @@
 package org.crsh.text.ui;
 
 import groovy.lang.Closure;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Map;
+import org.crsh.command.InvocationContext;
 import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.groovy.GroovyCommand;
-import org.crsh.shell.Shell;
+import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
 import org.crsh.shell.impl.command.AbstractInvocationContext;
 import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.text.Screenable;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
-import org.crsh.command.InvocationContext;
 import org.crsh.text.CLS;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.RenderPrintWriter;
 import org.crsh.text.Renderer;
+import org.crsh.text.Screenable;
 import org.crsh.text.Style;
-
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Map;
 
 public class EvalElement extends Element {
 
-  /** The closure to evaluate. */
+  /**
+   * The closure to evaluate.
+   */
   Closure closure;
 
   public LineRenderer renderer() {
@@ -55,158 +55,153 @@ public class EvalElement extends Element {
     while (true) {
       if (owner instanceof GroovyCommand) {
         cmd = owner;
-        ctx = ((GroovyCommand)cmd).peekContext();
+        ctx = ((GroovyCommand) cmd).peekContext();
         break;
       } else if (owner instanceof GroovyScriptCommand) {
         cmd = owner;
-        ctx = ((GroovyScriptCommand)cmd).peekContext();
+        ctx = ((GroovyScriptCommand) cmd).peekContext();
         break;
       } else if (owner instanceof Closure) {
-        owner = ((Closure)owner).getOwner();
+        owner = ((Closure) owner).getOwner();
       } else {
         throw new UnsupportedOperationException("Cannot resolver owner " + owner + " to command");
       }
     }
 
-    //
-    final LinkedList<LineRenderer> renderers = new LinkedList<LineRenderer>();
+    final LinkedList<LineRenderer> renderers = new LinkedList<>();
 
-    //
-    final InvocationContext nested = new AbstractInvocationContext() {
+    final InvocationContext nested =
+        new AbstractInvocationContext() {
 
-      /** . */
-      private LinkedList<Object> buffer = new LinkedList<Object>();
+          private LinkedList<Object> buffer = new LinkedList<>();
 
-      /** . */
-      private Renderer renderable;
+          private Renderer renderable;
 
-      @Override
-      public ShellSafety getShellSafety() {
-        return ShellSafetyFactory.getCurrentThreadShellSafety();
-      }
-
-      public CommandInvoker<?, ?> resolve(String s) throws CommandException {
-        return ctx.resolve(s);
-      }
-
-      public boolean takeAlternateBuffer() {
-        return false;
-      }
-
-      public boolean releaseAlternateBuffer() {
-        return false;
-      }
-
-      public RenderPrintWriter getWriter() {
-        return ctx.getWriter();
-      }
-
-      public Map<String, Object> getSession() {
-        return ctx.getSession();
-      }
-
-      public Map<String, Object> getAttributes() {
-        return ctx.getAttributes();
-      }
-
-      public int getWidth() {
-        return ctx.getWidth();
-      }
-
-      public int getHeight() {
-        return ctx.getHeight();
-      }
-
-      public String getProperty(String propertyName) {
-        return ctx.getProperty(propertyName);
-      }
-
-      public String readLine(String msg, boolean echo) {
-        return null;
-      }
-
-      public Class getConsumedType() {
-        return Object.class;
-      }
-
-      public Screenable append(CharSequence s) throws IOException {
-        provide(s);
-        return this;
-      }
-
-      @Override
-      public Appendable append(char c) throws IOException {
-        return append(Character.toString(c));
-      }
-
-      @Override
-      public Appendable append(CharSequence csq, int start, int end) throws IOException {
-        return append(csq.subSequence(start, end));
-      }
-
-      public Screenable append(Style style) throws IOException {
-        provide(style);
-        return this;
-      }
-
-      public Screenable cls() throws IOException {
-        provide(CLS.INSTANCE);
-        return this;
-      }
-
-      public void provide(Object element) throws IOException {
-        Renderer current = Renderer.getRenderable(element.getClass());
-        if (current == null) {
-          current = Renderer.ANY;
-        }
-        if (current != null) {
-          if (renderable != null && !current.equals(renderable)) {
-            flush();
+          @Override
+          public ShellSafety getShellSafety() {
+            return ShellSafetyFactory.getCurrentThreadShellSafety();
           }
-          buffer.addLast(element);
-          renderable = current;
-        }
-      }
 
-      public void flush() throws IOException {
-        // We don't really flush, we just compute renderables from the buffer
-        if (buffer.size() > 0) {
-          LineRenderer i = renderable.renderer(buffer.iterator());
-          buffer.clear();
-          renderers.add(i);
-        }
-      }
+          public CommandInvoker<?, ?> resolve(String s) throws CommandException {
+            return ctx.resolve(s);
+          }
 
-      public void close() throws IOException {
-        // Nothing to do, except maybe release resources (and also prevent to do any other operation)
-      }
-    };
+          public boolean takeAlternateBuffer() {
+            return false;
+          }
+
+          public boolean releaseAlternateBuffer() {
+            return false;
+          }
+
+          public RenderPrintWriter getWriter() {
+            return ctx.getWriter();
+          }
+
+          public Map<String, Object> getSession() {
+            return ctx.getSession();
+          }
+
+          public Map<String, Object> getAttributes() {
+            return ctx.getAttributes();
+          }
+
+          public int getWidth() {
+            return ctx.getWidth();
+          }
+
+          public int getHeight() {
+            return ctx.getHeight();
+          }
+
+          public String getProperty(String propertyName) {
+            return ctx.getProperty(propertyName);
+          }
+
+          public String readLine(String msg, boolean echo) {
+            return null;
+          }
+
+          public Class getConsumedType() {
+            return Object.class;
+          }
+
+          public Screenable append(CharSequence s) {
+            provide(s);
+            return this;
+          }
+
+          @Override
+          public Appendable append(char c) {
+            return append(Character.toString(c));
+          }
+
+          @Override
+          public Appendable append(CharSequence csq, int start, int end) {
+            return append(csq.subSequence(start, end));
+          }
+
+          public Screenable append(Style style) {
+            provide(style);
+            return this;
+          }
+
+          public Screenable cls() {
+            provide(CLS.INSTANCE);
+            return this;
+          }
+
+          public void provide(Object element) {
+            Renderer current = Renderer.getRenderable(element.getClass());
+            if (current == null) {
+              current = Renderer.ANY;
+            }
+            if (current != null) {
+              if (renderable != null && !current.equals(renderable)) {
+                flush();
+              }
+              buffer.addLast(element);
+              renderable = current;
+            }
+          }
+
+          public void flush() {
+            // We don't really flush, we just compute renderables from the buffer
+            if (buffer.size() > 0) {
+              LineRenderer i = renderable.renderer(buffer.iterator());
+              buffer.clear();
+              renderers.add(i);
+            }
+          }
+
+          public void close() throws IOException {
+            // Nothing to do, except maybe release resources (and also prevent to do any other
+            // operation)
+          }
+        };
 
     if (cmd instanceof GroovyCommand) {
-      ((GroovyCommand)cmd).pushContext(nested);
+      ((GroovyCommand) cmd).pushContext(nested);
     } else {
-      ((GroovyScriptCommand)cmd).pushContext(nested);
+      ((GroovyScriptCommand) cmd).pushContext(nested);
     }
     try {
       closure.call();
-    }
-    finally {
+    } finally {
       if (cmd instanceof GroovyCommand) {
-        ((GroovyCommand)cmd).popContext();
+        ((GroovyCommand) cmd).popContext();
       } else {
-        ((GroovyScriptCommand)cmd).popContext();
+        ((GroovyScriptCommand) cmd).popContext();
       }
     }
 
     // Be sure to flush
     try {
       nested.flush();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 
-    //
     return LineRenderer.vertical(renderers);
   }
 }

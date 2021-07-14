@@ -19,17 +19,16 @@
 
 package org.crsh.cli.impl.matcher;
 
+import java.util.Arrays;
+import java.util.List;
 import junit.framework.TestCase;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Option;
 import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.invocation.InvocationMatcher;
+import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.Util;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -37,11 +36,11 @@ import java.util.List;
  */
 public class EscapeTestCase extends TestCase {
 
-
   public void testOption() throws Exception {
     class A implements Runnable {
       @Option(names = "o")
       String s;
+
       public void run() {}
     }
 
@@ -65,11 +64,10 @@ public class EscapeTestCase extends TestCase {
     assertEquals(" a b", a.s);
   }
 
-
   public void testArgumentList() throws Exception {
     class A implements Runnable {
-      @Argument
-      List<String> s;
+      @Argument List<String> s;
+
       public void run() {}
     }
 

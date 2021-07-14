@@ -19,14 +19,12 @@
 
 package org.crsh.command.base.entities;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.io.Serializable;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 @Entity
 public class Bar implements Serializable {
 
@@ -42,7 +40,5 @@ public class Bar implements Serializable {
     this.id = id;
   }
 
-  public Bar() {
-  }
-  
+  public Bar() {}
 }

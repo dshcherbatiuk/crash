@@ -19,24 +19,21 @@
 
 package org.crsh.cli;
 
-import org.crsh.cli.completers.EmptyCompleter;
-import org.crsh.cli.spi.Completer;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.crsh.cli.completers.EmptyCompleter;
+import org.crsh.cli.spi.Completer;
 
-/**
- * An option command parameter.
- */
+/** An option command parameter. */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Option {
 
   /**
-   * The option names, when an option name has a single letter it will be used as a short switch, when it has
-   * two letters or more it is considered as a long switch.
+   * The option names, when an option name has a single letter it will be used as a short switch,
+   * when it has two letters or more it is considered as a long switch.
    *
    * @return the option names
    */
@@ -55,5 +52,4 @@ public @interface Option {
    * @return the completer type
    */
   Class<? extends Completer> completer() default EmptyCompleter.class;
-
 }

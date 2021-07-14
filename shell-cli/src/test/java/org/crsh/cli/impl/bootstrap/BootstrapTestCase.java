@@ -20,17 +20,17 @@
 package org.crsh.cli.impl.bootstrap;
 
 import junit.framework.TestCase;
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.descriptor.Help;
-import org.crsh.cli.impl.descriptor.HelpDescriptor;
-import org.crsh.cli.descriptor.OptionDescriptor;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
-import org.crsh.cli.impl.invocation.ParameterMatch;
-import org.crsh.cli.impl.lang.CommandFactory;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.impl.descriptor.Help;
+import org.crsh.cli.impl.descriptor.HelpDescriptor;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.InvocationMatcher;
+import org.crsh.cli.impl.invocation.ParameterMatch;
+import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.Util;
 
@@ -38,7 +38,9 @@ import org.crsh.cli.impl.lang.Util;
 public class BootstrapTestCase extends TestCase {
 
   public class A {
-    @Option(names = {"f", "foo"}) String foo;
+    @Option(names = {"f", "foo"})
+    String foo;
+
     @Command
     public String bar() {
       return "invoked:" + foo;
@@ -61,7 +63,7 @@ public class BootstrapTestCase extends TestCase {
     ParameterMatch<OptionDescriptor> helpMatch = match.getParameter(optionDesc);
     assertNotNull(helpMatch);
     CommandInvoker<Instance<A>, ?> invoker = match.getInvoker();
-    Help help = (Help)invoker.invoke(Util.wrap(new A()));
+    Help help = (Help) invoker.invoke(Util.wrap(new A()));
     assertNotNull(help);
     assertSame(desc, help.getDescriptor().getDelegate());
 
@@ -95,7 +97,7 @@ public class BootstrapTestCase extends TestCase {
     ParameterMatch<OptionDescriptor> helpMatch = match.getParameter(optionDesc);
     assertNotNull(helpMatch);
     CommandInvoker<Instance<b>, ?> invoker = match.getInvoker();
-    Help help = (Help)invoker.invoke(Util.wrap(new b()));
+    Help help = (Help) invoker.invoke(Util.wrap(new b()));
     assertNotNull(help);
     CommandDescriptor mainDescriptor = help.getDescriptor();
     assertEquals("b", mainDescriptor.getName());

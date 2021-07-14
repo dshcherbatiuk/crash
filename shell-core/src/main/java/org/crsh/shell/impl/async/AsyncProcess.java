@@ -19,35 +19,27 @@
 
 package org.crsh.shell.impl.async;
 
+import java.io.IOException;
+import java.util.concurrent.Callable;
 import org.crsh.keyboard.KeyHandler;
-import org.crsh.text.Screenable;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import org.crsh.text.Screenable;
 import org.crsh.text.Style;
-
-import java.io.IOException;
-import java.util.concurrent.Callable;
 
 public class AsyncProcess implements ShellProcess {
 
-
-  /** . */
   private final String request;
 
-  /** . */
   private ShellProcessContext caller;
 
-  /** . */
   private ShellProcess callee;
 
-  /** . */
-  private AsyncShell shell;
+  private final AsyncShell shell;
 
-  /** . */
   private Status status;
 
-  /** . */
   private final Object lock;
 
   AsyncProcess(AsyncShell shell, String request) {
@@ -62,90 +54,90 @@ public class AsyncProcess implements ShellProcess {
     return status;
   }
 
-  /** . */
-  private final ShellProcessContext context = new ShellProcessContext() {
-    public int getWidth() {
-      return caller.getWidth();
-    }
-
-    public int getHeight() {
-      return caller.getHeight();
-    }
-
-    public String getProperty(String name) {
-      return caller.getProperty(name);
-    }
-
-    public boolean takeAlternateBuffer() throws IOException {
-      return caller.takeAlternateBuffer();
-    }
-
-    public boolean releaseAlternateBuffer() throws IOException {
-      return caller.releaseAlternateBuffer();
-    }
-
-    public String readLine(String msg, boolean echo) throws IOException, InterruptedException {
-      return caller.readLine(msg, echo);
-    }
-
-    public Screenable append(CharSequence s) throws IOException {
-      caller.append(s);
-      return this;
-    }
-
-    @Override
-    public Screenable append(char c) throws IOException {
-      caller.append(c);
-      return this;
-    }
-
-    @Override
-    public Screenable append(CharSequence csq, int start, int end) throws IOException {
-      caller.append(csq, start, end);
-      return this;
-    }
-
-    public Screenable append(Style style) throws IOException {
-      caller.append(style);
-      return this;
-    }
-
-    public Screenable cls() throws IOException {
-      caller.cls();
-      return this;
-    }
-
-    public void flush() throws IOException {
-      caller.flush();
-    }
-
-    public void end(ShellResponse response) {
-      // Always leave the status in terminated status if the method succeeds
-      // Cancelled -> Terminated
-      // Evaluating -> Terminated
-      // Terminated -> Terminated
-      synchronized (lock) {
-        switch (status) {
-          case CONSTRUCTED:
-          case QUEUED:
-            throw new AssertionError("Should not happen");
-          case CANCELED:
-            // We substitute the response
-            response = ShellResponse.cancelled();
-            status = Status.TERMINATED;
-            break;
-          case EVALUATING:
-            status = Status.TERMINATED;
-            break;
-          case TERMINATED:
-            throw new IllegalStateException("Cannot end a process already terminated");
+  private final ShellProcessContext context =
+      new ShellProcessContext() {
+        public int getWidth() {
+          return caller.getWidth();
         }
-      }
 
-      //
-      caller.end(response);
-    }
-  };
+        public int getHeight() {
+          return caller.getHeight();
+        }
+
+        public String getProperty(String name) {
+          return caller.getProperty(name);
+        }
+
+        public boolean takeAlternateBuffer() throws IOException {
+          return caller.takeAlternateBuffer();
+        }
+
+        public boolean releaseAlternateBuffer() throws IOException {
+          return caller.releaseAlternateBuffer();
+        }
+
+        public String readLine(String msg, boolean echo) throws IOException, InterruptedException {
+          return caller.readLine(msg, echo);
+        }
+
+        public Screenable append(CharSequence s) throws IOException {
+          caller.append(s);
+          return this;
+        }
+
+        @Override
+        public Screenable append(char c) throws IOException {
+          caller.append(c);
+          return this;
+        }
+
+        @Override
+        public Screenable append(CharSequence csq, int start, int end) throws IOException {
+          caller.append(csq, start, end);
+          return this;
+        }
+
+        public Screenable append(Style style) throws IOException {
+          caller.append(style);
+          return this;
+        }
+
+        public Screenable cls() throws IOException {
+          caller.cls();
+          return this;
+        }
+
+        public void flush() throws IOException {
+          caller.flush();
+        }
+
+        public void end(ShellResponse response) {
+          // Always leave the status in terminated status if the method succeeds
+          // Cancelled -> Terminated
+          // Evaluating -> Terminated
+          // Terminated -> Terminated
+          synchronized (lock) {
+            switch (status) {
+              case CONSTRUCTED:
+              case QUEUED:
+                throw new AssertionError("Should not happen");
+              case CANCELED:
+                // We substitute the response
+                response = ShellResponse.cancelled();
+                status = Status.TERMINATED;
+                break;
+              case EVALUATING:
+                status = Status.TERMINATED;
+                break;
+              case TERMINATED:
+                throw new IllegalStateException("Cannot end a process already terminated");
+            }
+          }
+
+          //
+          caller.end(response);
+        }
+      };
 
   @Override
   public KeyHandler getKeyHandler() {
@@ -174,65 +166,61 @@ public class AsyncProcess implements ShellProcess {
     }
 
     // Create the task
-    Callable<AsyncProcess> task = new Callable<AsyncProcess>() {
-      public AsyncProcess call() throws Exception {
-        try {
-          // Cancelled -> Cancelled
-          // Queued -> Evaluating
-          ShellResponse response;
-          synchronized (lock) {
-            switch (status) {
-              case CANCELED:
-                // Do nothing it was canceled in the mean time
-                response = ShellResponse.cancelled();
-                break;
-              case QUEUED:
-                // Ok we are going to run it
-                status = Status.EVALUATING;
-                response = null;
-                break;
-              default:
-                // Just in case but this can only be called by the queue
-                throw new AssertionError();
-            }
-          }
-
-          // Execute the process if we are in evalating state
-          if (response == null) {
-            // Here the status could already be in status cancelled
-            // it is a race condition, execution still happens
-            // but the callback of the callee to the end method will make the process
-            // terminate and use a cancel response
-            try {
-              callee.execute(context);
-              response = ShellResponse.ok();
-            }
-            catch (Throwable t) {
-              response = ShellResponse.internalError("Unexpected throwable when executing process", t);
-            }
-          }
-
-          // Make the callback
-          // Calling terminated twice will have no effect
+    Callable<AsyncProcess> task =
+        () -> {
           try {
-            context.end(response);
-          }
-          catch (Throwable t) {
-            // Log it
-          }
+            // Cancelled -> Cancelled
+            // Queued -> Evaluating
+            ShellResponse response;
+            synchronized (lock) {
+              switch (status) {
+                case CANCELED:
+                  // Do nothing it was canceled in the mean time
+                  response = ShellResponse.cancelled();
+                  break;
+                case QUEUED:
+                  // Ok we are going to run it
+                  status = Status.EVALUATING;
+                  response = null;
+                  break;
+                default:
+                  // Just in case but this can only be called by the queue
+                  throw new AssertionError();
+              }
+            }
 
-          // We return this but we don't really care for now
-          return AsyncProcess.this;
-        }
-        finally {
-          synchronized (shell.lock) {
-            shell.processes.remove(AsyncProcess.this);
-          }
-        }
-      }
-    };
+            // Execute the process if we are in evalating state
+            if (response == null) {
+              // Here the status could already be in status cancelled
+              // it is a race condition, execution still happens
+              // but the callback of the callee to the end method will make the process
+              // terminate and use a cancel response
+              try {
+                callee.execute(context);
+                response = ShellResponse.ok();
+              } catch (Throwable t) {
+                response =
+                    ShellResponse.internalError("Unexpected throwable when executing process", t);
+              }
+            }
 
-    //
+            // Make the callback
+            // Calling terminated twice will have no effect
+            try {
+              context.end(response);
+            } catch (Throwable t) {
+              // Log it
+            }
+
+            // We return this but we don't really care for now
+            return AsyncProcess.this;
+          } finally {
+            synchronized (shell.lock) {
+              shell.processes.remove(AsyncProcess.this);
+            }
+          }
+        };
+
     synchronized (shell.lock) {
       if (!shell.closed) {
         shell.executor.submit(task);
@@ -260,7 +248,8 @@ public class AsyncProcess implements ShellProcess {
     synchronized (lock) {
       switch (status) {
         case CONSTRUCTED:
-          throw new IllegalStateException("Cannot call cancel on process that was not scheduled for execution yet");
+          throw new IllegalStateException(
+              "Cannot call cancel on process that was not scheduled for execution yet");
         case QUEUED:
           status = Status.CANCELED;
           cancel = false;

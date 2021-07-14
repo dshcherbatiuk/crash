@@ -18,6 +18,8 @@
  */
 package org.crsh.cli.impl.lang;
 
+import java.lang.annotation.Annotation;
+import java.util.List;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.descriptor.OptionDescriptor;
 import org.crsh.cli.impl.ParameterType;
@@ -26,18 +28,23 @@ import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.spi.Completer;
 
-import java.lang.annotation.Annotation;
-import java.util.List;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 class BoundOptionDescriptor extends OptionDescriptor implements Binding {
 
   /** . */
   final Binding binding;
 
-  BoundOptionDescriptor(Binding binding, ParameterType<?> type, List<String> names, Description info, boolean required, boolean password, boolean unquote, Class<? extends Completer> completerType, Annotation annotation) throws IllegalValueTypeException, IllegalParameterException {
+  BoundOptionDescriptor(
+      Binding binding,
+      ParameterType<?> type,
+      List<String> names,
+      Description info,
+      boolean required,
+      boolean password,
+      boolean unquote,
+      Class<? extends Completer> completerType,
+      Annotation annotation)
+      throws IllegalValueTypeException, IllegalParameterException {
     super(type, names, info, required, password, unquote, completerType, annotation);
 
     //

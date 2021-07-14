@@ -19,16 +19,14 @@
 
 package org.crsh.shell.impl.remoting;
 
-import org.crsh.shell.Shell;
-import org.crsh.util.AbstractSocketServer;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.crsh.shell.Shell;
+import org.crsh.util.AbstractSocketServer;
 
 public class RemoteServer extends AbstractSocketServer {
 
-  /** . */
   private ServerAutomaton automaton;
 
   public RemoteServer(int bindingPort) {

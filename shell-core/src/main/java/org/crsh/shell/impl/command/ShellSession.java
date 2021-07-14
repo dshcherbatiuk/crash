@@ -18,12 +18,11 @@
  */
 package org.crsh.shell.impl.command;
 
+import java.util.Map;
 import org.crsh.lang.spi.Repl;
+import org.crsh.plugin.PluginContext;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.plugin.PluginContext;
-
-import java.util.Map;
 
 /** @author Julien Viet */
 public interface ShellSession extends Map<String, Object> {
@@ -34,9 +33,7 @@ public interface ShellSession extends Map<String, Object> {
 
   Command<?> getCommand(String name) throws CommandException;
 
-  /**
-   * @return the current repl of this session
-   */
+  /** @return the current repl of this session */
   Repl getRepl();
 
   /**
@@ -46,5 +43,4 @@ public interface ShellSession extends Map<String, Object> {
    * @throws NullPointerException if the repl is null
    */
   void setRepl(Repl repl) throws NullPointerException;
-
 }

@@ -18,9 +18,8 @@
  */
 package org.crsh.shell.impl.command.spi;
 
-import org.crsh.command.ShellSafety;
-
 import java.util.Map;
+import org.crsh.command.ShellSafety;
 
 /**
  * Resolve commands.
@@ -31,7 +30,7 @@ public interface CommandResolver {
 
   /**
    * @return the known command names by this resolver, the returned map keys are the command names
-   *         and the values are the corresponding one line description of the command
+   *     and the values are the corresponding one line description of the command
    */
   Iterable<Map.Entry<String, String>> getDescriptions(ShellSafety shellSafety);
 
@@ -43,5 +42,6 @@ public interface CommandResolver {
    * @throws CommandException if an error occured preventing the command creation
    * @throws NullPointerException if the name argument is null
    */
-  Command<?> resolveCommand(String name, ShellSafety shellSafety) throws CommandException, NullPointerException;
+  Command<?> resolveCommand(String name, ShellSafety shellSafety)
+      throws CommandException, NullPointerException;
 }

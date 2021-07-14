@@ -18,13 +18,10 @@
  */
 package org.crsh.text;
 
+import java.io.IOException;
 import org.crsh.AbstractTestCase;
 
-import java.io.IOException;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class VirtualScreenTestCase extends AbstractTestCase {
 
   static class TestBuffer extends ScreenBuffer implements ScreenContext {
@@ -51,11 +48,12 @@ public class VirtualScreenTestCase extends AbstractTestCase {
     assertBuffer(2, 2, "a\nbc", "a\nb", "c", "d");
     assertBuffer(2, 2, "a\nb", "a\n", "b\n", "c");
     assertBuffer(2, 2, "a\nb", "a", "\n", "b", "\n", "c");
-    assertBuffer(2, 2, "\n","\n", "\n", "a");
+    assertBuffer(2, 2, "\n", "\n", "\n", "a");
     assertBuffer(2, 2, "", "");
   }
 
-  private void assertBuffer(int width, int height, String actual, String... test) throws IOException {
+  private void assertBuffer(int width, int height, String actual, String... test)
+      throws IOException {
     TestBuffer tmp = new TestBuffer(width, height);
     VirtualScreen buffer = new VirtualScreen(tmp);
     for (String a : test) {

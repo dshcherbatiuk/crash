@@ -47,5 +47,4 @@ public class SystemCommandTestCase extends AbstractShellTestCase {
       System.clearProperty("foo.bar2");
     }
   }
-  
 }

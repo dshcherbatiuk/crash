@@ -19,29 +19,24 @@
 
 package org.crsh.shell.impl.remoting;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import org.crsh.shell.ErrorKind;
-import org.crsh.text.Screenable;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import org.crsh.text.Screenable;
 import org.crsh.text.Style;
 import org.crsh.util.Statement;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 class ClientProcessContext implements ShellProcessContext {
 
-  /** . */
   final ClientAutomaton client;
 
-  /** . */
   final ShellProcess process;
 
-  /** . */
   final ArrayList<ServerMessage.Chunk> buffer;
 
-  /** . */
   private boolean closed;
 
   ClientProcessContext(ClientAutomaton client, ShellProcess process) {
@@ -52,8 +47,8 @@ class ClientProcessContext implements ShellProcessContext {
   }
 
   /**
-   * Ensure we have a recent size, the size is considered as recent if it's younger than 2 second, otherwise
-   * send a get size message.
+   * Ensure we have a recent size, the size is considered as recent if it's younger than 2 second,
+   * otherwise send a get size message.
    */
   private void ensureSize() {
     if (System.currentTimeMillis() - client.last > 2000) {
@@ -61,8 +56,7 @@ class ClientProcessContext implements ShellProcessContext {
         try {
           client.out.writeObject(new ServerMessage.GetSize());
           client.out.flush();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           //
         }
       }
@@ -72,11 +66,10 @@ class ClientProcessContext implements ShellProcessContext {
   void execute() {
     try {
       process.execute(this);
-    }
-    catch(final Throwable t) {
+    } catch (final Throwable t) {
       new Statement() {
         @Override
-        protected void run() throws Throwable {
+        protected void run() {
           // If it's not executing then we attempt to end it
           end(ShellResponse.error(ErrorKind.INTERNAL, "Unexpected process execution error", t));
         }
@@ -107,8 +100,7 @@ class ClientProcessContext implements ShellProcessContext {
       try {
         client.out.writeObject(new ServerMessage.UseAlternateBuffer());
         client.out.flush();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         //
       }
     }
@@ -122,8 +114,7 @@ class ClientProcessContext implements ShellProcessContext {
       try {
         client.out.writeObject(new ServerMessage.UseMainBuffer());
         client.out.flush();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         //
       }
     }
@@ -137,16 +128,16 @@ class ClientProcessContext implements ShellProcessContext {
   }
 
   public String readLine(String msg, boolean echo) {
-//    try {
-//      client.out.writeObject(ServerMessage.READLINE);
-//      client.out.writeObject(msg);
-//      client.out.writeObject(echo);
-//      client.out.flush();
-//      return (String)client.in.readObject();
-//    }
-//    catch (Exception e) {
-//      return null;
-//    }
+    //    try {
+    //      client.out.writeObject(ServerMessage.READLINE);
+    //      client.out.writeObject(msg);
+    //      client.out.writeObject(echo);
+    //      client.out.flush();
+    //      return (String)client.in.readObject();
+    //    }
+    //    catch (Exception e) {
+    //      return null;
+    //    }
     return null;
   }
 
@@ -193,11 +184,9 @@ class ClientProcessContext implements ShellProcessContext {
           }
           client.out.writeObject(new ServerMessage.Flush());
           client.out.flush();
-        }
-        catch (IOException ignore) {
+        } catch (IOException ignore) {
           //
-        }
-        finally {
+        } finally {
           buffer.clear();
         }
       }
@@ -217,11 +206,9 @@ class ClientProcessContext implements ShellProcessContext {
         client.current = null;
         client.out.writeObject(new ServerMessage.End(response));
         client.out.flush();
-      }
-      catch (IOException ignore) {
+      } catch (IOException ignore) {
         //
-      }
-      finally {
+      } finally {
         closed = true;
         if (response instanceof ShellResponse.Close) {
           client.close();

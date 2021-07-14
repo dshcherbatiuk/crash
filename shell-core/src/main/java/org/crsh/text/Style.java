@@ -19,48 +19,46 @@
 
 package org.crsh.text;
 
-import org.crsh.util.Utils;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
+import org.crsh.util.Utils;
 
 /**
- * A control for the text stylistric attributes:
- * <u>
- *   <li>background color</li>
- *   <li>foreground color</li>
- *   <li>underline</li>
- *   <li>bold</li>
- *   <li>blink</li>
- * </u>
+ * A control for the text stylistric attributes: <u>
+ * <li>background color
+ * <li>foreground color
+ * <li>underline
+ * <li>bold
+ * <li>blink </u>
  *
- * A style is either a composite style or the {@link #reset} style. Styles can be composed together to form a new
- * style <code>style.merge(other)</code>.
+ *     <p>A style is either a composite style or the {@link #reset} style. Styles can be composed
+ *     together to form a new style <code>style.merge(other)</code>.
  */
 public abstract class Style implements Serializable {
 
-  public static final Style reset = new Style() {
+  public static final Style reset =
+      new Style() {
 
-    @Override
-    public Style merge(Style s) throws NullPointerException {
-      if (s == null) {
-        throw new NullPointerException();
-      }
-      return s;
-    }
+        @Override
+        public Style merge(Style s) throws NullPointerException {
+          if (s == null) {
+            throw new NullPointerException();
+          }
+          return s;
+        }
 
-    @Override
-    public String toString() {
-      return "Style.Reset[]";
-    }
+        @Override
+        public String toString() {
+          return "Style.Reset[]";
+        }
 
-    @Override
-    public void writeAnsiTo(Appendable appendable) throws IOException {
-      appendable.append("\033[0m");
-    }
-  };
+        @Override
+        public void writeAnsiTo(Appendable appendable) throws IOException {
+          appendable.append("\033[0m");
+        }
+      };
 
   public static final class Composite extends Style {
 
@@ -79,7 +77,8 @@ public abstract class Style implements Serializable {
     /** . */
     protected final Color background;
 
-    private Composite(Boolean bold, Boolean underline, Boolean blink, Color foreground, Color background) {
+    private Composite(
+        Boolean bold, Boolean underline, Boolean blink, Color foreground, Color background) {
       this.bold = bold;
       this.underline = underline;
       this.blink = blink;
@@ -174,7 +173,7 @@ public abstract class Style implements Serializable {
       if (s == reset) {
         return reset;
       } else {
-        Style.Composite that = (Composite)s;
+        Style.Composite that = (Composite) s;
         Boolean bold = Utils.notNull(that.getBold(), getBold());
         Boolean underline = Utils.notNull(that.getUnderline(), getUnderline());
         Boolean blink = Utils.notNull(that.getBlink(), getBlink());
@@ -186,16 +185,22 @@ public abstract class Style implements Serializable {
 
     @Override
     public String toString() {
-      return "Style.Composite[bold=" + bold + ",underline=" + underline + ",blink=" + blink +
-          ",background=" + background + ",foreground=" + foreground + "]";
+      return "Style.Composite[bold="
+          + bold
+          + ",underline="
+          + underline
+          + ",blink="
+          + blink
+          + ",background="
+          + background
+          + ",foreground="
+          + foreground
+          + "]";
     }
 
     private static boolean decoration(
-        Appendable appendable,
-        String on,
-        String off,
-        Boolean value,
-        boolean append) throws IOException {
+        Appendable appendable, String on, String off, Boolean value, boolean append)
+        throws IOException {
       if (value != null) {
         if (append) {
           appendable.append(';');
@@ -212,11 +217,8 @@ public abstract class Style implements Serializable {
       return false;
     }
 
-    private static boolean color(
-        Appendable appendable,
-        Color color,
-        char base,
-        boolean append) throws IOException {
+    private static boolean color(Appendable appendable, Color color, char base, boolean append)
+        throws IOException {
       if (color != null) {
         if (append) {
           appendable.append(';');
@@ -232,9 +234,17 @@ public abstract class Style implements Serializable {
 
     @Override
     public void writeAnsiTo(Appendable appendable) throws IOException {
-      boolean appended = decoration(appendable, Decoration.bold.code, Decoration.bold_off.code, bold, false);
-      appended |= decoration(appendable, Decoration.underline.code, Decoration.underline_off.code, underline, appended);
-      appended |= decoration(appendable, Decoration.blink.code, Decoration.blink_off.code, blink, appended);
+      boolean appended =
+          decoration(appendable, Decoration.bold.code, Decoration.bold_off.code, bold, false);
+      appended |=
+          decoration(
+              appendable,
+              Decoration.underline.code,
+              Decoration.underline_off.code,
+              underline,
+              appended);
+      appended |=
+          decoration(appendable, Decoration.blink.code, Decoration.blink_off.code, blink, appended);
       appended |= color(appendable, foreground, '3', appended);
       appended |= color(appendable, background, '4', appended);
       if (appended) {
@@ -244,7 +254,7 @@ public abstract class Style implements Serializable {
   }
 
   /** . */
-  private static final Boolean[] BOOLEANS = {true,false,null};
+  private static final Boolean[] BOOLEANS = {true, false, null};
 
   /** . */
   private static final Color[] COLORS = Arrays.copyOf(Color.values(), Color.values().length + 1);
@@ -254,21 +264,22 @@ public abstract class Style implements Serializable {
 
   static {
     ALL = new Composite[BOOLEANS.length][][][][];
-    for (int bold = 0;bold < BOOLEANS.length;bold++) {
+    for (int bold = 0; bold < BOOLEANS.length; bold++) {
       ALL[bold] = new Composite[BOOLEANS.length][][][];
-      for (int underline = 0;underline < BOOLEANS.length;underline++) {
+      for (int underline = 0; underline < BOOLEANS.length; underline++) {
         ALL[bold][underline] = new Composite[BOOLEANS.length][][];
-        for (int blink = 0;blink < BOOLEANS.length;blink++) {
+        for (int blink = 0; blink < BOOLEANS.length; blink++) {
           ALL[bold][underline][blink] = new Composite[COLORS.length][];
-          for (int foreground = 0;foreground < COLORS.length;foreground++) {
+          for (int foreground = 0; foreground < COLORS.length; foreground++) {
             ALL[bold][underline][blink][foreground] = new Composite[COLORS.length];
-            for (int background = 0;background < COLORS.length;background++) {
-              ALL[bold][underline][blink][foreground][background] = new Composite(
-                  BOOLEANS[bold],
-                  BOOLEANS[underline],
-                  BOOLEANS[blink],
-                  COLORS[foreground],
-                  COLORS[background]);
+            for (int background = 0; background < COLORS.length; background++) {
+              ALL[bold][underline][blink][foreground][background] =
+                  new Composite(
+                      BOOLEANS[bold],
+                      BOOLEANS[underline],
+                      BOOLEANS[blink],
+                      COLORS[foreground],
+                      COLORS[background]);
             }
           }
         }
@@ -313,10 +324,11 @@ public abstract class Style implements Serializable {
     return style(bold, underline, blink, foreground, background);
   }
 
-  public static Composite style(Boolean bold, Boolean underline, Boolean blink, Color foreground, Color background) {
-    int bo = bold != null ? bold ? 0 : 1: 2;
-    int un = underline != null ? underline ? 0 : 1: 2;
-    int bl = blink != null ? blink ? 0 : 1: 2;
+  public static Composite style(
+      Boolean bold, Boolean underline, Boolean blink, Color foreground, Color background) {
+    int bo = bold != null ? bold ? 0 : 1 : 2;
+    int un = underline != null ? underline ? 0 : 1 : 2;
+    int bl = blink != null ? blink ? 0 : 1 : 2;
     int fg = foreground != null ? foreground.ordinal() : COLORS.length - 1;
     int bg = background != null ? background.ordinal() : COLORS.length - 1;
     return ALL[bo][un][bl][fg][bg];
@@ -345,8 +357,7 @@ public abstract class Style implements Serializable {
     StringBuilder sb = new StringBuilder();
     try {
       writeAnsiTo(sb);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       // Should not happen
       throw new UndeclaredThrowableException(e);
     }

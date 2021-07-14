@@ -19,24 +19,21 @@
 
 package org.crsh.cli.impl.parser;
 
-import org.crsh.cli.descriptor.ArgumentDescriptor;
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.Multiplicity;
-import org.crsh.cli.descriptor.OptionDescriptor;
-import org.crsh.cli.impl.tokenizer.Token;
-import org.crsh.cli.impl.tokenizer.Tokenizer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import org.crsh.cli.descriptor.ArgumentDescriptor;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.impl.Multiplicity;
+import org.crsh.cli.impl.tokenizer.Token;
+import org.crsh.cli.impl.tokenizer.Tokenizer;
 
 abstract class Status {
 
-  /**
-   * The input.
-   */
+  /** The input. */
   static class Request<T> {
 
     /** . */
@@ -55,9 +52,7 @@ abstract class Status {
     }
   }
 
-  /**
-   * The output.
-   */
+  /** The output. */
   static class Response<T> {
 
     /** . */
@@ -116,10 +111,11 @@ abstract class Status {
         response.add(new Event.Separator((Token.Whitespace) token));
         req.tokenizer.next();
       } else {
-        Token.Literal literal = (Token.Literal)token;
+        Token.Literal literal = (Token.Literal) token;
         if (literal instanceof Token.Literal.Option) {
-          Token.Literal.Option optionToken = (Token.Literal.Option)literal;
-          if (optionToken.getName().length() == 0 && optionToken instanceof Token.Literal.Option.Long) {
+          Token.Literal.Option optionToken = (Token.Literal.Option) literal;
+          if (optionToken.getName().length() == 0
+              && optionToken instanceof Token.Literal.Option.Long) {
             req.tokenizer.next();
             if (req.tokenizer.hasNext()) {
               response.status = new Status.WantReadArg();
@@ -142,16 +138,17 @@ abstract class Status {
                   Token a = req.tokenizer.peek();
                   if (a instanceof Token.Whitespace) {
                     req.tokenizer.next();
-                    if (req.tokenizer.hasNext() && req.tokenizer.peek() instanceof Token.Literal.Word) {
+                    if (req.tokenizer.hasNext()
+                        && req.tokenizer.peek() instanceof Token.Literal.Word) {
                       // ok
                     } else {
                       req.tokenizer.pushBack();
                       break;
                     }
                   } else {
-                    Token.Literal b = (Token.Literal)a;
+                    Token.Literal b = (Token.Literal) a;
                     if (b instanceof Token.Literal.Word) {
-                      values.addLast((Token.Literal.Word)b);
+                      values.addLast((Token.Literal.Word) b);
                       req.tokenizer.next();
                       arity--;
                     } else {
@@ -169,7 +166,7 @@ abstract class Status {
             }
           }
         } else {
-          Token.Literal.Word wordLiteral = (Token.Literal.Word)literal;
+          Token.Literal.Word wordLiteral = (Token.Literal.Word) literal;
           CommandDescriptor<T> m = req.command.getSubordinate(wordLiteral.getValue());
           if (m != null) {
             response.command = m;
@@ -182,7 +179,6 @@ abstract class Status {
       }
       return response;
     }
-
   }
 
   static class WantReadArg extends Status {
@@ -224,8 +220,7 @@ abstract class Status {
             wordCount++;
           }
           tokenCount++;
-        }
-        while (req.tokenizer.hasNext());
+        } while (req.tokenizer.hasNext());
         req.tokenizer.pushBack(tokenCount);
 
         //
@@ -285,11 +280,11 @@ abstract class Status {
 
           // Now take care of the argument
           if (size > 0) {
-            List<Token.Literal> values = new ArrayList<Token.Literal>(size);
+            List<Token.Literal> values = new ArrayList<>(size);
             while (size > 0) {
               Token t = req.tokenizer.next();
               if (t instanceof Token.Literal) {
-                values.add(((Token.Literal)t));
+                values.add(((Token.Literal) t));
                 size--;
               }
             }
@@ -347,7 +342,7 @@ abstract class Status {
         response.add(new Event.Separator((Token.Whitespace) token));
         req.tokenizer.next();
       } else {
-        final Token.Literal literal = (Token.Literal)token;
+        final Token.Literal literal = (Token.Literal) token;
         List<? extends ArgumentDescriptor> arguments = req.command.getArguments();
         if (index < arguments.size()) {
           ArgumentDescriptor argument = arguments.get(index);
@@ -364,7 +359,7 @@ abstract class Status {
               while (req.tokenizer.hasNext()) {
                 Token capture = req.tokenizer.next();
                 if (capture instanceof Token.Literal) {
-                  values.add(((Token.Literal)capture));
+                  values.add(((Token.Literal) capture));
                 } else {
                   if (req.tokenizer.hasNext()) {
                     // Ok

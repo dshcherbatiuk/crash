@@ -18,30 +18,27 @@
  */
 package org.crsh.cli.completers;
 
-import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
-import org.crsh.cli.type.ValueType;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.spi.Completer;
+import org.crsh.cli.spi.Completion;
+import org.crsh.cli.type.ValueType;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ObjectNameCompleter implements Completer {
 
   private static String[] parseKeyValue(String s) {
     int eq = s.indexOf('=');
     if (eq == -1) {
-      return new String[]{s, null};
+      return new String[] {s, null};
     } else {
-      return new String[]{s.substring(0, eq), s.substring(eq + 1, s.length())};
+      return new String[] {s.substring(0, eq), s.substring(eq + 1, s.length())};
     }
   }
 
@@ -71,9 +68,10 @@ public class ObjectNameCompleter implements Completer {
           int next = rest.indexOf(',', prev);
           if (next == -1) {
             String[] keyValue = parseKeyValue(rest.substring(prev));
-            Set<ObjectName> completions = new HashSet<ObjectName>();
+            Set<ObjectName> completions = new HashSet<>();
             for (ObjectName name : server.queryNames(null, null)) {
-              if (name.getDomain().equals(domain) && name.getKeyPropertyList().entrySet().containsAll(keyValues.entrySet())) {
+              if (name.getDomain().equals(domain)
+                  && name.getKeyPropertyList().entrySet().containsAll(keyValues.entrySet())) {
                 completions.add(name);
               }
             }

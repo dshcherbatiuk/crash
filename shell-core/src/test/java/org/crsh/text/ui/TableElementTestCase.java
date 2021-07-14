@@ -19,9 +19,9 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.Color;
-
 import static org.crsh.text.ui.Element.*;
+
+import org.crsh.text.Color;
 
 public class TableElementTestCase extends AbstractRendererTestCase {
 
@@ -29,49 +29,38 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     TableElement tableElement = new TableElement();
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")));
 
-
-    assertRender(tableElement, 12,
-        "ab          ",
-        "cd          ");
+    assertRender(tableElement, 12, "ab          ", "cd          ");
   }
 
   public void testStyle() throws Exception {
 
     TableElement tableElement = new TableElement();
 
-    tableElement.
-        add(row().style(Color.green.bg().fg(Color.blue).bold()).
-            add(label("a")).
-            add(label("b")))
-      .add(row().
-          add(label("c").style(Color.green.bg().fg(Color.blue).bold())).
-          add(label("d")));
+    tableElement
+        .add(row().style(Color.green.bg().fg(Color.blue).bold()).add(label("a")).add(label("b")))
+        .add(row().add(label("c").style(Color.green.bg().fg(Color.blue).bold())).add(label("d")));
 
-/*
-    ChunkBuffer reader = new ChunkBuffer();
-    ShellFormatter writer = new ShellFormatter(reader, "_");
+    /*
+        ChunkBuffer reader = new ChunkBuffer();
+        ShellFormatter writer = new ShellFormatter(reader, "_");
 
-    tableElement.print(writer, new TestInvocationContext());
+        tableElement.print(writer, new TestInvocationContext());
 
-    String expected = "\u001B[1;34;42ma     b     \u001B[0m_\u001B[1;34;42mc     \u001B[0md     \u001B[0m_";
+        String expected = "\u001B[1;34;42ma     b     \u001B[0m_\u001B[1;34;42mc     \u001B[0md     \u001B[0m_";
 
-    StringBuilder sb = new StringBuilder();
-    reader.writeAnsiTo(sb);
-    String ansi = sb.toString();
+        StringBuilder sb = new StringBuilder();
+        reader.writeAnsiTo(sb);
+        String ansi = sb.toString();
 
-    //
-    assertEquals(
-      expected
-      , ansi);
-*/
+        //
+        assertEquals(
+          expected
+          , ansi);
+    */
 
   }
 
@@ -79,25 +68,16 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     TableElement tableElement = new TableElement();
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")));
 
     TreeElement node = new TreeElement();
     node.addChild(label("foo"));
     node.addChild(tableElement);
     node.addChild(label("bar"));
 
-    assertRender(node, 14,
-        "+-foo         ",
-        "+-ab          ",
-        "| cd          ",
-        "+-bar         ");
-
+    assertRender(node, 14, "+-foo         ", "+-ab          ", "| cd          ", "+-bar         ");
   }
 
   public void testInNodeBorder() throws Exception {
@@ -105,20 +85,18 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     TableElement tableElement = new TableElement(1, 1);
     tableElement.border(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")));
 
     TreeElement node = new TreeElement();
     node.addChild(label("foo"));
     node.addChild(tableElement);
     node.addChild(label("bar"));
 
-    assertRender(node, 32,
+    assertRender(
+        node,
+        32,
         "+-foo                           ",
         "+- ---------------------------- ",
         "| |a             b             |",
@@ -131,26 +109,26 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     TableElement tableElement = new TableElement();
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b")).
-            add(label("c is a very very very too long value"))).
-        add(row().
-            add(label("d")).
-            add(label("e")).
-            add(label("f")));
+    tableElement
+        .add(
+            row()
+                .add(label("a"))
+                .add(label("b"))
+                .add(label("c is a very very very too long value")))
+        .add(row().add(label("d")).add(label("e")).add(label("f")));
 
     TreeElement node = new TreeElement();
     node.addChild(label("foo"));
     node.addChild(tableElement);
     node.addChild(label("bar"));
 
-    assertRender(node, 24,
-        "+-foo                   " ,
-        "+-abc is a very very ver" ,
-        "|   y too long value    " ,
-        "| def                   " ,
+    assertRender(
+        node,
+        24,
+        "+-foo                   ",
+        "+-abc is a very very ver",
+        "|   y too long value    ",
+        "| def                   ",
         "+-bar                   ");
   }
 
@@ -160,22 +138,22 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     tableElement.border(BorderStyle.DASHED);
     tableElement.separator(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b")).
-            add(label("c is a very very very too long value"))).
-        add(row().
-            add(label("d")).
-            add(label("e")).
-            add(label("f")));
+    tableElement
+        .add(
+            row()
+                .add(label("a"))
+                .add(label("b"))
+                .add(label("c is a very very very too long value")))
+        .add(row().add(label("d")).add(label("e")).add(label("f")));
 
     TreeElement node = new TreeElement();
     node.addChild(label("foo"));
     node.addChild(tableElement);
     node.addChild(label("bar"));
 
-    assertRender(node, 32,
+    assertRender(
+        node,
+        32,
         "+-foo                           ",
         "+- ---------------------------- ",
         "| |a|b|c is a very very very to|",
@@ -189,29 +167,21 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     TableElement tableElement = new TableElement().border(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d"))).
-        add(header().
-            add(label("e")).
-            add(label("f"))).
-        add(row().
-            add(label("g")).
-            add(label("h"))).
-        add(row().
-            add(label("i")).
-            add(label("j")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")))
+        .add(header().add(label("e")).add(label("f")))
+        .add(row().add(label("g")).add(label("h")))
+        .add(row().add(label("i")).add(label("j")));
 
     TreeElement node = new TreeElement();
     node.addChild(label("foo"));
     node.addChild(tableElement);
     node.addChild(label("bar"));
 
-    assertRender(node, 32,
+    assertRender(
+        node,
+        32,
         "+-foo                           ",
         "+- --                           ",
         "| |ab|                          ",
@@ -228,36 +198,34 @@ public class TableElementTestCase extends AbstractRendererTestCase {
   public void testTooLarge() throws Exception {
     TableElement tableElement = new TableElement();
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("This text is very ver very too large to be displayed in a cell of 32"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(
+            row()
+                .add(label("a"))
+                .add(label("This text is very ver very too large to be displayed in a cell of 32")))
+        .add(row().add(label("c")).add(label("d")));
 
-    assertRender(tableElement, 27,
+    assertRender(
+        tableElement,
+        27,
         "aThis text is very ver very",
         "  too large to be displayed",
         "  in a cell of 32          ",
-        "cd                         "
-    );
+        "cd                         ");
   }
 
   public void testSimpleBorder() throws Exception {
 
     TableElement tableElement = new TableElement();
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")));
 
     //
     tableElement.border(BorderStyle.DASHED);
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " --                             ",
         "|ab|                            ",
         "|cd|                            ",
@@ -266,7 +234,9 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     //
     tableElement.border(BorderStyle.STAR);
     tableElement.separator(BorderStyle.STAR);
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         "*****                           ",
         "*a*b*                           ",
         "*c*d*                           ",
@@ -279,21 +249,15 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     tableElement.border(BorderStyle.DASHED);
 
-    tableElement.
-        add(header().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d"))).
-        add(row().
-            add(label("e")).
-            add(label("f"))).
-        add(header().
-            add(label("g")).
-            add(label("h")));
+    tableElement
+        .add(header().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")))
+        .add(row().add(label("e")).add(label("f")))
+        .add(header().add(label("g")).add(label("h")));
 
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " --                             ",
         "|ab|                            ",
         " --                             ",
@@ -310,23 +274,12 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     tableElement.border(null);
 
-    tableElement.
-        add(header().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d"))).
-        add(row().
-            add(label("e")).
-            add(label("f")));
+    tableElement
+        .add(header().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")))
+        .add(row().add(label("e")).add(label("f")));
 
-    assertRender(tableElement, 3,
-        "ab ",
-        "-- ",
-        "cd ",
-        "ef ");
-
+    assertRender(tableElement, 3, "ab ", "-- ", "cd ", "ef ");
   }
 
   public void testBorderHeaderMiddle() throws Exception {
@@ -335,24 +288,16 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     tableElement.border(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d"))).
-        add(header().
-            add(label("e")).
-            add(label("f"))).
-        add(row().
-            add(label("g")).
-            add(label("h"))).
-        add(row().
-            add(label("i")).
-            add(label("j")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")))
+        .add(header().add(label("e")).add(label("f")))
+        .add(row().add(label("g")).add(label("h")))
+        .add(row().add(label("i")).add(label("j")));
 
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " --                             ",
         "|ab|                            ",
         "|cd|                            ",
@@ -370,27 +315,17 @@ public class TableElementTestCase extends AbstractRendererTestCase {
 
     tableElement.border(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d"))).
-        add(header().
-            add(label("e")).
-            add(label("f"))).
-        add(header().
-            add(label("g")).
-            add(label("h"))).
-        add(row().
-            add(label("i")).
-            add(label("j"))).
-        add(row().
-            add(label("k")).
-            add(label("l")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")))
+        .add(header().add(label("e")).add(label("f")))
+        .add(header().add(label("g")).add(label("h")))
+        .add(row().add(label("i")).add(label("j")))
+        .add(row().add(label("k")).add(label("l")));
 
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " --                             ",
         "|ab|                            ",
         "|cd|                            ",
@@ -402,7 +337,6 @@ public class TableElementTestCase extends AbstractRendererTestCase {
         "|ij|                            ",
         "|kl|                            ",
         " --                             ");
-
   }
 
   public void testTooLargeBorder() throws Exception {
@@ -410,15 +344,16 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     tableElement.border(BorderStyle.DASHED);
     tableElement.separator(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("This text is very ver very too large to be displayed in a cell of 32"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(
+            row()
+                .add(label("a"))
+                .add(label("This text is very ver very too large to be displayed in a cell of 32")))
+        .add(row().add(label("c")).add(label("d")));
 
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " ------------------------------ ",
         "|a|This text is very ver very t|",
         "| |oo large to be displayed in |",
@@ -432,15 +367,16 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     tableElement.border(BorderStyle.DASHED);
     tableElement.separator(BorderStyle.DASHED);
 
-    tableElement.
-        add(header().
-            add(label("a")).
-            add(label("This text is very ver very too large to be displayed in a cell of 32"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(
+            header()
+                .add(label("a"))
+                .add(label("This text is very ver very too large to be displayed in a cell of 32")))
+        .add(row().add(label("c")).add(label("d")));
 
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " ------------------------------ ",
         "|a|This text is very ver very t|",
         "| |oo large to be displayed in |",
@@ -455,35 +391,31 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     TableElement tableElement = new TableElement();
     tableElement.border(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().style(Color.green.bg().fg(Color.blue).bold()).
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c").style(Color.green.bg().fg(Color.blue).bold())).
-            add(label("d")));
+    tableElement
+        .add(row().style(Color.green.bg().fg(Color.blue).bold()).add(label("a")).add(label("b")))
+        .add(row().add(label("c").style(Color.green.bg().fg(Color.blue).bold())).add(label("d")));
 
-/*
-    ChunkBuffer reader = new ChunkBuffer();
-    ShellFormatter writer = new ShellFormatter(reader, "_");
+    /*
+        ChunkBuffer reader = new ChunkBuffer();
+        ShellFormatter writer = new ShellFormatter(reader, "_");
 
-    tableElement.print(writer, new TestInvocationContext());
+        tableElement.print(writer, new TestInvocationContext());
 
-    String expected =
-      " --------------- _|" +
-      "\u001B[1;34;42m a     \u001B[0m|\u001B[1;34;42m b     \u001B[0m|_" +
-      "|\u001B[1;34;42m c     \u001B[0m| \u001B[0md     \u001B[0m|_" +
-      " --------------- _";
+        String expected =
+          " --------------- _|" +
+          "\u001B[1;34;42m a     \u001B[0m|\u001B[1;34;42m b     \u001B[0m|_" +
+          "|\u001B[1;34;42m c     \u001B[0m| \u001B[0md     \u001B[0m|_" +
+          " --------------- _";
 
-    StringBuilder sb = new StringBuilder();
-    reader.writeAnsiTo(sb);
-    String ansi = sb.toString();
+        StringBuilder sb = new StringBuilder();
+        reader.writeAnsiTo(sb);
+        String ansi = sb.toString();
 
-    //
-    assertEquals(
-      expected
-      , ansi);
-*/
+        //
+        assertEquals(
+          expected
+          , ansi);
+    */
 
   }
 
@@ -492,13 +424,15 @@ public class TableElementTestCase extends AbstractRendererTestCase {
     tableElement.separator(BorderStyle.DASHED);
     tableElement.border(BorderStyle.DASHED);
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("This text is very ver very too large to be displayed in a cell of 32")).
-            add(label("b")));
+    tableElement.add(
+        row()
+            .add(label("a"))
+            .add(label("This text is very ver very too large to be displayed in a cell of 32"))
+            .add(label("b")));
 
-    assertRender(tableElement, 32,
+    assertRender(
+        tableElement,
+        32,
         " ------------------------------ ",
         "|a|This text is very ver very t|",
         "| |oo large to be displayed in |",

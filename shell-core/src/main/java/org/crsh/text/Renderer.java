@@ -19,67 +19,61 @@
 
 package org.crsh.text;
 
-import org.crsh.text.ui.LabelElement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import org.crsh.text.ui.LabelElement;
 
-/**
- * Provide a renderable.
- */
+/** Provide a renderable. */
 public abstract class Renderer<E> {
 
-  /** . */
   private static final Renderer<?>[] renderables;
 
   static {
-    ArrayList<Renderer<?>> tmp = new ArrayList<Renderer<?>>();
+    ArrayList<Renderer<?>> tmp = new ArrayList<>();
     Iterator<Renderer> i = ServiceLoader.load(Renderer.class).iterator();
     while (i.hasNext()) {
       try {
         Renderer renderable = i.next();
         tmp.add(renderable);
-      }
-      catch (ServiceConfigurationError e) {
+      } catch (ServiceConfigurationError e) {
         // Config error
       }
     }
     renderables = tmp.toArray(new Renderer<?>[tmp.size()]);
   }
 
-  public static Renderer<Object> ANY = new Renderer<Object>() {
-    @Override
-    public Class<Object> getType() {
-      return Object.class;
-    }
-
-    @Override
-    public LineRenderer renderer(Iterator<Object> stream) {
-      StringBuilder sb = new StringBuilder();
-      while (stream.hasNext()) {
-        Object next = stream.next();
-        if (next instanceof CharSequence) {
-          sb.append((CharSequence)next);
-        } else {
-          sb.append(next);
+  public static Renderer<Object> ANY =
+      new Renderer<Object>() {
+        @Override
+        public Class<Object> getType() {
+          return Object.class;
         }
-      }
-      return new LabelElement(sb.toString()).renderer();
-    }
-  };
+
+        @Override
+        public LineRenderer renderer(Iterator<Object> stream) {
+          StringBuilder sb = new StringBuilder();
+          while (stream.hasNext()) {
+            Object next = stream.next();
+            if (next instanceof CharSequence) {
+              sb.append((CharSequence) next);
+            } else {
+              sb.append(next);
+            }
+          }
+          return new LabelElement(sb.toString()).renderer();
+        }
+      };
 
   public static <I> Renderer<? super I> getRenderable(Class<I> itemType) {
     for (Renderer<?> formatter : renderables) {
       try {
         if (formatter.getType().isAssignableFrom(itemType)) {
-          return (Renderer<I>)formatter;
+          return (Renderer<I>) formatter;
         }
-      }
-      catch (Exception e) {
-      }
-      catch (NoClassDefFoundError e) {
+      } catch (Exception e) {
+      } catch (NoClassDefFoundError e) {
       }
     }
     return null;
@@ -88,5 +82,4 @@ public abstract class Renderer<E> {
   public abstract Class<E> getType();
 
   public abstract LineRenderer renderer(Iterator<E> stream);
-
 }

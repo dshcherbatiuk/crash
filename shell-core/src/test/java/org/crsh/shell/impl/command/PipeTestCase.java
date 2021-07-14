@@ -19,16 +19,15 @@
 
 package org.crsh.shell.impl.command;
 
-import org.crsh.command.ScriptException;
-import org.crsh.shell.AbstractShellTestCase;
-import test.command.Commands;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.impl.command.spi.CommandMatch;
-import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.text.ScreenBuffer;
-
 import java.util.Arrays;
 import java.util.Collections;
+import org.crsh.command.ScriptException;
+import org.crsh.shell.AbstractShellTestCase;
+import org.crsh.shell.ErrorKind;
+import org.crsh.shell.impl.command.spi.Command;
+import org.crsh.shell.impl.command.spi.CommandMatch;
+import org.crsh.text.ScreenBuffer;
+import test.command.Commands;
 
 public class PipeTestCase extends AbstractShellTestCase {
 
@@ -55,12 +54,13 @@ public class PipeTestCase extends AbstractShellTestCase {
   }
 
   public void testProducerUseWriter() throws Exception {
-    String cmd = "class foo {\n" +
-        "@Command\n" +
-        "public void main(org.crsh.command.InvocationContext<Integer> context) {\n" +
-        "context.getWriter().print('foo');\n" +
-        "}\n" +
-        "}";
+    String cmd =
+        "class foo {\n"
+            + "@Command\n"
+            + "public void main(org.crsh.command.InvocationContext<Integer> context) {\n"
+            + "context.getWriter().print('foo');\n"
+            + "}\n"
+            + "}";
     lifeCycle.bindGroovy("cmd", cmd);
 
     //
@@ -73,13 +73,14 @@ public class PipeTestCase extends AbstractShellTestCase {
   }
 
   public void testLeftShiftOperator() {
-    String producer = "class foo {\n" +
-        "@Command\n" +
-        "public void main(org.crsh.command.InvocationContext<Integer> context) {\n" +
-        "context << 'hello';\n" +
-        "context << 3;\n" +
-        "}\n" +
-        "}";
+    String producer =
+        "class foo {\n"
+            + "@Command\n"
+            + "public void main(org.crsh.command.InvocationContext<Integer> context) {\n"
+            + "context << 'hello';\n"
+            + "context << 3;\n"
+            + "}\n"
+            + "}";
     lifeCycle.bindGroovy("producer", producer);
     lifeCycle.bindClass("consumer", Commands.ConsumeInteger.class);
 
@@ -100,19 +101,19 @@ public class PipeTestCase extends AbstractShellTestCase {
 
   public void testLifeCycle() throws Exception {
     String consumer =
-        "class consumer {\n" +
-        "  @Command\n" +
-        "  public org.crsh.command.Pipe<Object, Object> main() {\n" +
-        "    return new org.crsh.command.Pipe<Object, Object>() {\n" +
-        "      public void open() {\n" +
-        "        test.command.Commands.list.add('open');\n" +
-        "      }\n" +
-        "      public void close() {\n" +
-        "        test.command.Commands.list.add('close');\n" +
-        "      }\n" +
-        "    };\n" +
-        "  }\n" +
-        "}";
+        "class consumer {\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Object, Object> main() {\n"
+            + "    return new org.crsh.command.Pipe<Object, Object>() {\n"
+            + "      public void open() {\n"
+            + "        test.command.Commands.list.add('open');\n"
+            + "      }\n"
+            + "      public void close() {\n"
+            + "        test.command.Commands.list.add('close');\n"
+            + "      }\n"
+            + "    };\n"
+            + "  }\n"
+            + "}";
 
     //
     lifeCycle.bindClass("producer", Commands.Noop.class);
@@ -126,29 +127,29 @@ public class PipeTestCase extends AbstractShellTestCase {
 
   public void testPropagateFlush() throws Exception {
     String producer =
-        "class producer {\n" +
-        "  @Command\n" +
-        "  public org.crsh.command.Pipe<Object, Object> main() {\n" +
-        "    return new org.crsh.command.Pipe<Object, Object>() {\n" +
-        "      public void open() {\n" +
-        "        context.provide(\"whatever\");\n" +
-        "        context.flush();\n" +
-        "        context.provide(\"whatever\");\n" +
-        "      }\n" +
-        "    };\n" +
-        "  }\n" +
-        "}";
+        "class producer {\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Object, Object> main() {\n"
+            + "    return new org.crsh.command.Pipe<Object, Object>() {\n"
+            + "      public void open() {\n"
+            + "        context.provide(\"whatever\");\n"
+            + "        context.flush();\n"
+            + "        context.provide(\"whatever\");\n"
+            + "      }\n"
+            + "    };\n"
+            + "  }\n"
+            + "}";
     String consumer =
-        "class consumer {\n" +
-        "  @Command\n" +
-        "  public org.crsh.command.Pipe<Object, Object> main() {\n" +
-        "    return new org.crsh.command.Pipe<Object, Object>() {\n" +
-        "      public void flush() {\n" +
-        "        test.command.Commands.list.add('flush');\n" +
-        "      }\n" +
-        "    };\n" +
-        "  }\n" +
-        "}";
+        "class consumer {\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Object, Object> main() {\n"
+            + "    return new org.crsh.command.Pipe<Object, Object>() {\n"
+            + "      public void flush() {\n"
+            + "        test.command.Commands.list.add('flush');\n"
+            + "      }\n"
+            + "    };\n"
+            + "  }\n"
+            + "}";
 
     //
     lifeCycle.bindGroovy("producer", producer);
@@ -165,16 +166,16 @@ public class PipeTestCase extends AbstractShellTestCase {
 
   public void testProvideInFlush() throws Exception {
     String producer =
-        "class producer {\n" +
-        "  @Command\n" +
-        "  public org.crsh.command.Pipe<Object, String> main() {\n" +
-        "    return new org.crsh.command.Pipe<Object, String>() {\n" +
-        "      public void flush() {\n" +
-        "        context.provide('foo');\n" +
-        "      }\n" +
-        "    };\n" +
-        "  }\n" +
-        "}";
+        "class producer {\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Object, String> main() {\n"
+            + "    return new org.crsh.command.Pipe<Object, String>() {\n"
+            + "      public void flush() {\n"
+            + "        context.provide('foo');\n"
+            + "      }\n"
+            + "    };\n"
+            + "  }\n"
+            + "}";
 
     //
     lifeCycle.bindGroovy("producer", producer);
@@ -190,16 +191,16 @@ public class PipeTestCase extends AbstractShellTestCase {
 
   public void testProvideInClose() throws Exception {
     String producer =
-        "class producer {\n" +
-            "  @Command\n" +
-            "  public org.crsh.command.Pipe<Object, String> main() {\n" +
-            "    return new org.crsh.command.Pipe<Object, String>() {\n" +
-            "      public void close() {\n" +
-            "        context.provide('foo');\n" +
-            "      }\n" +
-            "    };\n" +
-            "  }\n" +
-            "}";
+        "class producer {\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Object, String> main() {\n"
+            + "    return new org.crsh.command.Pipe<Object, String>() {\n"
+            + "      public void close() {\n"
+            + "        context.provide('foo');\n"
+            + "      }\n"
+            + "    };\n"
+            + "  }\n"
+            + "}";
 
     //
     lifeCycle.bindGroovy("producer", producer);
@@ -241,14 +242,16 @@ public class PipeTestCase extends AbstractShellTestCase {
   }
 
   public void testReturnedObjectByGroovyIsProduced() throws Exception {
-    lifeCycle.bindGroovy("producer", "" +
-        "class producer {\n" +
-        "    @Command\n" +
-        "    public Integer main() {\n" +
-        "      context.session['class'] = getClass();\n" +
-        "      return 3;\n" +
-        "    }\n" +
-        "  }\n");
+    lifeCycle.bindGroovy(
+        "producer",
+        ""
+            + "class producer {\n"
+            + "    @Command\n"
+            + "    public Integer main() {\n"
+            + "      context.session['class'] = getClass();\n"
+            + "      return 3;\n"
+            + "    }\n"
+            + "  }\n");
     lifeCycle.bindClass("consumer", Commands.ConsumeInteger.class);
     Commands.list.clear();
     assertOk("producer | consumer");
@@ -271,16 +274,16 @@ public class PipeTestCase extends AbstractShellTestCase {
 
   public void testConsumerThrowsScriptExceptionInProvide() throws Exception {
     String consumer =
-        "class producer {\n" +
-            "  @Command\n" +
-            "  public org.crsh.command.Pipe<Integer, Object> main() {\n" +
-            "    return new org.crsh.command.Pipe<Integer, Object>() {\n" +
-            "      public void provide(Integer element) {\n" +
-            "        throw new org.crsh.command.ScriptException('foo')\n" +
-            "      }\n" +
-            "    };\n" +
-            "  }\n" +
-            "}\n";
+        "class producer {\n"
+            + "  @Command\n"
+            + "  public org.crsh.command.Pipe<Integer, Object> main() {\n"
+            + "    return new org.crsh.command.Pipe<Integer, Object>() {\n"
+            + "      public void provide(Integer element) {\n"
+            + "        throw new org.crsh.command.ScriptException('foo')\n"
+            + "      }\n"
+            + "    };\n"
+            + "  }\n"
+            + "}\n";
     lifeCycle.bindClass("producer", Commands.ProduceInteger.class);
     lifeCycle.bindGroovy("consumer", consumer);
     Commands.list.clear();

@@ -1,19 +1,19 @@
 package org.crsh.util;
 
-import org.crsh.cli.completers.AbstractPathCompleter;
-import org.crsh.text.renderers.BindingRenderer;
-
+import java.util.*;
+import java.util.regex.Pattern;
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
-import java.util.*;
-import java.util.regex.Pattern;
+import org.crsh.cli.completers.AbstractPathCompleter;
+import org.crsh.text.renderers.BindingRenderer;
 
 /** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class JNDIHandler {
 
-  public static List<BindingRenderer.BindingData> lookup(List<String> filters, String name, Boolean verbose) {
+  public static List<BindingRenderer.BindingData> lookup(
+      List<String> filters, String name, Boolean verbose) {
 
     Pattern pattern = null;
     if (name != null) {
@@ -31,14 +31,10 @@ public class JNDIHandler {
     data.addAll(get(filters, pattern, verbose, "java:module"));
 
     return data;
-
   }
 
   static List<BindingRenderer.BindingData> get(
-      List<String> filters,
-      Pattern pattern,
-      Boolean verbose,
-      String path) {
+      List<String> filters, Pattern pattern, Boolean verbose, String path) {
 
     return get(filters, pattern, verbose, path, path, null);
   }
@@ -67,22 +63,21 @@ public class JNDIHandler {
 
         String fullName = path + instance.getName();
 
-        if (
-            filters == null ||
-                filters.size() == 0 ||
-                Utils.instanceOf(instance.getObject().getClass(), filters)) {
+        if (filters == null
+            || filters.size() == 0
+            || Utils.instanceOf(instance.getObject().getClass(), filters)) {
           if (pattern == null || pattern.matcher(fullName).find()) {
-            data.add(new BindingRenderer.BindingData(fullName, instance.getClassName(), instance, verbose));
+            data.add(
+                new BindingRenderer.BindingData(
+                    fullName, instance.getClassName(), instance, verbose));
           }
         }
         if (instance.getObject() instanceof Context) {
           data.addAll(get(filters, pattern, verbose, fullName, "", (Context) instance.getObject()));
         }
-
       }
 
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
     }
 
     return data;
@@ -176,5 +171,4 @@ public class JNDIHandler {
       return path;
     }
   }
-
 }

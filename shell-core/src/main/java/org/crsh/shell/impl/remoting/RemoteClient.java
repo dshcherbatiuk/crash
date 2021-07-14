@@ -19,19 +19,16 @@
 
 package org.crsh.shell.impl.remoting;
 
-import org.crsh.shell.Shell;
-import org.crsh.util.AbstractSocketClient;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.crsh.shell.Shell;
+import org.crsh.util.AbstractSocketClient;
 
 public class RemoteClient extends AbstractSocketClient {
 
-  /** . */
   private ClientAutomaton automaton;
 
-  /** . */
   private final Shell shell;
 
   public RemoteClient(int port, Shell shell) {
@@ -43,7 +40,7 @@ public class RemoteClient extends AbstractSocketClient {
 
   @Override
   protected void handle(InputStream in, OutputStream out) throws IOException {
-    this.automaton = new ClientAutomaton(in, out, shell).addCloseListener(this);;
+    this.automaton = new ClientAutomaton(in, out, shell).addCloseListener(this);
   }
 
   public Runnable getRunnable() {

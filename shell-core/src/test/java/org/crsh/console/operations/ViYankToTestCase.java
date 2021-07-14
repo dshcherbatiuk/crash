@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViYankToTestCase extends AbstractPasteTestCase {
 
   public void testNormal() {

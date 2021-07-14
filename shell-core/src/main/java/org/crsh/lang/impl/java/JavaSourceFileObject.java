@@ -18,10 +18,10 @@
  */
 package org.crsh.lang.impl.java;
 
-import javax.tools.SimpleJavaFileObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.tools.SimpleJavaFileObject;
 
 /** @author Julien Viet */
 class JavaSourceFileObject extends SimpleJavaFileObject {
@@ -30,7 +30,8 @@ class JavaSourceFileObject extends SimpleJavaFileObject {
   private final String source;
 
   JavaSourceFileObject(String className, String source) throws URISyntaxException {
-    super(new URI("whatever", null, '/' + className.replace('.', '/') + ".java", null), Kind.SOURCE);
+    super(
+        new URI("whatever", null, '/' + className.replace('.', '/') + ".java", null), Kind.SOURCE);
 
     //
     this.source = source;

@@ -18,20 +18,17 @@
  */
 package org.crsh.console;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import org.crsh.cli.impl.line.LineParser;
 import org.crsh.cli.impl.line.MultiLineVisitor;
 import org.crsh.text.Style;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 /**
  * An editor state machine.
  *
- * todo:
- * - undo
- * - optimize operation with an improvement of {@link org.crsh.console.EditorBuffer}
+ * <p>todo: - undo - optimize operation with an improvement of {@link org.crsh.console.EditorBuffer}
  *
  * @author Julien Viet
  */
@@ -72,7 +69,6 @@ class Editor extends Plugin {
   }
 
   Editor(Console console, boolean echo) {
-
 
     //
     EditorBuffer buffer = new EditorBuffer(echo ? console.driver : NULL);
@@ -149,8 +145,7 @@ class Editor extends Plugin {
   String append(EditorAction action, int[] sequence) {
     try {
       return action.execute(this, buffer, sequence, true);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       AssertionError ae = new AssertionError("Not yet supported");
       ae.initCause(e);
       throw ae;
@@ -164,22 +159,68 @@ class Editor extends Plugin {
   }
 
   // Null impl for echo
-  private static final ConsoleDriver NULL = new ConsoleDriver() {
-    @Override public int getWidth() { return 80; }
-    @Override public int getHeight() { return 40; }
-    @Override public String getProperty(String name) { return null; }
-    @Override public boolean takeAlternateBuffer() throws IOException { return false; }
-    @Override public boolean releaseAlternateBuffer() throws IOException { return false; }
-    @Override public void flush() throws IOException { }
-    @Override public void write(CharSequence s) throws IOException { }
-    @Override public void write(CharSequence s, int start, int end) throws IOException { }
-    @Override public void write(char c) throws IOException { }
-    @Override public void write(Style d) throws IOException { }
-    @Override public void writeDel() throws IOException { }
-    @Override public void writeCRLF() throws IOException { }
-    @Override public void cls() throws IOException { }
-    @Override public boolean moveRight(char c) throws IOException { return true; }
-    @Override public boolean moveLeft() throws IOException { return true; }
-    @Override public void close() throws IOException { }
-  };
+  private static final ConsoleDriver NULL =
+      new ConsoleDriver() {
+        @Override
+        public int getWidth() {
+          return 80;
+        }
+
+        @Override
+        public int getHeight() {
+          return 40;
+        }
+
+        @Override
+        public String getProperty(String name) {
+          return null;
+        }
+
+        @Override
+        public boolean takeAlternateBuffer() {
+          return false;
+        }
+
+        @Override
+        public boolean releaseAlternateBuffer() {
+          return false;
+        }
+
+        @Override
+        public void flush() {}
+
+        @Override
+        public void write(CharSequence s) {}
+
+        @Override
+        public void write(CharSequence s, int start, int end) {}
+
+        @Override
+        public void write(char c) {}
+
+        @Override
+        public void write(Style d) {}
+
+        @Override
+        public void writeDel() {}
+
+        @Override
+        public void writeCRLF() {}
+
+        @Override
+        public void cls() {}
+
+        @Override
+        public boolean moveRight(char c) {
+          return true;
+        }
+
+        @Override
+        public boolean moveLeft() {
+          return true;
+        }
+
+        @Override
+        public void close() {}
+      };
 }

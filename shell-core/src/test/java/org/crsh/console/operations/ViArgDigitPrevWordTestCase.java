@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViArgDigitPrevWordTestCase extends AbstractConsoleTestCase {
 
   public void testWordLeft3() throws Exception {

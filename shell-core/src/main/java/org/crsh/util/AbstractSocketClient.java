@@ -56,7 +56,7 @@ public abstract class AbstractSocketClient implements Closeable {
     this.out = out;
 
     //
-    handle(in ,out);
+    handle(in, out);
   }
 
   protected abstract void handle(InputStream in, OutputStream out) throws IOException;
@@ -66,8 +66,7 @@ public abstract class AbstractSocketClient implements Closeable {
       Utils.close(socket);
       Utils.close(in);
       Utils.close(out);
-    }
-    finally {
+    } finally {
       this.socket = null;
       this.in = null;
       this.out = null;

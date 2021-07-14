@@ -19,33 +19,28 @@
 
 package org.crsh.text.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.crsh.text.LineReader;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.RenderAppendable;
 import org.crsh.text.Style;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 class RowLineRenderer extends LineRenderer {
 
-  /** . */
   private final List<LineRenderer> cols;
 
-  /** . */
   private final Style.Composite style;
 
-  /** . */
   final int leftCellPadding;
 
-  /** . */
   final int rightCellPadding;
 
-  /** . */
   private final BorderStyle separator;
 
-  RowLineRenderer(RowElement row, BorderStyle separator, int leftCellPadding, int rightCellPadding) {
+  RowLineRenderer(
+      RowElement row, BorderStyle separator, int leftCellPadding, int rightCellPadding) {
 
     List<LineRenderer> cols = new ArrayList<LineRenderer>(row.cols.size());
     for (Element col : row.cols) {
@@ -71,7 +66,7 @@ class RowLineRenderer extends LineRenderer {
   @Override
   public int getActualWidth() {
     int actualWidth = 0;
-    for (int i = 0;i < cols.size();i++) {
+    for (int i = 0; i < cols.size(); i++) {
       LineRenderer col = cols.get(i);
       actualWidth += col.getActualWidth();
       actualWidth += leftCellPadding;
@@ -86,7 +81,7 @@ class RowLineRenderer extends LineRenderer {
   @Override
   public int getMinWidth() {
     int minWidth = 0;
-    for (int i = 0;i < cols.size();i++) {
+    for (int i = 0; i < cols.size(); i++) {
       LineRenderer col = cols.get(i);
       minWidth += col.getMinWidth();
       minWidth += leftCellPadding;
@@ -123,7 +118,7 @@ class RowLineRenderer extends LineRenderer {
   // in relation to widths array that can contain (should?) 0 value
   LineReader renderer(final int[] widths, int height) {
     final LineReader[] readers = new LineReader[widths.length];
-    for (int i = 0;i < readers.length;i++) {
+    for (int i = 0; i < readers.length; i++) {
       LineRenderer renderer = cols.get(i);
       LineReader reader = renderer.reader(widths[i] - leftCellPadding - rightCellPadding, height);
       readers[i] = reader;
@@ -149,11 +144,9 @@ class RowLineRenderer extends LineRenderer {
           to.enterStyle(style);
         }
 
-        //
-        for (int i = 0;i < readers.length;i++) {
+        for (int i = 0; i < readers.length; i++) {
           LineReader reader = readers[i];
 
-          //
           if (i > 0) {
             if (separator != null) {
               to.styleOff();
@@ -164,20 +157,20 @@ class RowLineRenderer extends LineRenderer {
           if (reader != null && reader.hasLine()) {
             // Left padding
             if (leftCellPadding > 0) {
-              for (int j = 0;j < leftCellPadding;j++) {
+              for (int j = 0; j < leftCellPadding; j++) {
                 to.append(' ');
               }
             }
             reader.renderLine(to);
             // Right padding
             if (rightCellPadding > 0) {
-              for (int j = 0;j < rightCellPadding;j++) {
+              for (int j = 0; j < rightCellPadding; j++) {
                 to.append(' ');
               }
             }
           } else {
             readers[i] = null;
-            for (int j = widths[i];j > 0;j--) {
+            for (int j = widths[i]; j > 0; j--) {
               to.append(' ');
             }
           }
@@ -187,7 +180,6 @@ class RowLineRenderer extends LineRenderer {
         if (style != null) {
           to.leaveStyle();
         }
-
 
         // Update status
         done = true;
@@ -207,7 +199,7 @@ class RowLineRenderer extends LineRenderer {
   public LineReader reader(int width) {
     int[] widths = new int[cols.size()];
     int[] minWidths = new int[cols.size()];
-    for (int i = 0;i < cols.size();i++) {
+    for (int i = 0; i < cols.size(); i++) {
       LineRenderer renderable = cols.get(i);
       widths[i] = Math.max(widths[i], renderable.getActualWidth());
       minWidths[i] = Math.max(minWidths[i], renderable.getMinWidth());

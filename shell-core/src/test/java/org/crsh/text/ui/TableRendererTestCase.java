@@ -19,10 +19,10 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.Color;
-
 import static org.crsh.text.ui.Element.label;
 import static org.crsh.text.ui.Element.row;
+
+import org.crsh.text.Color;
 
 public class TableRendererTestCase extends AbstractRendererTestCase {
 
@@ -31,44 +31,22 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
     TableElement table = new TableElement();
     table.withColumnLayout(Layout.flow());
 
-    table.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    table.add(row().add(label("a")).add(label("b"))).add(row().add(label("c")).add(label("d")));
 
-    assertRender(table, 2,
-        "ab",
-        "cd");
+    assertRender(table, 2, "ab", "cd");
   }
 
   public void testHeterogeneous() throws Exception {
 
     TableElement table = new TableElement(1, 2);
 
-    table.
-        add(row().
-            add(label("foo"))
-        ).
-        add(row().
-            add(label("aa")).
-            add(label("bb"))
-        ).
-        add(row().
-            add(label("cc")).
-            add(label("dd")).
-            add(label("ee"))
-        );
+    table
+        .add(row().add(label("foo")))
+        .add(row().add(label("aa")).add(label("bb")))
+        .add(row().add(label("cc")).add(label("dd")).add(label("ee")));
 
     //
-    assertRender(table, 3,
-        "foo",
-        "abb",
-        "a  ",
-        "cdd",
-        "c  ");
+    assertRender(table, 3, "foo", "abb", "a  ", "cdd", "c  ");
   }
 
   public void testRenderWithoutBorder() throws Exception {
@@ -152,7 +130,7 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
     assertRender(table, 6, " ---- ", "|foob|", "|   a|", "|   r|", " ---- ");
     assertRender(table, 5, " --- ", "|foo|", " --- ");
     assertRender(table, 4, " -- ", "|fo|", "|o |", " -- ");
-    assertRender(table, 3, " - ", "|f|", "|o|", "|o|"," - ");
+    assertRender(table, 3, " - ", "|f|", "|o|", "|o|", " - ");
     assertRender(table, 2);
     assertRender(table, 1);
     assertRender(table, 0);
@@ -209,7 +187,7 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
     assertRender(table, 6, " ---- ", "|foob|", " ---- ");
     assertRender(table, 5, " --- ", "|foo|", " --- ");
     assertRender(table, 4, " -- ", "|fo|", " -- ");
-    assertRender(table, 3, " - ", "|f|"," - ");
+    assertRender(table, 3, " - ", "|f|", " - ");
     assertRender(table, 2);
     assertRender(table, 1);
     assertRender(table, 0);
@@ -250,7 +228,8 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
   }
 
   public void testRenderWithBorderAndSeparator() throws Exception {
-    TableElement table = new TableElement().border(BorderStyle.DASHED).separator(BorderStyle.DASHED);
+    TableElement table =
+        new TableElement().border(BorderStyle.DASHED).separator(BorderStyle.DASHED);
     RowElement row = new RowElement().add(new LabelElement("foo"), new LabelElement("bar"));
     table.add(row);
 
@@ -266,11 +245,11 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
     assertRender(table, 10, " -------  ", "|foo|bar| ", " -------  ");
     assertRender(table, 9, " ------- ", "|foo|bar|", " ------- ");
     assertRender(table, 8, " ------ ", "|foo|ba|", "|   |r |", " ------ ");
-    assertRender(table, 7, " ----- ", "|foo|b|", "|   |a|", "|   |r|"," ----- ");
+    assertRender(table, 7, " ----- ", "|foo|b|", "|   |a|", "|   |r|", " ----- ");
     assertRender(table, 6, " ---  ", "|foo| ", " ---  ");
     assertRender(table, 5, " --- ", "|foo|", " --- ");
     assertRender(table, 4, " -- ", "|fo|", "|o |", " -- ");
-    assertRender(table, 3, " - ", "|f|", "|o|", "|o|"," - ");
+    assertRender(table, 3, " - ", "|f|", "|o|", "|o|", " - ");
     assertRender(table, 2);
     assertRender(table, 1);
     assertRender(table, 0);
@@ -313,21 +292,29 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
   public void testCosmetic() throws Exception {
     TableElement table = new TableElement();
     table.withColumnLayout(Layout.flow());
-    RowElement row = new RowElement().add(new LabelElement("foo", 5), new LabelElement("This text is larger to be displayed in a cell of 32", 5));
+    RowElement row =
+        new RowElement()
+            .add(
+                new LabelElement("foo", 5),
+                new LabelElement("This text is larger to be displayed in a cell of 32", 5));
     table.add(row);
-    assertRender(table, 32,
-        "fooThis text is larger to be dis",
-        "   played in a cell of 32       ");
+    assertRender(table, 32, "fooThis text is larger to be dis", "   played in a cell of 32       ");
   }
 
   public void testCosmeticWithBorder() throws Exception {
     TableElement table = new TableElement();
     table.withColumnLayout(Layout.flow());
-    RowElement row = new RowElement().add(new LabelElement("foo", 5), new LabelElement("This text is larger to be displayed in a cell of 32", 5));
+    RowElement row =
+        new RowElement()
+            .add(
+                new LabelElement("foo", 5),
+                new LabelElement("This text is larger to be displayed in a cell of 32", 5));
     table.separator(BorderStyle.DASHED);
     table.border(BorderStyle.DASHED);
     table.add(row);
-    assertRender(table, 32,
+    assertRender(
+        table,
+        32,
         " ------------------------------ ",
         "|foo|This text is larger to be |",
         "|   |displayed in a cell of 32 |",
@@ -340,36 +327,32 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
     table.withColumnLayout(Layout.flow());
     table.border(BorderStyle.DASHED);
 
-    table.
-        add(row().style(Color.blue.fg().bg(Color.green).bold()).
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c").style(Color.blue.fg().bg(Color.green).bold())).
-            add(label("d")));
+    table
+        .add(row().style(Color.blue.fg().bg(Color.green).bold()).add(label("a")).add(label("b")))
+        .add(row().add(label("c").style(Color.blue.fg().bg(Color.green).bold())).add(label("d")));
 
-/*
-    ChunkBuffer reader = new ChunkBuffer();
-    ShellFormatter writer = new ShellFormatter(reader, "_");
+    /*
+        ChunkBuffer reader = new ChunkBuffer();
+        ShellFormatter writer = new ShellFormatter(reader, "_");
 
-    tableElement.print(writer, new TestInvocationContext());
+        tableElement.print(writer, new TestInvocationContext());
 
-    String expected =
-        " --------------- _|" +
-            "\u001B[1;34;42m a     \u001B[0m|\u001B[1;34;42m b     \u001B[0m|_" +
-            "|\u001B[1;34;42m c     \u001B[0m| \u001B[0md     \u001B[0m|_" +
-            " --------------- _";
+        String expected =
+            " --------------- _|" +
+                "\u001B[1;34;42m a     \u001B[0m|\u001B[1;34;42m b     \u001B[0m|_" +
+                "|\u001B[1;34;42m c     \u001B[0m| \u001B[0md     \u001B[0m|_" +
+                " --------------- _";
 
-    StringBuilder sb = new StringBuilder();
-    reader.writeAnsiTo(sb);
-    String ansi = sb.toString();
+        StringBuilder sb = new StringBuilder();
+        reader.writeAnsiTo(sb);
+        String ansi = sb.toString();
 
-    //
-    assertEquals(
-        expected
-        , ansi);
+        //
+        assertEquals(
+            expected
+            , ansi);
 
-*/
+    */
   }
 
   public void testCellPadding() {
@@ -474,7 +457,8 @@ public class TableRendererTestCase extends AbstractRendererTestCase {
   }
 
   public void testRowLayoutWithColumns() {
-    TableElement table = new TableElement().border(BorderStyle.DASHED).separator(BorderStyle.DASHED);
+    TableElement table =
+        new TableElement().border(BorderStyle.DASHED).separator(BorderStyle.DASHED);
     table.add(new RowElement().add(new LabelElement("foo"), new LabelElement("bar")));
 
     //

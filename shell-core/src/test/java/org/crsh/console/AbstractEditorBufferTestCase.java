@@ -18,9 +18,8 @@
  */
 package org.crsh.console;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
+import junit.framework.TestCase;
 
 public abstract class AbstractEditorBufferTestCase extends TestCase {
 
@@ -31,12 +30,12 @@ public abstract class AbstractEditorBufferTestCase extends TestCase {
 
   /** . */
   private EditorBuffer buffer;
-  
+
   @Override
   protected void setUp() throws Exception {
     resetConsole();
   }
-  
+
   private void resetConsole() {
     buffer = new EditorBuffer(client = new SimpleConsoleDriver(getSupportsCursorMove()));
   }
@@ -63,7 +62,7 @@ public abstract class AbstractEditorBufferTestCase extends TestCase {
   }
 
   public void testReadLine() throws IOException {
-    for (String test : new String[]{"a\n","a\r\n"}) {
+    for (String test : new String[] {"a\n", "a\r\n"}) {
       resetConsole();
       buffer.append(test);
       assertTrue(buffer.hasNext());
@@ -73,7 +72,7 @@ public abstract class AbstractEditorBufferTestCase extends TestCase {
     }
 
     //
-    for (String test : new String[]{"a\n\n"}) {
+    for (String test : new String[] {"a\n\n"}) {
       resetConsole();
       buffer.append(test);
       assertTrue(buffer.hasNext());

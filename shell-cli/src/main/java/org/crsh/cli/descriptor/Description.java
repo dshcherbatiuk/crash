@@ -38,11 +38,10 @@
 
 package org.crsh.cli.descriptor;
 
-import org.crsh.cli.Man;
-import org.crsh.cli.Usage;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import org.crsh.cli.Man;
+import org.crsh.cli.Usage;
 
 public final class Description {
 
@@ -96,15 +95,15 @@ public final class Description {
     String man = "";
     for (Annotation annotation : annotations) {
       if (annotation instanceof Usage) {
-        usage = ((Usage)annotation).value();
+        usage = ((Usage) annotation).value();
       } else if (annotation instanceof Man) {
-        man = ((Man)annotation).value();
+        man = ((Man) annotation).value();
       }
     }
 
     //
-    this.usage  = usage;
-    this.man  = man;
+    this.usage = usage;
+    this.man = man;
   }
 
   public String getUsage() {
@@ -128,7 +127,7 @@ public final class Description {
     if (obj == this) {
       return true;
     } else if (obj instanceof Description) {
-      Description that = (Description)obj;
+      Description that = (Description) obj;
       return usage.equals(that.usage) && man.equals(that.man);
     } else {
       return false;

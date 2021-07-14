@@ -19,22 +19,20 @@
 
 package org.crsh.shell.impl.async;
 
-import org.crsh.AbstractTestCase;
-import test.shell.base.BaseProcess;
-import test.shell.base.BaseProcessContext;
-import test.shell.base.BaseProcessFactory;
-import test.shell.base.BaseShell;
-import test.CommandQueue;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellResponse;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import org.crsh.AbstractTestCase;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellResponse;
+import test.CommandQueue;
+import test.shell.base.BaseProcess;
+import test.shell.base.BaseProcessContext;
+import test.shell.base.BaseProcessFactory;
+import test.shell.base.BaseShell;
 
 public class CancellationTestCase extends AbstractTestCase {
-
 
   public void testEvaluating() throws Exception {
     final AtomicReference<Throwable> failure = new AtomicReference<Throwable>();
@@ -43,36 +41,38 @@ public class CancellationTestCase extends AbstractTestCase {
     final CountDownLatch latch2 = new CountDownLatch(1);
 
     //
-    BaseProcessFactory factory = new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
+    BaseProcessFactory factory =
+        new BaseProcessFactory() {
           @Override
-          protected ShellResponse execute(String request) {
-            latch1.countDown();
-            try {
-              latch2.await();
-            } catch (InterruptedException e) {
-              failure.set(e);
-            }
-            return ShellResponse.ok();
-          }
-          @Override
-          public void cancel() {
-            cancelCount.getAndIncrement();
+          public BaseProcess create(String request) {
+            return new BaseProcess(request) {
+              @Override
+              protected ShellResponse execute(String request) {
+                latch1.countDown();
+                try {
+                  latch2.await();
+                } catch (InterruptedException e) {
+                  failure.set(e);
+                }
+                return ShellResponse.ok();
+              }
+
+              @Override
+              public void cancel() {
+                cancelCount.getAndIncrement();
+              }
+            };
           }
         };
-      }
-    };
 
     //
     Shell shell = new BaseShell(factory);
     CommandQueue commands = new CommandQueue();
-    AsyncShell  asyncShell = new AsyncShell(commands, shell);
+    AsyncShell asyncShell = new AsyncShell(commands, shell);
 
     //
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "foo").execute();
-    assertEquals(Status.QUEUED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.QUEUED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(0, cancelCount.get());
     assertEquals(1, commands.getSize());
 
@@ -80,17 +80,17 @@ public class CancellationTestCase extends AbstractTestCase {
     // And wait until the other thread is waiting
     Future<?> future = commands.executeAsync();
     latch1.await();
-    assertEquals(Status.EVALUATING, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.EVALUATING, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(0, cancelCount.get());
 
     //
     ctx.getProcess().cancel();
-    assertEquals(Status.CANCELED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.CANCELED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(1, cancelCount.get());
 
     //
     ctx.getProcess().cancel();
-    assertEquals(Status.CANCELED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.CANCELED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(1, cancelCount.get());
 
     // Wait until it's done
@@ -99,7 +99,7 @@ public class CancellationTestCase extends AbstractTestCase {
 
     // Test we received a cancelled response even though we provided an OK result
     assertEquals(ShellResponse.Cancelled.class, ctx.getResponse().getClass());
-    assertEquals(Status.TERMINATED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.TERMINATED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(1, cancelCount.get());
 
     //
@@ -110,43 +110,45 @@ public class CancellationTestCase extends AbstractTestCase {
     final AtomicReference<Throwable> failure = new AtomicReference<Throwable>();
 
     //
-    BaseProcessFactory factory = new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
+    BaseProcessFactory factory =
+        new BaseProcessFactory() {
           @Override
-          protected ShellResponse execute(String request) {
-            failure.set(failure("Was not exepecting request"));
-            return ShellResponse.ok();
-          }
-          @Override
-          public void cancel() {
-            failure.set(failure("Was not exepecting cancel"));
+          public BaseProcess create(String request) {
+            return new BaseProcess(request) {
+              @Override
+              protected ShellResponse execute(String request) {
+                failure.set(failure("Was not exepecting request"));
+                return ShellResponse.ok();
+              }
+
+              @Override
+              public void cancel() {
+                failure.set(failure("Was not exepecting cancel"));
+              }
+            };
           }
         };
-      }
-    };
 
     //
     Shell shell = new BaseShell(factory);
     CommandQueue commands = new CommandQueue();
-    AsyncShell  asyncShell = new AsyncShell(commands, shell);
+    AsyncShell asyncShell = new AsyncShell(commands, shell);
 
     //
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "foo").execute();
-    assertEquals(Status.QUEUED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.QUEUED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(1, commands.getSize());
 
     //
     ctx.getProcess().cancel();
-    assertEquals(Status.CANCELED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.CANCELED, ((AsyncProcess) ctx.getProcess()).getStatus());
 
     // Execute the command
     Future<?> future = commands.executeAsync();
     future.get();
 
     // Test we get terminated status and the callback was done
-    assertEquals(Status.TERMINATED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.TERMINATED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(ShellResponse.Cancelled.class, ctx.getResponse().getClass());
     safeFail(failure.get());
   }

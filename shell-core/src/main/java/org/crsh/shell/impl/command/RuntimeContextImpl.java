@@ -19,9 +19,8 @@
 
 package org.crsh.shell.impl.command;
 
-import org.crsh.command.RuntimeContext;
-
 import java.util.Map;
+import org.crsh.command.RuntimeContext;
 
 public class RuntimeContextImpl implements RuntimeContext {
 

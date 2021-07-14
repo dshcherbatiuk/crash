@@ -19,25 +19,24 @@
 
 package org.crsh.console;
 
-import org.crsh.text.Style;
-
 import java.io.Closeable;
 import java.io.IOException;
+import org.crsh.text.Style;
 
-/**
- * The contract between the console and the underlying stream.
- */
+/** The contract between the console and the underlying stream. */
 public interface ConsoleDriver extends Closeable {
 
   /**
-   * Returns the term width in chars. When the value is not positive it means the value could not be determined.
+   * Returns the term width in chars. When the value is not positive it means the value could not be
+   * determined.
    *
    * @return the term width
    */
   int getWidth();
 
   /**
-   * Returns the term height in chars. When the value is not positive it means the value could not be determined.
+   * Returns the term height in chars. When the value is not positive it means the value could not
+   * be determined.
    *
    * @return the term height
    */
@@ -52,18 +51,16 @@ public interface ConsoleDriver extends Closeable {
   String getProperty(String name);
 
   /**
-   * Take control of the alternate buffer. When the alternate buffer is already used
-   * nothing happens. The buffer switch should occur when then {@link #flush()} method
-   * is invoked.
+   * Take control of the alternate buffer. When the alternate buffer is already used nothing
+   * happens. The buffer switch should occur when then {@link #flush()} method is invoked.
    *
    * @return true if the alternate buffer is shown
    */
   boolean takeAlternateBuffer() throws IOException;
 
   /**
-   * Release control of the alternate buffer. When the normal buffer is already used
-   * nothing happens. The buffer switch should occur when then {@link #flush()} method
-   * is invoked.
+   * Release control of the alternate buffer. When the normal buffer is already used nothing
+   * happens. The buffer switch should occur when then {@link #flush()} method is invoked.
    *
    * @return true if the usual buffer is shown
    */
@@ -147,5 +144,4 @@ public interface ConsoleDriver extends Closeable {
    * @throws java.io.IOException any io exception
    */
   boolean moveLeft() throws IOException;
-
 }

@@ -37,13 +37,12 @@
  */
 package org.crsh.cli.descriptor;
 
-import org.crsh.cli.impl.lang.Util;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
 import java.util.List;
+import org.crsh.cli.impl.lang.Util;
 
 /**
  * Format the command descriptor for producing documentation.
@@ -63,6 +62,7 @@ public abstract class Format {
 
   /**
    * Print the specified <code>command</code> to the <code>stream</code>
+   *
    * @param command the command to print
    * @param stream the output
    * @throws IOException
@@ -85,7 +85,8 @@ public abstract class Format {
     stream.append(command.getName());
   }
 
-  protected void printFQNWithOptions(CommandDescriptor<?> command, Appendable stream) throws IOException {
+  protected void printFQNWithOptions(CommandDescriptor<?> command, Appendable stream)
+      throws IOException {
     CommandDescriptor<?> owner = command.getOwner();
     if (owner != null) {
       printFQNWithOptions(owner, stream);
@@ -98,9 +99,7 @@ public abstract class Format {
     }
   }
 
-  /**
-   * The command description in one line.
-   */
+  /** The command description in one line. */
   public static class Describe extends Format {
     @Override
     public void print(CommandDescriptor<?> command, Appendable stream) throws IOException {
@@ -108,9 +107,7 @@ public abstract class Format {
     }
   }
 
-  /**
-   * The command manual.
-   */
+  /** The command manual. */
   public static class Man extends Format {
 
     public void print(CommandDescriptor<?> command, Appendable stream) throws IOException {
@@ -120,7 +117,8 @@ public abstract class Format {
       printParametersSection(command, stream);
     }
 
-    public void printNameSection(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    public void printNameSection(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       stream.append("NAME\n");
       stream.append(Util.MAN_TAB);
       printFQN(command, stream);
@@ -131,7 +129,8 @@ public abstract class Format {
       stream.append("\n\n");
     }
 
-    public void printSynopsisSection(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    public void printSynopsisSection(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       stream.append("SYNOPSIS\n");
       stream.append(Util.MAN_TAB);
       printFQNWithOptions(command, stream);
@@ -146,7 +145,8 @@ public abstract class Format {
       stream.append("\n\n");
     }
 
-    public void printDescriptionSection(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    public void printDescriptionSection(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       String man = command.getDescription().getMan();
       if (man.length() > 0) {
         stream.append("DESCRIPTION\n");
@@ -155,7 +155,8 @@ public abstract class Format {
       }
     }
 
-    public void printParametersSection(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    public void printParametersSection(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       boolean printed = printOptions(false, command, stream);
       if (command.getSubordinates().size() > 0) {
         stream.append("COMMANDS\n");
@@ -165,7 +166,8 @@ public abstract class Format {
       }
     }
 
-    protected void printSubordinates(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    protected void printSubordinates(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       for (CommandDescriptor<?> subordinate : command.getSubordinates().values()) {
         stream.append(Util.MAN_TAB).append(subordinate.getName());
         String methodText = subordinate.getDescription().getBestEffortMan();
@@ -177,7 +179,8 @@ public abstract class Format {
       }
     }
 
-    protected boolean printOptions(boolean printed, CommandDescriptor<?> command, Appendable stream) throws IOException {
+    protected boolean printOptions(boolean printed, CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       CommandDescriptor<?> owner = command.getOwner();
       if (owner != null) {
         printed = printOptions(printed, owner, stream);
@@ -188,14 +191,16 @@ public abstract class Format {
       return printed;
     }
 
-    protected boolean printParameters(boolean printed, CommandDescriptor<?> command, Appendable stream) throws IOException {
+    protected boolean printParameters(
+        boolean printed, CommandDescriptor<?> command, Appendable stream) throws IOException {
       for (ArgumentDescriptor argument : command.getArguments()) {
         printed = printParameter(printed, argument, stream);
       }
       return printed;
     }
 
-    protected boolean printParameter(boolean printed, ParameterDescriptor parameter, Appendable stream) throws IOException {
+    protected boolean printParameter(
+        boolean printed, ParameterDescriptor parameter, Appendable stream) throws IOException {
       if (!printed) {
         stream.append("PARAMETERS\n");
       }
@@ -211,9 +216,7 @@ public abstract class Format {
     }
   }
 
-  /**
-   * The command usage.
-   */
+  /** The command usage. */
   public static class Usage extends Format {
 
     public void print(CommandDescriptor<?> command, Appendable stream) throws IOException {
@@ -221,7 +224,8 @@ public abstract class Format {
       printDetailsSection(command, stream);
     }
 
-    public void printUsageSection(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    public void printUsageSection(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       stream.append("usage: ");
       printFQNWithOptions(command, stream);
       if (command.getSubordinates().size() > 0) {
@@ -235,7 +239,8 @@ public abstract class Format {
       stream.append("\n\n");
     }
 
-    private List<String[]> collectParametersTuples(CommandDescriptor<?> command) throws IOException {
+    private List<String[]> collectParametersTuples(CommandDescriptor<?> command)
+        throws IOException {
       CommandDescriptor<?> owner = command.getOwner();
       List<String[]> tuples;
       Collection<? extends ParameterDescriptor> parameters;
@@ -250,12 +255,13 @@ public abstract class Format {
         StringBuilder sb = new StringBuilder();
         parameter.printUsage(sb);
         String usage = sb.toString();
-        tuples.add(new String[]{usage, parameter.getUsage()});
+        tuples.add(new String[] {usage, parameter.getUsage()});
       }
       return tuples;
     }
 
-    public void printDetailsSection(CommandDescriptor<?> command, Appendable stream) throws IOException {
+    public void printDetailsSection(CommandDescriptor<?> command, Appendable stream)
+        throws IOException {
       if (command.getSubordinates().isEmpty()) {
         List<String[]> tt = collectParametersTuples(command);
         int length = 0;
@@ -268,7 +274,10 @@ public abstract class Format {
           formatter.format(format, tuple[0], tuple[1]);
         }
       } else {
-        stream.append("The most commonly used ").append(command.getName()).append(" commands are:\n");
+        stream
+            .append("The most commonly used ")
+            .append(command.getName())
+            .append(" commands are:\n");
         String format = "   %1$-16s %2$s\n";
         for (CommandDescriptor<?> subordinate : command.getSubordinates().values()) {
           Formatter formatter = new Formatter(stream);

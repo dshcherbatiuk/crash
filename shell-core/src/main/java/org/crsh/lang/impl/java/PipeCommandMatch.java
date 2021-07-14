@@ -18,24 +18,22 @@
  */
 package org.crsh.lang.impl.java;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.command.*;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ErrorKind;
-import org.crsh.text.ScreenContext;
 import org.crsh.shell.impl.command.InvocationContextImpl;
 import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.text.ScreenContext;
 import org.crsh.util.Utils;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-
-/**
-* @author Julien Viet
-*/
-class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>> extends BaseCommandMatch<T, C, P> {
+/** @author Julien Viet */
+class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>>
+    extends BaseCommandMatch<T, C, P> {
 
   /** . */
   final Type ret;
@@ -52,12 +50,13 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>> exten
   /** . */
   private final String name;
 
-  public PipeCommandMatch(ClassShellCommand<T> baseShellCommand, CommandInvoker<Instance<T>, PC> invoker) {
+  public PipeCommandMatch(
+      ClassShellCommand<T> baseShellCommand, CommandInvoker<Instance<T>, PC> invoker) {
     super(baseShellCommand);
     this.invoker = invoker;
     ret = invoker.getGenericReturnType();
-    consumedType = (Class<C>)Utils.resolveToClass(ret, Pipe.class, 0);
-    producedType = (Class<P>)Utils.resolveToClass(ret, Pipe.class, 1);
+    consumedType = (Class<C>) Utils.resolveToClass(ret, Pipe.class, 0);
+    producedType = (Class<P>) Utils.resolveToClass(ret, Pipe.class, 1);
     name = baseShellCommand.getDescriptor().getName();
   }
 
@@ -90,24 +89,25 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>> exten
 
       public void open(CommandContext<? super P> consumer) throws CommandException {
         // Java is fine with that but not intellij....
-        CommandContext<P> consumer2 = (CommandContext<P>)consumer;
+        CommandContext<P> consumer2 = (CommandContext<P>) consumer;
         open2(consumer2);
       }
 
       @Override
       public ScreenContext getScreenContext() {
-        return real instanceof ScreenContext ? (ScreenContext)real : null;
+        return real instanceof ScreenContext ? (ScreenContext) real : null;
       }
 
       @Override
       public KeyHandler getKeyHandler() {
-        return real instanceof KeyHandler ? (KeyHandler)real : null;
+        return real instanceof KeyHandler ? (KeyHandler) real : null;
       }
 
       public void open2(final CommandContext<P> consumer) throws CommandException {
 
-        //
-        invocationContext = new InvocationContextImpl<P>(consumer, ShellSafetyFactory.getCurrentThreadShellSafety());
+        invocationContext =
+            new InvocationContextImpl<P>(
+                consumer, ShellSafetyFactory.getCurrentThreadShellSafety());
 
         // Push context
         command.pushContext(invocationContext);
@@ -115,15 +115,15 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>> exten
         //  Set the unmatched part
         command.unmatched = invoker.getMatch().getRest();
 
-        //
         PC ret;
         try {
           ret = invoker.invoke(this);
-        }
-        catch (org.crsh.cli.impl.SyntaxException e) {
-          throw new CommandException(ErrorKind.SYNTAX, "Syntax exception when executing command " + name, e);
+        } catch (org.crsh.cli.impl.SyntaxException e) {
+          throw new CommandException(
+              ErrorKind.SYNTAX, "Syntax exception when executing command " + name, e);
         } catch (InvocationException e) {
-          throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e.getCause());
+          throw new CommandException(
+              ErrorKind.EVALUATION, "Command " + name + " failed", e.getCause());
         }
 
         // It's a pipe command
@@ -131,19 +131,17 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>> exten
           real = ret;
           try {
             real.open(invocationContext);
-          }
-          catch (Exception e) {
+          } catch (Exception e) {
             throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e);
           }
         }
       }
 
-      public void provide(C element) throws IOException, CommandException {
+      public void provide(C element) throws CommandException {
         if (real != null) {
           try {
             real.provide(element);
-          }
-          catch (Exception e) {
+          } catch (Exception e) {
             throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e);
           }
         }
@@ -163,14 +161,12 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>> exten
             if (real != null) {
               real.close();
             }
-          }
-          catch (Exception e) {
+          } catch (Exception e) {
             throw new CommandException(ErrorKind.EVALUATION, "Command " + name + " failed", e);
           } finally {
             try {
               invocationContext.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               throw new CommandException(ErrorKind.EVALUATION, e);
             }
           }

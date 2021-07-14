@@ -19,9 +19,8 @@
 
 package org.crsh.shell;
 
-import org.crsh.cli.impl.completion.CompletionMatch;
-
 import java.io.Closeable;
+import org.crsh.cli.impl.completion.CompletionMatch;
 
 public interface Shell extends Closeable {
 
@@ -51,10 +50,8 @@ public interface Shell extends Closeable {
   /**
    * Completion.
    *
-   *
    * @param prefix the prefix to complete
    * @return the sorted list of available suffixes
    */
   CompletionMatch complete(String prefix);
-
 }

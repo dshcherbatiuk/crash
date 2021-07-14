@@ -22,5 +22,4 @@ package org.crsh.cli.impl.completion;
 public abstract class Completion {
 
   abstract CompletionMatch complete() throws CompletionException;
-
 }

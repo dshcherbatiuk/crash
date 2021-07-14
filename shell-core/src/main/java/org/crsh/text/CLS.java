@@ -19,14 +19,11 @@
 
 package org.crsh.text;
 
-/**
- * Clears the screen.
- */
+/** Clears the screen. */
 public class CLS {
 
   /** . */
   public static final CLS INSTANCE = new CLS();
 
-  private CLS() {
-  }
+  private CLS() {}
 }

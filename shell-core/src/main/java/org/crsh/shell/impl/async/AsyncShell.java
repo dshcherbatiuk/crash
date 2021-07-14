@@ -19,38 +19,28 @@
 
 package org.crsh.shell.impl.async;
 
-import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.shell.Shell;
-
 import java.io.Closeable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import org.crsh.cli.impl.completion.CompletionMatch;
+import org.crsh.shell.Shell;
 
 public class AsyncShell implements Shell, Closeable {
 
-  /** . */
   final Shell shell;
 
-  /** . */
-  private AsyncProcess current;
-
-  /** . */
   final ExecutorService executor;
 
-  /** . */
   boolean closed;
 
-  /** . */
   final Object lock = new Object();
 
-  /** . */
   final Set<AsyncProcess> processes;
 
   public AsyncShell(ExecutorService executor, Shell shell) {
     this.shell = shell;
-    this.current = null;
     this.executor = executor;
     this.closed = false;
     this.processes = Collections.synchronizedSet(new HashSet<AsyncProcess>());
@@ -76,7 +66,8 @@ public class AsyncShell implements Shell, Closeable {
     }
   }
 
-  // Shell implementation **********************************************************************************************
+  // Shell implementation
+  // **********************************************************************************************
 
   public String getWelcome() {
     return shell.getWelcome();

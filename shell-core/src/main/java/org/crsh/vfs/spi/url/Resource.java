@@ -18,20 +18,16 @@
  */
 package org.crsh.vfs.spi.url;
 
-import org.crsh.util.InputStreamFactory;
-
 import java.net.URL;
+import org.crsh.util.InputStreamFactory;
 
 /** @author Julien Viet */
 public class Resource {
 
-  /** . */
   public final URL url;
 
-  /** . */
   public final InputStreamFactory streamFactory;
 
-  /** . */
   public final long lastModified;
 
   Resource(URL url, InputStreamFactory streamFactory, long lastModified) {

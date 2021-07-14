@@ -19,12 +19,11 @@
 
 package org.crsh.cli.completers;
 
+import java.lang.reflect.Method;
 import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.spi.Completer;
 import org.crsh.cli.spi.Completion;
 import org.crsh.cli.type.ValueType;
-import org.crsh.cli.spi.Completer;
-
-import java.lang.reflect.Method;
 
 public class EnumCompleter implements Completer {
 
@@ -46,9 +45,9 @@ public class EnumCompleter implements Completer {
       Class<?> vt = parameter.getDeclaredType();
       Method valuesM = vt.getDeclaredMethod("values");
       Method nameM = vt.getMethod("name");
-      Enum<?>[] values = (Enum<?>[])valuesM.invoke(null);
+      Enum<?>[] values = (Enum<?>[]) valuesM.invoke(null);
       for (Enum<?> value : values) {
-        String name = (String)nameM.invoke(value);
+        String name = (String) nameM.invoke(value);
         if (name.startsWith(prefix)) {
           if (builder == null) {
             builder = Completion.builder(prefix);

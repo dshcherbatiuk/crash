@@ -18,31 +18,29 @@
  */
 package org.crsh.console.operations;
 
+import java.util.concurrent.atomic.AtomicReference;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
-import test.shell.sync.SyncProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import test.shell.sync.SyncProcess;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViMoveAcceptLineTestCase extends AbstractConsoleTestCase {
 
   public void testEnter() {
     console.init();
     final AtomicReference<String> calls = new AtomicReference<String>();
-    shell.addProcess(new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        calls.set(request);
-        context.end(ShellResponse.ok());
-      }
-    });
+    shell.addProcess(
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            calls.set(request);
+            context.end(ShellResponse.ok());
+          }
+        });
     console.toInsert();
     console.on(KeyStrokes.of("abc def"));
     console.toMove();

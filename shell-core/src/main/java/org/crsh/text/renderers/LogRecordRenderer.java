@@ -18,20 +18,19 @@
  */
 package org.crsh.text.renderers;
 
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
 import org.crsh.text.Color;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 import org.crsh.text.ui.LabelElement;
 import org.crsh.util.BaseIterator;
 
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.SimpleFormatter;
-
 /**
- * A renderer for {@link java.util.logging.LogRecord} objects based on the {@link java.util.logging.SimpleFormatter}
- * formatter.
+ * A renderer for {@link java.util.logging.LogRecord} objects based on the {@link
+ * java.util.logging.SimpleFormatter} formatter.
  *
  * @author Julien Viet
  */
@@ -44,15 +43,15 @@ public class LogRecordRenderer extends Renderer<LogRecord> {
 
   @Override
   public LineRenderer renderer(final Iterator<LogRecord> stream) {
-    return LineRenderer.vertical(new Iterable<LineRenderer>() {
-      @Override
-      public Iterator<LineRenderer> iterator() {
-        return new BaseIterator<LineRenderer>() {
+    return LineRenderer.vertical(
+        () -> new BaseIterator<LineRenderer>() {
           final SimpleFormatter formatter = new SimpleFormatter();
+
           @Override
           public boolean hasNext() {
             return stream.hasNext();
           }
+
           @Override
           public LineRenderer next() {
             LogRecord record = stream.next();
@@ -69,8 +68,6 @@ public class LogRecordRenderer extends Renderer<LogRecord> {
             }
             return new LabelElement(line).style(color.fg()).renderer();
           }
-        };
-      }
-    });
+        });
   }
 }

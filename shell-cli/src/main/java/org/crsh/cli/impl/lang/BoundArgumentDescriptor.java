@@ -18,6 +18,7 @@
  */
 package org.crsh.cli.impl.lang;
 
+import java.lang.annotation.Annotation;
 import org.crsh.cli.descriptor.ArgumentDescriptor;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.impl.ParameterType;
@@ -26,17 +27,23 @@ import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.spi.Completer;
 
-import java.lang.annotation.Annotation;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 class BoundArgumentDescriptor extends ArgumentDescriptor implements Binding {
 
   /** . */
   final Binding binding;
 
-  BoundArgumentDescriptor(Binding binding, String name, ParameterType<?> type, Description info, boolean required, boolean password, boolean unquote, Class<? extends Completer> completerType, Annotation annotation) throws IllegalValueTypeException, IllegalParameterException {
+  BoundArgumentDescriptor(
+      Binding binding,
+      String name,
+      ParameterType<?> type,
+      Description info,
+      boolean required,
+      boolean password,
+      boolean unquote,
+      Class<? extends Completer> completerType,
+      Annotation annotation)
+      throws IllegalValueTypeException, IllegalParameterException {
     super(name, type, info, required, password, unquote, completerType, annotation);
 
     //

@@ -18,14 +18,12 @@
  */
 package org.crsh.command.base.factory;
 
+import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
-import java.util.Hashtable;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class NestedInitialContextFactory implements InitialContextFactory {
   public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
     return new NestedContext();

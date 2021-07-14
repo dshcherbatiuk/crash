@@ -19,6 +19,13 @@
 
 package org.crsh.console.jline;
 
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.PrintStream;
+import java.util.Stack;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jline.Terminal;
 import jline.console.ConsoleReader;
 import jline.console.KeyMap;
@@ -29,20 +36,16 @@ import org.crsh.console.ConsoleDriver;
 import org.crsh.shell.Shell;
 import org.crsh.text.Style;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.PrintStream;
-import java.util.Stack;
-import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class JLineProcessor implements Runnable, ConsoleDriver {
 
-  /** . */
+  /**
+   * .
+   */
   private final Console console;
 
-  /** Whether or not we switched on the alternate screen. */
+  /**
+   * Whether or not we switched on the alternate screen.
+   */
   boolean useAlternate;
 
   // *********
@@ -55,11 +58,7 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
   final boolean ansi;
   final Logger logger = Logger.getLogger(JLineProcessor.class.getName());
 
-  public JLineProcessor(
-      boolean ansi,
-      Shell shell,
-      ConsoleReader reader,
-      PrintStream out) {
+  public JLineProcessor(boolean ansi, Shell shell, ConsoleReader reader, PrintStream out) {
     this(ansi, shell, reader, out, System.getProperty("line.separator"));
   }
 
@@ -81,12 +80,7 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
     this.ansi = ansi;
 
     // Update the mode according to the notification
-    console.addModeListener(new Runnable() {
-      @Override
-      public void run() {
-        reader.setKeyMap(console.getMode().getKeyMap());
-      }
-    });
+    console.addModeListener(() -> reader.setKeyMap(console.getMode().getKeyMap()));
   }
 
   public void interrupt() {
@@ -112,7 +106,7 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
       try {
 
         //
-        int c = pushBackChar.isEmpty() ? reader.readCharacter() : pushBackChar.pop ();
+        int c = pushBackChar.isEmpty() ? reader.readCharacter() : pushBackChar.pop();
         if (c == -1) {
           break;
         }
@@ -121,7 +115,7 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
         sb.appendCodePoint(c);
 
         //
-        Object o = reader.getKeys().getBound( sb );
+        Object o = reader.getKeys().getBound(sb);
 
         /*
          * A KeyMap indicates that the key that was struck has a
@@ -130,7 +124,7 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
          * lookups. Since more keys must follow, go back to waiting
          * for the next key.
          */
-        if ( o instanceof KeyMap) {
+        if (o instanceof KeyMap) {
           /*
            * The ESC key (#27) is special in that it is ambiguous until
            * you know what is coming next.  The ESC could be a literal
@@ -147,15 +141,14 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
            */
           if (c == 27
               && pushBackChar.isEmpty()
-              && ((NonBlockingInputStream)reader.getInput()).isNonBlockingEnabled()
-              && ((NonBlockingInputStream)reader.getInput()).peek(escapeTimeout) == -2) {
+              && ((NonBlockingInputStream) reader.getInput()).isNonBlockingEnabled()
+              && ((NonBlockingInputStream) reader.getInput()).peek(escapeTimeout) == -2) {
             o = ((KeyMap) o).getAnotherKey();
             if (o == null || o instanceof KeyMap) {
               continue;
             }
             sb.setLength(0);
-          }
-          else {
+          } else {
             continue;
           }
         }
@@ -176,30 +169,30 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
          * If there is no binding found, then we go back to waiting for
          * input.
          */
-        while ( o == null && sb.length() > 0 ) {
-          c = sb.charAt( sb.length() - 1 );
-          sb.setLength( sb.length() - 1 );
-          Object o2 = reader.getKeys().getBound( sb );
-          if ( o2 instanceof KeyMap ) {
+        while (o == null && sb.length() > 0) {
+          c = sb.charAt(sb.length() - 1);
+          sb.setLength(sb.length() - 1);
+          Object o2 = reader.getKeys().getBound(sb);
+          if (o2 instanceof KeyMap) {
             o = ((KeyMap) o2).getAnotherKey();
-            if ( o == null ) {
+            if (o == null) {
               continue;
             } else {
-              pushBackChar.push( (char) c );
+              pushBackChar.push((char) c);
             }
           }
         }
 
-        if ( o == null ) {
+        if (o == null) {
           continue;
         }
 
         // It must be that unless it is a macro (...) -> not yet handled
         if (o instanceof Operation) {
-          Operation operation = (Operation)o;
+          Operation operation = (Operation) o;
 
           int[] buffer = new int[sb.length()];
-          for (int i = 0;i < buffer.length;i++) {
+          for (int i = 0; i < buffer.length; i++) {
             buffer[i] = sb.codePointAt(i);
           }
           sb.setLength(0);
@@ -209,13 +202,11 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
         } else {
           System.out.println("No operation: " + o);
         }
-      }
-      catch (InterruptedIOException e) {
+      } catch (InterruptedIOException e) {
         // Suppress warning for "Interrupted at cycle #0 while waiting for data to become available"
         logger.log(Level.FINE, e.getMessage(), e);
         return;
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         logger.log(Level.WARNING, e.getMessage(), e);
         return;
       }
@@ -256,13 +247,14 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
         // Save screen and erase
         writer.print("\033[?47h"); // Switches to the alternate screen
         // writer.print("\033[1;43r");
-//      processor.writer.print("\033[m"); // Reset to normal (Sets SGR parameters : 0 m == m)
+        //      processor.writer.print("\033[m"); // Reset to normal (Sets SGR parameters : 0 m ==
+        // m)
         // writer.print("\033[4l");
         // writer.print("\033[?1h");
         // writer.print("\033[=");
-//      processor.writer.print("\033[H"); // Move the cursor to home
-//      processor.writer.print("\033[2J"); // Clear screen
-//      processor.writer.flush();
+        //      processor.writer.print("\033[H"); // Move the cursor to home
+        //      processor.writer.print("\033[2J"); // Clear screen
+        //      processor.writer.flush();
       }
       return true;
     } else {

@@ -1,10 +1,9 @@
 package org.crsh.util;
 
-import junit.framework.TestCase;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import junit.framework.TestCase;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class SimpleMapTestCase extends TestCase {

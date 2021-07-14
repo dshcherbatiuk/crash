@@ -100,11 +100,9 @@ public abstract class ShellResponse implements Serializable {
 
   public static class NoCommand extends ShellResponse {
 
-    /** . */
     private static final NoCommand INSTANCE = new NoCommand();
 
-    private NoCommand() {
-    }
+    private NoCommand() {}
 
     @Override
     public String getMessage() {
@@ -114,11 +112,9 @@ public abstract class ShellResponse implements Serializable {
 
   public static class Close extends ShellResponse {
 
-    /** . */
     private static final Close INSTANCE = new Close();
 
-    private Close() {
-    }
+    private Close() {}
 
     @Override
     public String getMessage() {
@@ -126,16 +122,13 @@ public abstract class ShellResponse implements Serializable {
     }
   }
 
-  /**
-   * Command execution is terminated.
-   */
+  /** Command execution is terminated. */
   public static class Ok extends ShellResponse {
 
-    /** . */
     private final transient Iterable<?> produced;
 
     private Ok() {
-      this(Collections.<Object>emptyList());
+      this(Collections.emptyList());
     }
 
     private Ok(Iterable<?> produced) {
@@ -154,11 +147,9 @@ public abstract class ShellResponse implements Serializable {
 
   public static class Cancelled extends ShellResponse {
 
-    /** . */
     private static final Cancelled INSTANCE = new Cancelled();
 
-    private Cancelled() {
-    }
+    private Cancelled() {}
 
     @Override
     public String getMessage() {

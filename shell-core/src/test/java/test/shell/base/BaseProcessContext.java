@@ -19,21 +19,20 @@
 
 package test.shell.base;
 
-import junit.framework.Assert;
-import org.crsh.AbstractTestCase;
-import org.crsh.keyboard.KeyHandler;
-import org.crsh.keyboard.KeyType;
-import org.crsh.text.Screenable;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellProcess;
-import org.crsh.shell.ShellProcessContext;
-import org.crsh.shell.ShellResponse;
-import org.crsh.text.Style;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import junit.framework.Assert;
+import org.crsh.AbstractTestCase;
+import org.crsh.keyboard.KeyHandler;
+import org.crsh.keyboard.KeyType;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellProcess;
+import org.crsh.shell.ShellProcessContext;
+import org.crsh.shell.ShellResponse;
+import org.crsh.text.Screenable;
+import org.crsh.text.Style;
 
 public class BaseProcessContext implements ShellProcessContext {
 
@@ -116,7 +115,7 @@ public class BaseProcessContext implements ShellProcessContext {
   public BaseProcessContext assertLineOutput(String expected) {
     Assert.assertTrue(output.size() > 0);
     String test = output.removeFirst();
-    Assert.assertEquals(expected,  test);
+    Assert.assertEquals(expected, test);
     return this;
   }
 
@@ -196,8 +195,7 @@ public class BaseProcessContext implements ShellProcessContext {
     return buffer.toString();
   }
 
-  public void flush() {
-  }
+  public void flush() {}
 
   public void end(ShellResponse response) {
     this.response = response;
@@ -208,8 +206,7 @@ public class BaseProcessContext implements ShellProcessContext {
     try {
       latch.await(60, TimeUnit.SECONDS);
       return response;
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       throw AbstractTestCase.failure(e);
     }
   }

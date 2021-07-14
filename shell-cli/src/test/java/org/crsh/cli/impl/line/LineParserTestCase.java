@@ -18,18 +18,12 @@
  */
 package org.crsh.cli.impl.line;
 
-import junit.framework.TestCase;
-import org.crsh.cli.impl.line.LineParser;
-import org.crsh.cli.impl.line.MultiLineVisitor;
-import org.crsh.cli.impl.line.ValueLineVisitor;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import junit.framework.TestCase;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class LineParserTestCase extends TestCase {
 
   /** . */
@@ -46,13 +40,28 @@ public class LineParserTestCase extends TestCase {
 
   @Override
   public void setUp() throws Exception {
-    LineParser.Visitor indexer = new LineParser.Visitor() {
-      public void onChar(int index, Quoting quoting, boolean backslash, char c) { indexes.add(index); }
-      public void openStrongQuote(int index) { indexes.add(index); }
-      public void closeStrongQuote(int index) { indexes.add(index); }
-      public void openWeakQuote(int index) { indexes.add(index); }
-      public void closeWeakQuote(int index) { indexes.add(index); }
-    };
+    LineParser.Visitor indexer =
+        new LineParser.Visitor() {
+          public void onChar(int index, Quoting quoting, boolean backslash, char c) {
+            indexes.add(index);
+          }
+
+          public void openStrongQuote(int index) {
+            indexes.add(index);
+          }
+
+          public void closeStrongQuote(int index) {
+            indexes.add(index);
+          }
+
+          public void openWeakQuote(int index) {
+            indexes.add(index);
+          }
+
+          public void closeWeakQuote(int index) {
+            indexes.add(index);
+          }
+        };
     o = new LineParser(m = new MultiLineVisitor(), v = new ValueLineVisitor(), indexer);
     indexes = new LinkedList<Integer>();
   }
@@ -80,7 +89,7 @@ public class LineParserTestCase extends TestCase {
     assertTrue(o.crlf());
     assertEquals("\"a\"", m.getRaw());
     assertEquals("a", v.getEvaluated());
-    assertEquals(Arrays.asList(0,1,2), indexes);
+    assertEquals(Arrays.asList(0, 1, 2), indexes);
   }
 
   // % "a"
@@ -89,7 +98,7 @@ public class LineParserTestCase extends TestCase {
     assertTrue(o.crlf());
     assertEquals("'a'", m.getRaw());
     assertEquals("a", v.getEvaluated());
-    assertEquals(Arrays.asList(0,1,2), indexes);
+    assertEquals(Arrays.asList(0, 1, 2), indexes);
   }
 
   // % \a

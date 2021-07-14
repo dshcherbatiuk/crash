@@ -38,11 +38,10 @@ public class RAMURLConnection extends URLConnection {
   }
 
   @Override
-  public void connect() throws IOException {
-  }
+  public void connect() {}
 
   @Override
-  public InputStream getInputStream() throws IOException{
+  public InputStream getInputStream() {
     return new ByteArrayInputStream(file.getBytes());
   }
 }

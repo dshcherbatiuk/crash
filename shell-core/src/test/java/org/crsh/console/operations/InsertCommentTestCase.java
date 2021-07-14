@@ -18,30 +18,28 @@
  */
 package org.crsh.console.operations;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
-import test.shell.sync.SyncProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import test.shell.sync.SyncProcess;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class InsertCommentTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() throws Exception {
     final ArrayBlockingQueue<String> requests = new ArrayBlockingQueue<String>(1);
-    shell.addProcess(new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        requests.add(request);
-        context.end(ShellResponse.ok());
-      }
-    });
+    shell.addProcess(
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            requests.add(request);
+            context.end(ShellResponse.ok());
+          }
+        });
     console.init();
     console.on(KeyStrokes.of("putrified whales"));
     console.on(Operation.INSERT_COMMENT);
@@ -54,13 +52,14 @@ public class InsertCommentTestCase extends AbstractConsoleTestCase {
   // The # key causes a comment to get inserted.
   public void testInsertComment1() throws Exception {
     final ArrayBlockingQueue<String> requests = new ArrayBlockingQueue<String>(1);
-    shell.addProcess(new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        requests.add(request);
-        context.end(ShellResponse.ok());
-      }
-    });
+    shell.addProcess(
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            requests.add(request);
+            context.end(ShellResponse.ok());
+          }
+        });
     console.toInsert();
     console.init();
     console.on(KeyStrokes.of("putrified whales"));
@@ -72,13 +71,14 @@ public class InsertCommentTestCase extends AbstractConsoleTestCase {
 
   public void testInsertComment2() throws Exception {
     final ArrayBlockingQueue<String> requests = new ArrayBlockingQueue<String>(1);
-    shell.addProcess(new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        requests.add(request);
-        context.end(ShellResponse.ok());
-      }
-    });
+    shell.addProcess(
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            requests.add(request);
+            context.end(ShellResponse.ok());
+          }
+        });
     console.toInsert();
     console.init();
     console.on(KeyStrokes.of("echo \"abc"));

@@ -19,18 +19,17 @@
 
 package org.crsh.shell.impl.remoting;
 
-import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellResponse;
-import org.crsh.util.CloseableList;
-import org.crsh.util.Statement;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import org.crsh.cli.impl.completion.CompletionMatch;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellResponse;
+import org.crsh.util.CloseableList;
+import org.crsh.util.Statement;
 
 public class ClientAutomaton implements Runnable {
 
@@ -72,7 +71,7 @@ public class ClientAutomaton implements Runnable {
     this.height = null;
   }
 
-  public ClientAutomaton(InputStream in,OutputStream out, Shell shell) throws IOException {
+  public ClientAutomaton(InputStream in, OutputStream out, Shell shell) throws IOException {
     this(new ObjectOutputStream(out), new ObjectInputStream(in), shell);
   }
 
@@ -84,7 +83,7 @@ public class ClientAutomaton implements Runnable {
   public void run() {
     try {
       while (!listeners.isClosed()) {
-        ClientMessage msg = (ClientMessage)in.readObject();
+        ClientMessage msg = (ClientMessage) in.readObject();
 
         //
         if (msg instanceof ClientMessage.GetWelcome) {
@@ -96,17 +95,17 @@ public class ClientAutomaton implements Runnable {
           out.writeObject(new ServerMessage.Prompt(prompt));
           out.flush();
         } else if (msg instanceof ClientMessage.GetCompletion) {
-          String prefix = ((ClientMessage.GetCompletion)msg).prefix;
+          String prefix = ((ClientMessage.GetCompletion) msg).prefix;
           CompletionMatch completion = shell.complete(prefix);
           out.writeObject(new ServerMessage.Completion(completion));
           out.flush();
         } else if (msg instanceof ClientMessage.SetSize) {
-          ClientMessage.SetSize setSize = (ClientMessage.SetSize)msg;
+          ClientMessage.SetSize setSize = (ClientMessage.SetSize) msg;
           width = setSize.width;
           height = setSize.height;
           last = System.currentTimeMillis();
         } else if (msg instanceof ClientMessage.Execute) {
-          ClientMessage.Execute execute = (ClientMessage.Execute)msg;
+          ClientMessage.Execute execute = (ClientMessage.Execute) msg;
           width = execute.width;
           height = execute.height;
           last = System.currentTimeMillis();
@@ -124,29 +123,29 @@ public class ClientAutomaton implements Runnable {
             // 3/ if it's not ended then we end it
 
             final ClientProcessContext context = current;
-            Statement statements = new Statement() {
-              @Override
-              protected void run() throws Throwable {
-                context.end(ShellResponse.cancelled());
-              }
-            }.with(new Statement() {
-              @Override
-              protected void run() throws Throwable {
-                context.process.cancel();
-              }
-            });
+            Statement statements =
+                new Statement() {
+                  @Override
+                  protected void run() {
+                    context.end(ShellResponse.cancelled());
+                  }
+                }.with(
+                    new Statement() {
+                      @Override
+                      protected void run() {
+                        context.process.cancel();
+                      }
+                    });
             statements.all();
           }
         } else if (msg instanceof ClientMessage.Close) {
           close();
         }
       }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
       //
-    }
-    finally {
+    } finally {
       close();
     }
   }

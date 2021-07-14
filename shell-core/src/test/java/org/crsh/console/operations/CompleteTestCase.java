@@ -18,17 +18,14 @@
  */
 package org.crsh.console.operations;
 
+import java.util.concurrent.atomic.AtomicReference;
 import jline.console.Operation;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import test.shell.sync.SyncCompleter;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class CompleteTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {
@@ -44,13 +41,14 @@ public class CompleteTestCase extends AbstractConsoleTestCase {
 
   private void doTest() {
     final AtomicReference<String> completions = new AtomicReference<String>();
-    shell.setCompleter(new SyncCompleter() {
-      @Override
-      public CompletionMatch complete(String prefix) {
-        completions.set(prefix);
-        return null;
-      }
-    });
+    shell.setCompleter(
+        new SyncCompleter() {
+          @Override
+          public CompletionMatch complete(String prefix) {
+            completions.set(prefix);
+            return null;
+          }
+        });
     console.on(KeyStrokes.of("abc def"));
     console.on(Operation.COMPLETE);
     assertEquals("abc def", completions.get());

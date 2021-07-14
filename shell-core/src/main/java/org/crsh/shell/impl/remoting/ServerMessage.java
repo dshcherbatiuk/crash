@@ -19,14 +19,13 @@
 
 package org.crsh.shell.impl.remoting;
 
-import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.ShellResponse;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import org.crsh.cli.impl.completion.CompletionMatch;
+import org.crsh.shell.ErrorKind;
+import org.crsh.shell.ShellResponse;
 
 public class ServerMessage implements Serializable {
 
@@ -60,23 +59,15 @@ public class ServerMessage implements Serializable {
     }
   }
 
-  public static class UseMainBuffer extends ServerMessage {
+  public static class UseMainBuffer extends ServerMessage {}
 
-  }
+  public static class UseAlternateBuffer extends ServerMessage {}
 
-  public static class UseAlternateBuffer extends ServerMessage {
+  public static class GetSize extends ServerMessage {}
 
-  }
+  public static class ReadLine extends ServerMessage {}
 
-  public static class GetSize extends ServerMessage {
-
-  }
-
-  public static class ReadLine extends ServerMessage {
-
-  }
-
-  public static abstract class Chunk extends ServerMessage {
+  public abstract static class Chunk extends ServerMessage {
 
     public static class Text extends Chunk {
 
@@ -100,19 +91,14 @@ public class ServerMessage implements Serializable {
 
     public static class Cls extends Chunk {
 
-      public Cls() {
-      }
+      public Cls() {}
     }
   }
 
-  public static class Flush extends ServerMessage {
-  }
-
-
+  public static class Flush extends ServerMessage {}
 
   public static class End extends ServerMessage {
 
-    /** . */
     public ShellResponse response;
 
     public End(ShellResponse response) {
@@ -127,7 +113,7 @@ public class ServerMessage implements Serializable {
     private void writeObject(ObjectOutputStream oos) throws IOException {
       if (response instanceof ShellResponse.Error) {
         oos.writeBoolean(false);
-        ShellResponse.Error error = (ShellResponse.Error)response;
+        ShellResponse.Error error = (ShellResponse.Error) response;
         oos.writeObject(error.getKind());
         oos.writeObject(error.getMessage());
         oos.writeObject(error.getThrowable().getMessage());
@@ -140,12 +126,12 @@ public class ServerMessage implements Serializable {
 
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
       if (ois.readBoolean()) {
-        response = (ShellResponse)ois.readObject();
+        response = (ShellResponse) ois.readObject();
       } else {
-        ErrorKind type = (ErrorKind)ois.readObject();
-        String message = (String)ois.readObject();
-        String errorMessage = (String)ois.readObject();
-        StackTraceElement[] errorTrace = (StackTraceElement[])ois.readObject();
+        ErrorKind type = (ErrorKind) ois.readObject();
+        String message = (String) ois.readObject();
+        String errorMessage = (String) ois.readObject();
+        StackTraceElement[] errorTrace = (StackTraceElement[]) ois.readObject();
         Exception ex = new Exception(errorMessage);
         ex.setStackTrace(errorTrace);
         response = ShellResponse.error(type, message, ex);

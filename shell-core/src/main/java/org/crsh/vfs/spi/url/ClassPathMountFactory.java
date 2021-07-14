@@ -18,18 +18,15 @@
  */
 package org.crsh.vfs.spi.url;
 
-import org.crsh.vfs.Path;
-import org.crsh.vfs.spi.FSMountFactory;
-import org.crsh.vfs.spi.Mount;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Enumeration;
+import org.crsh.vfs.Path;
+import org.crsh.vfs.spi.FSMountFactory;
+import org.crsh.vfs.spi.Mount;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ClassPathMountFactory implements FSMountFactory<Node> {
 
   /** . */
@@ -51,11 +48,10 @@ public class ClassPathMountFactory implements FSMountFactory<Node> {
       URL url = en.nextElement();
       try {
         driver.merge(url);
-      }
-      catch (URISyntaxException e) {
+      } catch (URISyntaxException e) {
         throw new IOException(e);
       }
     }
-    return new Mount<Node>(driver, "classpath:" + path.absolute().getValue());
+    return new Mount<>(driver, "classpath:" + path.absolute().getValue());
   }
 }

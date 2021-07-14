@@ -20,26 +20,26 @@
 package org.crsh.lang.impl.groovy;
 
 import groovy.lang.GroovyClassLoader;
-import junit.framework.TestCase;
-import org.crsh.cli.Argument;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import junit.framework.TestCase;
+import org.crsh.cli.Argument;
 
 public class ArgumentNameTestCase extends TestCase {
 
   public void testFoo() throws Exception {
 
-
     GroovyClassLoader gcl = new GroovyClassLoader();
-    Class<?> clazz = gcl.parseClass("public class foo {\n" +
-      "@Argument private String a;" +
-      "@Argument(name=\"some\") private String b;" +
-      "public void bar(" +
-      "@Argument String c, " +
-      "@Argument(name=\"some\") String d) {}\n" +
-      "}");
+    Class<?> clazz =
+        gcl.parseClass(
+            "public class foo {\n"
+                + "@Argument private String a;"
+                + "@Argument(name=\"some\") private String b;"
+                + "public void bar("
+                + "@Argument String c, "
+                + "@Argument(name=\"some\") String d) {}\n"
+                + "}");
 
     //
     Field a = clazz.getDeclaredField("a");
@@ -54,7 +54,7 @@ public class ArgumentNameTestCase extends TestCase {
     //
     Method m = clazz.getDeclaredMethod("bar", String.class, String.class);
     Annotation[][] mAnnotations = m.getParameterAnnotations();
-    assertEquals("c", ((Argument)mAnnotations[0][0]).name());
-    assertEquals("some", ((Argument)mAnnotations[1][0]).name());
+    assertEquals("c", ((Argument) mAnnotations[0][0]).name());
+    assertEquals("some", ((Argument) mAnnotations[1][0]).name());
   }
 }

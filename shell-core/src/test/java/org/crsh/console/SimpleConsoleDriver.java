@@ -19,11 +19,10 @@
 
 package org.crsh.console;
 
+import java.io.IOException;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import org.crsh.text.Style;
-
-import java.io.IOException;
 
 public class SimpleConsoleDriver implements ConsoleDriver {
 
@@ -108,16 +107,14 @@ public class SimpleConsoleDriver implements ConsoleDriver {
       throw new AssertionFailedError();
     }
     if (position < line.length()) {
-      line.setCharAt(position++, (char)c);
-    } else
-    {
+      line.setCharAt(position++, (char) c);
+    } else {
       line.appendCodePoint(c);
       position++;
     }
   }
 
-  public void write(Style style) throws IOException {
-  }
+  public void write(Style style) throws IOException {}
 
   public void writeDel() throws IOException {
     if (position > lastPosition) {

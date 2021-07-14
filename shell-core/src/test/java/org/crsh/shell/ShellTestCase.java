@@ -26,8 +26,7 @@ public class ShellTestCase extends AbstractShellTestCase {
     try {
       String s = shell.getWelcome();
       assertNotNull(s);
-    }
-    finally {
+    } finally {
       session.put("welcome", welcome);
     }
   }
@@ -37,8 +36,7 @@ public class ShellTestCase extends AbstractShellTestCase {
     try {
       String s = shell.getPrompt();
       assertNotNull(s);
-    }
-    finally {
+    } finally {
       session.put("prompt", prompt);
     }
   }

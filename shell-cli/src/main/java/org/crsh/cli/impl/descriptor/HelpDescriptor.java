@@ -76,28 +76,28 @@
 
 package org.crsh.cli.impl.descriptor;
 
-import org.crsh.cli.impl.SyntaxException;
+import java.lang.reflect.Type;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.descriptor.OptionDescriptor;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.ParameterType;
+import org.crsh.cli.impl.SyntaxException;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.ParameterMatch;
 import org.crsh.cli.type.ValueTypeFactory;
 
-import java.lang.reflect.Type;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class HelpDescriptor<T> extends CommandDescriptor<T> {
 
-  public static <T> HelpDescriptor<T> create(CommandDescriptor<T> descriptor) throws IntrospectionException {
+  public static <T> HelpDescriptor<T> create(CommandDescriptor<T> descriptor)
+      throws IntrospectionException {
     return new HelpDescriptor<T>(descriptor);
   }
 
@@ -106,18 +106,17 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
 
   static {
     try {
-      HELP_OPTION = new OptionDescriptor(
-          ParameterType.create(ValueTypeFactory.DEFAULT, Boolean.class),
-          Arrays.asList("h", "help"),
-          new Description("this help", "Display this help message"),
-          false,
-          false,
-          false,
-          null,
-          null
-      );
-    }
-    catch (IntrospectionException e) {
+      HELP_OPTION =
+          new OptionDescriptor(
+              ParameterType.create(ValueTypeFactory.DEFAULT, Boolean.class),
+              Arrays.asList("h", "help"),
+              new Description("this help", "Display this help message"),
+              false,
+              false,
+              false,
+              null,
+              null);
+    } catch (IntrospectionException e) {
       throw new UndeclaredThrowableException(e);
     }
   }
@@ -135,7 +134,8 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
     this(null, delegate);
   }
 
-  private HelpDescriptor(HelpDescriptor<T> owner, CommandDescriptor<T> delegate) throws IntrospectionException {
+  private HelpDescriptor(HelpDescriptor<T> owner, CommandDescriptor<T> delegate)
+      throws IntrospectionException {
     super(delegate.getName(), delegate.getDescription());
 
     //
@@ -161,7 +161,8 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
     }
 
     // Wrap subordinates
-    LinkedHashMap<String, HelpDescriptor<T>> subordinates = new LinkedHashMap<String, HelpDescriptor<T>>();
+    LinkedHashMap<String, HelpDescriptor<T>> subordinates =
+        new LinkedHashMap<String, HelpDescriptor<T>>();
     for (CommandDescriptor<T> subordinate : delegate.getSubordinates().values()) {
       subordinates.put(subordinate.getName(), new HelpDescriptor<T>(this, subordinate));
     }
@@ -184,7 +185,9 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
 
     // Get the option from the top match
     ParameterMatch<OptionDescriptor> helpDesc = null;
-    for (InvocationMatch<T> current = match;current != null && helpDesc == null;current = current.owner()) {
+    for (InvocationMatch<T> current = match;
+        current != null && helpDesc == null;
+        current = current.owner()) {
       helpDesc = current.getParameter(HELP_OPTION);
     }
 
@@ -198,10 +201,12 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
         public Class<Help> getReturnType() {
           return Help.class;
         }
+
         @Override
         public Type getGenericReturnType() {
           return Help.class;
         }
+
         @Override
         public Help invoke(T command) throws InvocationException, SyntaxException {
           return new Help<T>(HelpDescriptor.this);
@@ -221,5 +226,4 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
   public Map<String, ? extends HelpDescriptor<T>> getSubordinates() {
     return subordinates;
   }
-
 }

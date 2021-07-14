@@ -19,10 +19,9 @@
 
 package org.crsh.auth;
 
-import org.crsh.plugin.PropertyDescriptor;
-
 import java.util.Collections;
 import java.util.List;
+import org.crsh.plugin.PropertyDescriptor;
 
 /**
  * The authentication plugin.
@@ -32,22 +31,24 @@ import java.util.List;
 public interface AuthenticationPlugin<C> {
 
   /** The authentication plugin to use. */
-  PropertyDescriptor<List> AUTH = PropertyDescriptor.create("auth", Collections.emptyList(), "The authentication plugin");
+  PropertyDescriptor<List> AUTH =
+      PropertyDescriptor.create("auth", Collections.emptyList(), "The authentication plugin");
 
-  /**
-   * The plugin that never authenticates, returns the name value <code>null</code>.
-   */
-  AuthenticationPlugin<Object> NULL = new AuthenticationPlugin<Object>() {
-    public Class<Object> getCredentialType() {
-      return Object.class;
-    }
-    public String getName() {
-      return "null";
-    }
-    public AuthInfo authenticate(String username, Object password) throws Exception {
-      return AuthInfo.UNSUCCESSFUL;
-    }
-  };
+  /** The plugin that never authenticates, returns the name value <code>null</code>. */
+  AuthenticationPlugin<Object> NULL =
+      new AuthenticationPlugin<Object>() {
+        public Class<Object> getCredentialType() {
+          return Object.class;
+        }
+
+        public String getName() {
+          return "null";
+        }
+
+        public AuthInfo authenticate(String username, Object password) throws Exception {
+          return AuthInfo.UNSUCCESSFUL;
+        }
+      };
 
   /**
    * Returns the authentication plugin name.

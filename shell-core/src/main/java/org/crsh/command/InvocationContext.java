@@ -23,8 +23,6 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.text.RenderPrintWriter;
 
-import java.io.IOException;
-
 public interface InvocationContext<P> extends CommandContext<P> {
 
   /**
@@ -44,5 +42,4 @@ public interface InvocationContext<P> extends CommandContext<P> {
    * @throws CommandException any command exception
    */
   CommandInvoker<?, ?> resolve(String s) throws CommandException;
-
 }

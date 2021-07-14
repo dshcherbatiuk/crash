@@ -18,15 +18,12 @@
  */
 package org.crsh.console.operations;
 
+import java.io.IOException;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-import java.io.IOException;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViArgDigitEndWordTestCase extends AbstractConsoleTestCase {
 
   public void testEndWord3() throws IOException {

@@ -18,15 +18,12 @@
  */
 package org.crsh.console.operations;
 
+import javax.swing.*;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-import javax.swing.*;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class BackwardKillLineTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {

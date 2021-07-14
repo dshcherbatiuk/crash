@@ -18,37 +18,31 @@
  */
 package org.crsh.shell.impl.command;
 
+import java.io.IOException;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
 
-import java.io.IOException;
-
-/**
-* @author Julien Viet
-*/
+/** @author Julien Viet */
 class CRaSHResponseProcess extends CRaSHProcess {
 
-  /** . */
   private final StringBuilder msg;
 
-  /** . */
   private final ShellResponse response;
 
-  public CRaSHResponseProcess(CRaSHSession session, String request, StringBuilder msg, ShellResponse response) {
+  public CRaSHResponseProcess(
+      CRaSHSession session, String request, StringBuilder msg, ShellResponse response) {
     super(session, request);
 
-    //
     this.msg = msg;
     this.response = response;
   }
 
   @Override
-  ShellResponse doInvoke(ShellProcessContext context) throws InterruptedException {
+  ShellResponse doInvoke(ShellProcessContext context) {
     if (msg.length() > 0) {
       try {
         context.append(msg);
-      }
-      catch (IOException ignore) {
+      } catch (IOException ignore) {
       }
     }
     return response;

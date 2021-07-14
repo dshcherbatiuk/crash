@@ -27,40 +27,47 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>An immutable object representing the complation of a value. A completion is described by:</p>
+ * An immutable object representing the complation of a value. A completion is described by:
  *
  * <ol>
- *   <li>A prefix: an optional value that is relevant when more than a result is provided. The prefix value must be a
- *   suffix of the completion prefix, it is used to shorten the completed prefix in order to make the completions
- *   values shorter. For instance a path completion returning several values could be displayed in columns, however only
- *   the last name of the path would be displayed and not the full path.</li>
- *   <li>A list of <code>Map.Entry&lt;String, Boolean&gt;</code>  map where the key is string value of the completion
- *   and the boolean value tells whether the value is a suffix (i.e it ends the value) or not (i.e it can be further
- *   more completed).</li>
+ *   <li>A prefix: an optional value that is relevant when more than a result is provided. The
+ *       prefix value must be a suffix of the completion prefix, it is used to shorten the completed
+ *       prefix in order to make the completions values shorter. For instance a path completion
+ *       returning several values could be displayed in columns, however only the last name of the
+ *       path would be displayed and not the full path.
+ *   <li>A list of <code>Map.Entry&lt;String, Boolean&gt;</code> map where the key is string value
+ *       of the completion and the boolean value tells whether the value is a suffix (i.e it ends
+ *       the value) or not (i.e it can be further more completed).
  * </ol>
  *
- * <p>The following guidelines should be respected:</p>
+ * <p>The following guidelines should be respected:
+ *
  * <ul>
- *   <li>An empty completion means no completion can be determined.</li>
- *   <li>A singleton map means the match was entire and completion will happen with the unique entry.</li>
- *   <li>A map containing a list of string values sharing a common prefix indicates to use this common prefix.</li>
- *   <li>A list containing strings with no common prefix (other than the empty string) instruct to display the list of
- *   possible completions. In that case the completion result prefix is used to preped the returned suffixes when
- *   displayed in rows.</li>
- *   <li>When a match is considered as entire (the entry value is set to true), the completion should contain a
- *   trailing value that is usually a white space (but it could be a quote for quoted values).</li>
+ *   <li>An empty completion means no completion can be determined.
+ *   <li>A singleton map means the match was entire and completion will happen with the unique
+ *       entry.
+ *   <li>A map containing a list of string values sharing a common prefix indicates to use this
+ *       common prefix.
+ *   <li>A list containing strings with no common prefix (other than the empty string) instruct to
+ *       display the list of possible completions. In that case the completion result prefix is used
+ *       to preped the returned suffixes when displayed in rows.
+ *   <li>When a match is considered as entire (the entry value is set to true), the completion
+ *       should contain a trailing value that is usually a white space (but it could be a quote for
+ *       quoted values).
  * </ul>
  *
- * <p>Example: a completer that would complete colors could</p>
+ * <p>Example: a completer that would complete colors could
+ *
  * <ul>
- *   <li>return the result ["lack ":true,"lue ":true] with the prefix "b" for the prefix "b".</li>
- *   <li>return the result ["e ":true] with the prefix "blu" for the prefix "blu".</li>
- *   <li>return the result [] for the prefix "z".</li>
+ *   <li>return the result ["lack ":true,"lue ":true] with the prefix "b" for the prefix "b".
+ *   <li>return the result ["e ":true] with the prefix "blu" for the prefix "blu".
+ *   <li>return the result [] for the prefix "z".
  * </ul>
  *
- * <p>Example: a completer that would complete java packages could</p>
+ * <p>Example: a completer that would complete java packages could
+ *
  * <ul>
- *   <li>return the map ["ext":true,"ext.spi":false] for the prefix "java.t"</li>
+ *   <li>return the map ["ext":true,"ext.spi":false] for the prefix "java.t"
  * </ul>
  */
 public final class Completion implements Iterable<Map.Entry<String, Boolean>>, Serializable {
@@ -146,7 +153,7 @@ public final class Completion implements Iterable<Map.Entry<String, Boolean>>, S
       return true;
     }
     if (obj instanceof Completion) {
-      Completion that = (Completion)obj;
+      Completion that = (Completion) obj;
       return prefix.equals(that.prefix) && values.equals(that.values);
     }
     return false;
@@ -172,14 +179,14 @@ public final class Completion implements Iterable<Map.Entry<String, Boolean>>, S
 
     public Builder add(String key, boolean value) {
       if (entries == null) {
-        entries = new LinkedHashMap<String, Boolean>();
+        entries = new LinkedHashMap<>();
       }
       entries.put(key, value);
       return this;
     }
 
     public Completion build() {
-      return create(prefix,  entries != null ? entries : Collections.<String, Boolean>emptyMap());
+      return create(prefix, entries != null ? entries : Collections.emptyMap());
     }
   }
 }

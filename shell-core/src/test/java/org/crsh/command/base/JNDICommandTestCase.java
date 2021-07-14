@@ -18,30 +18,29 @@
  */
 package org.crsh.command.base;
 
+import java.util.*;
+import javax.naming.Context;
 import org.crsh.shell.AbstractShellTestCase;
 import org.crsh.text.renderers.BindingRenderer;
 
-import javax.naming.Context;
-import java.util.*;
-
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class JNDICommandTestCase extends AbstractShellTestCase {
 
   private String defaultFactory;
-  public static List<BindingRenderer.BindingData> output = new ArrayList<BindingRenderer.BindingData>();
+  public static List<BindingRenderer.BindingData> output =
+      new ArrayList<BindingRenderer.BindingData>();
 
-  private final String consume_command = "class consume_command {\n" +
-      "@Command\n" +
-      "public org.crsh.command.Pipe<org.crsh.text.renderers.BindingRenderer.BindingData, Object> main() {\n" +
-      "return new org.crsh.command.Pipe<org.crsh.text.renderers.BindingRenderer.BindingData, Object>() {\n" +
-      "public void provide(org.crsh.text.renderers.BindingRenderer.BindingData element) {\n" +
-      "org.crsh.command.base.JNDICommandTestCase.output.add(element)\n" +
-      "}\n" +
-      "}\n" +
-      "}\n" +
-      "}";
+  private final String consume_command =
+      "class consume_command {\n"
+          + "@Command\n"
+          + "public org.crsh.command.Pipe<org.crsh.text.renderers.BindingRenderer.BindingData, Object> main() {\n"
+          + "return new org.crsh.command.Pipe<org.crsh.text.renderers.BindingRenderer.BindingData, Object>() {\n"
+          + "public void provide(org.crsh.text.renderers.BindingRenderer.BindingData element) {\n"
+          + "org.crsh.command.base.JNDICommandTestCase.output.add(element)\n"
+          + "}\n"
+          + "}\n"
+          + "}\n"
+          + "}";
 
   @Override
   protected void tearDown() throws Exception {
@@ -199,5 +198,4 @@ public class JNDICommandTestCase extends AbstractShellTestCase {
     defaultFactory = System.getProperty(Context.INITIAL_CONTEXT_FACTORY);
     System.setProperty(Context.INITIAL_CONTEXT_FACTORY, name);
   }
-
 }

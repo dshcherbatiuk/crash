@@ -18,13 +18,12 @@
  */
 package test.shell.base;
 
-import org.crsh.cli.impl.completion.CompletionMatch;
+import java.io.IOException;
 import org.crsh.cli.impl.Delimiter;
+import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.spi.Completion;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellProcess;
-
-import java.io.IOException;
 
 public class BaseShell implements Shell {
 
@@ -72,13 +71,10 @@ public class BaseShell implements Shell {
     return factory.create(request);
   }
 
-  /**
-   * Returns an empty unmodifiable map.
-   */
+  /** Returns an empty unmodifiable map. */
   public CompletionMatch complete(String prefix) {
     return new CompletionMatch(Delimiter.EMPTY, Completion.create());
   }
 
-  public void close() throws IOException {
-  }
+  public void close() throws IOException {}
 }

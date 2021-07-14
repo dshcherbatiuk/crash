@@ -24,38 +24,50 @@ import org.crsh.text.RenderAppendable;
 
 class TableRowReader implements LineReader {
 
-  /** . */
+  /**
+   * .
+   */
   private final TableRowLineRenderer renderer;
 
-  /** . */
+  /**
+   * .
+   */
   private final int[] widths;
 
-  /** . */
+  /**
+   * .
+   */
   private final RowLineRenderer row;
 
-  /** . */
+  /**
+   * .
+   */
   private LineReader reader;
 
-  /** . */
+  /**
+   * .
+   */
   private TableRowReader previous;
 
-  /** . */
+  /**
+   * .
+   */
   private TableRowReader next;
 
-  /** . */
+  /**
+   * .
+   */
   private BorderStyle top;
 
-  /** . */
+  /**
+   * .
+   */
   private BorderStyle bottom;
 
-  /** . */
   private final int height;
 
   /**
-   * 0 -> render top
-   * 1 -> render cells
-   * 2 -> render bottom
-   * 3 -> done
+   * 0 -> render top 1 -> render cells 2 -> render bottom 3 -> done
    */
   private int status;
 
@@ -75,8 +87,16 @@ class TableRowReader implements LineReader {
   TableRowReader add(TableRowReader next) {
     next.previous = this;
     this.next = next;
-    bottom = renderer.header ? (renderer.table.separator != null ? renderer.table.separator : BorderStyle.DASHED) : null;
-    next.top = next.renderer.header && !renderer.header ? (next.renderer.table.separator != null ? next.renderer.table.separator : BorderStyle.DASHED) : null;
+    bottom =
+        renderer.header
+            ? (renderer.table.separator != null ? renderer.table.separator : BorderStyle.DASHED)
+            : null;
+    next.top =
+        next.renderer.header && !renderer.header
+            ? (next.renderer.table.separator != null
+            ? next.renderer.table.separator
+            : BorderStyle.DASHED)
+            : null;
     next.status = next.top != null ? 0 : 1;
     return next;
   }
@@ -114,11 +134,11 @@ class TableRowReader implements LineReader {
       case 2: {
         BorderStyle b = status == 0 ? top : bottom;
         to.styleOff();
-        for (int i = 0;i < widths.length;i++) {
+        for (int i = 0; i < widths.length; i++) {
           if (i > 0 && renderer.table.separator != null) {
             to.append(b.horizontal);
           }
-          for (int j = 0;j < widths[i];j++) {
+          for (int j = 0; j < widths[i]; j++) {
             to.append(b.horizontal);
           }
         }
@@ -127,8 +147,6 @@ class TableRowReader implements LineReader {
         break;
       }
       case 1: {
-
-        //
         if (reader == null) {
           if (height > 0 && renderer.table.overflow == Overflow.WRAP) {
             int h = height;
@@ -144,10 +162,8 @@ class TableRowReader implements LineReader {
           }
         }
 
-        //
         reader.renderLine(to);
 
-        //
         if (renderer.table.overflow == Overflow.HIDDEN) {
           status = bottom != null ? 2 : 3;
         } else {
@@ -156,7 +172,6 @@ class TableRowReader implements LineReader {
           }
         }
 
-        //
         break;
       }
       default:

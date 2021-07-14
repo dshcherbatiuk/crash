@@ -19,19 +19,12 @@
 
 package org.crsh.text.ui;
 
-/**
- * Overflow control.
- */
+/** Overflow control. */
 public enum Overflow {
 
-  /**
-   * Wrap.
-   */
+  /** Wrap. */
   WRAP,
 
-  /**
-   * Hidden.
-   */
+  /** Hidden. */
   HIDDEN
-
 }

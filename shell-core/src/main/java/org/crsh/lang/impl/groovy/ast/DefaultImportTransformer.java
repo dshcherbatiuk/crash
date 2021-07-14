@@ -19,6 +19,8 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.control.CompilePhase;
@@ -27,22 +29,19 @@ import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
-import org.crsh.cli.Required;
-import org.crsh.cli.Usage;
 import org.crsh.cli.Man;
 import org.crsh.cli.Option;
+import org.crsh.cli.Required;
+import org.crsh.cli.Usage;
 import org.crsh.command.InvocationContext;
 import org.crsh.command.ScriptException;
 import org.crsh.groovy.GroovyCommand;
-import org.crsh.text.ui.BorderStyle;
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.Style;
+import org.crsh.text.ui.BorderStyle;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-@GroovyASTTransformation(phase= CompilePhase.CONVERSION)
+@GroovyASTTransformation(phase = CompilePhase.CONVERSION)
 public class DefaultImportTransformer implements ASTTransformation {
 
   /** . */
@@ -63,10 +62,7 @@ public class DefaultImportTransformer implements ASTTransformation {
 
   /** . */
   private static final Class<?>[] defaultStaticImports = {
-    Color.class,
-    Decoration.class,
-    Style.class,
-    BorderStyle.class
+    Color.class, Decoration.class, Style.class, BorderStyle.class
   };
 
   public void visit(ASTNode[] nodes, final SourceUnit source) {
@@ -78,9 +74,16 @@ public class DefaultImportTransformer implements ASTTransformation {
       }
     }
     for (Class<?> defaultStaticImport : defaultStaticImports) {
-      log.log(Level.FINE, "Adding default static import for class " + defaultStaticImport.getName());
-      if (!source.getAST().getStaticStarImports().containsKey(defaultStaticImport.getSimpleName())) {
-        source.getAST().addStaticStarImport(defaultStaticImport.getSimpleName(), ClassHelper.make(defaultStaticImport));
+      log.log(
+          Level.FINE, "Adding default static import for class " + defaultStaticImport.getName());
+      if (!source
+          .getAST()
+          .getStaticStarImports()
+          .containsKey(defaultStaticImport.getSimpleName())) {
+        source
+            .getAST()
+            .addStaticStarImport(
+                defaultStaticImport.getSimpleName(), ClassHelper.make(defaultStaticImport));
       }
     }
   }

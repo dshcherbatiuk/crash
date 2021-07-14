@@ -34,7 +34,7 @@ public class Custom {
       return true;
     } else {
       if (obj instanceof Custom) {
-        Custom that = (Custom)obj;
+        Custom that = (Custom) obj;
         return string.equals(that.string);
       } else {
         return false;

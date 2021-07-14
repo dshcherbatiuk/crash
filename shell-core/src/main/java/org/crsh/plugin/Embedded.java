@@ -18,17 +18,14 @@
  */
 package org.crsh.plugin;
 
-import org.crsh.vfs.FS;
-import org.crsh.vfs.spi.FSMountFactory;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
+import org.crsh.vfs.FS;
+import org.crsh.vfs.spi.FSMountFactory;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class Embedded extends PluginLifeCycle {
 
   /**
@@ -37,7 +34,8 @@ public class Embedded extends PluginLifeCycle {
    * @param discovery the plugin discovery
    * @return the plugin context
    */
-  protected PluginContext create(Map<String, Object> attributes, PluginDiscovery discovery, ClassLoader loader) {
+  protected PluginContext create(
+      Map<String, Object> attributes, PluginDiscovery discovery, ClassLoader loader) {
 
     //
     FS cmdFS;
@@ -45,8 +43,7 @@ public class Embedded extends PluginLifeCycle {
     try {
       cmdFS = createCommandFS();
       confFS = createConfFS();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       log.log(Level.SEVERE, "Coult not initialize the file system", e);
       return null;
     }
@@ -61,7 +58,8 @@ public class Embedded extends PluginLifeCycle {
    * @param discovery the plugin discovery
    * @return the plugin context
    */
-  protected PluginContext start(Map<String, Object> attributes, PluginDiscovery discovery, ClassLoader loader) {
+  protected PluginContext start(
+      Map<String, Object> attributes, PluginDiscovery discovery, ClassLoader loader) {
     PluginContext context = create(attributes, discovery, loader);
     if (context != null) {
       context.refresh();
@@ -71,7 +69,8 @@ public class Embedded extends PluginLifeCycle {
   }
 
   /**
-   * Create the command file system from the <code>crash.mountpointconfig.cmd</code> servlet context parameter.
+   * Create the command file system from the <code>crash.mountpointconfig.cmd</code> servlet context
+   * parameter.
    *
    * @return the command file system
    */
@@ -80,7 +79,8 @@ public class Embedded extends PluginLifeCycle {
   }
 
   /**
-   * Create the conf file system from the <code>crash.mountpointconfig.conf</code> servlet context parameter.
+   * Create the conf file system from the <code>crash.mountpointconfig.conf</code> servlet context
+   * parameter.
    *
    * @return the conf file system
    */
@@ -89,15 +89,16 @@ public class Embedded extends PluginLifeCycle {
   }
 
   /**
-   * @return the registered drivers, by default an empty map is returned, subclasses can override to customize
+   * @return the registered drivers, by default an empty map is returned, subclasses can override to
+   *     customize
    */
   protected Map<String, FSMountFactory<?>> getMountFactories() {
     return Collections.emptyMap();
   }
 
   /**
-   * Create a new file system, configured by a the argument <code>mountPointConfig</code>: when the mount point
-   * configuration is not null, it is mounted on the returned file system.
+   * Create a new file system, configured by a the argument <code>mountPointConfig</code>: when the
+   * mount point configuration is not null, it is mounted on the returned file system.
    *
    * @param mountPointConfig the mount point configuration
    * @return the configured file system

@@ -19,33 +19,27 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.LineRenderer;
-
 import java.util.List;
+import org.crsh.text.LineRenderer;
 
 class TableRowLineRenderer {
 
-  /** . */
   final TableLineRenderer table;
 
-  /** . */
   final RowLineRenderer row;
 
-  /** . */
   final boolean header;
 
-  /** . */
   private TableRowLineRenderer previous;
 
-  /** . */
   private TableRowLineRenderer next;
 
-  /** . */
   private int index;
 
   TableRowLineRenderer(TableLineRenderer table, RowElement row) {
     this.table = table;
-    this.row = new RowLineRenderer(row, table.separator, table.leftCellPadding, table.rightCellPadding);
+    this.row =
+        new RowLineRenderer(row, table.separator, table.leftCellPadding, table.rightCellPadding);
     this.header = row.header;
     this.index = 0;
   }
@@ -130,7 +124,7 @@ class TableRowLineRenderer {
         break;
       case WRAP:
         actualHeight = 0;
-        for (int i = 0;i < widths.length;i++) {
+        for (int i = 0; i < widths.length; i++) {
           LineRenderer col = row.getCols().get(i);
           actualHeight = Math.max(actualHeight, col.getActualHeight(widths[i]));
         }
@@ -155,7 +149,7 @@ class TableRowLineRenderer {
         break;
       case WRAP:
         minHeight = 0;
-        for (int i = 0;i < widths.length;i++) {
+        for (int i = 0; i < widths.length; i++) {
           LineRenderer col = row.getCols().get(i);
           minHeight = Math.max(minHeight, col.getMinHeight(widths[i]));
         }

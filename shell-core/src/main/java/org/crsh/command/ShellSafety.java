@@ -1,104 +1,120 @@
 package org.crsh.command;
 
 public class ShellSafety {
-    private boolean safeShell = true;
-    private boolean standAlone = false;
-    private boolean internal = false;
-    private boolean sshMode = false;
-    private boolean allowExitInSafeMode = false;
-    private boolean allowManCommand = false;
-    private boolean isDefault = true;
+  private boolean safeShell = true;
+  private boolean standAlone = false;
+  private boolean internal = false;
+  private boolean sshMode = false;
+  private boolean allowExitInSafeMode = false;
+  private boolean allowManCommand = false;
+  private boolean isDefault = true;
 
-    public ShellSafety() {
+  public ShellSafety() {}
+
+  public ShellSafety(String safetyMode) {
+    safeShell = safetyMode.contains("SAFESAFE");
+    standAlone = safetyMode.contains("STANDALONE");
+    internal = safetyMode.contains("INTERNAL");
+    sshMode = safetyMode.contains("SSH");
+    allowExitInSafeMode = safetyMode.contains("EXIT");
+    allowManCommand = safetyMode.contains("MAN");
+    isDefault = safetyMode.contains("DEFAULT");
+  }
+
+  public String toSafeString() {
+    String ret = "";
+    if (safeShell) {
+      ret += "|SAFESAFE";
     }
-
-    public ShellSafety(String safetyMode) {
-        safeShell = safetyMode.contains("SAFESAFE");
-        standAlone = safetyMode.contains("STANDALONE");
-        internal = safetyMode.contains("INTERNAL");
-        sshMode = safetyMode.contains("SSH");
-        allowExitInSafeMode = safetyMode.contains("EXIT");
-        allowManCommand = safetyMode.contains("MAN");
-        isDefault = safetyMode.contains("DEFAULT");
+    if (standAlone) {
+      ret += "|STANDALONE";
     }
-
-    public String toSafeString() {
-        String ret = "";
-        if (safeShell) { ret += "|SAFESAFE"; }
-        if (standAlone) { ret += "|STANDALONE"; }
-        if (internal) { ret += "|INTERNAL"; }
-        if (sshMode) { ret += "|SSH"; }
-        if (allowExitInSafeMode) { ret += "|EXIT"; }
-        if (allowManCommand) { ret += "|MAN"; }
-        if (isDefault) { ret += "|DEFAULT"; }
-        return ret;
+    if (internal) {
+      ret += "|INTERNAL";
     }
-
-    public String toString() {
-        return toSafeString();
+    if (sshMode) {
+      ret += "|SSH";
     }
-
-    public boolean isDefault() {
-        return isDefault;
+    if (allowExitInSafeMode) {
+      ret += "|EXIT";
     }
-
-    public boolean isSafeShell() {
-        return safeShell;
+    if (allowManCommand) {
+      ret += "|MAN";
     }
-
-    public boolean isStandAlone() {
-        return standAlone;
+    if (isDefault) {
+      ret += "|DEFAULT";
     }
+    return ret;
+  }
 
-    public boolean isInternal() {
-        return internal;
-    }
+  public String toString() {
+    return toSafeString();
+  }
 
-    public boolean isSshMode() {
-        return sshMode;
-    }
+  public boolean isDefault() {
+    return isDefault;
+  }
 
-    public boolean isAllowExitInSafeMode() {
-        return allowExitInSafeMode;
-    }
+  public boolean isSafeShell() {
+    return safeShell;
+  }
 
-    public boolean isAllowManCommand() { return allowManCommand; }
+  public boolean isStandAlone() {
+    return standAlone;
+  }
 
-    public void setDefault(boolean isDefault) {
-        this.isDefault = isDefault;
-    }
+  public boolean isInternal() {
+    return internal;
+  }
 
-    public void setSafeShell(boolean safeShell) {
-        this.safeShell = safeShell;
-        this.isDefault = false;
-    }
+  public boolean isSshMode() {
+    return sshMode;
+  }
 
-    public void setStandAlone(boolean standAlone) {
-        this.standAlone = standAlone;
-        this.isDefault = false;
-    }
+  public boolean isAllowExitInSafeMode() {
+    return allowExitInSafeMode;
+  }
 
-    public void setInternal(boolean internal) {
-        this.internal = internal;
-        this.isDefault = false;
-    }
+  public boolean isAllowManCommand() {
+    return allowManCommand;
+  }
 
-    public void setSSH(boolean sshMode) {
-        this.sshMode = sshMode;
-        this.isDefault = false;
-    }
+  public void setDefault(boolean isDefault) {
+    this.isDefault = isDefault;
+  }
 
-    public void setAllowExitInSafeMode(boolean exit) {
-        this.allowExitInSafeMode = exit;
-        this.isDefault = false;
-    }
+  public void setSafeShell(boolean safeShell) {
+    this.safeShell = safeShell;
+    this.isDefault = false;
+  }
 
-    public void setAllowManCommand(boolean allowMan) {
-        this.allowManCommand = allowMan;
-        this.isDefault = false;
-    }
+  public void setStandAlone(boolean standAlone) {
+    this.standAlone = standAlone;
+    this.isDefault = false;
+  }
 
-    public boolean permitExit() {
-        return !isSafeShell() || !isInternal() || isSshMode() || isAllowExitInSafeMode();
-    }
-};
+  public void setInternal(boolean internal) {
+    this.internal = internal;
+    this.isDefault = false;
+  }
+
+  public void setSSH(boolean sshMode) {
+    this.sshMode = sshMode;
+    this.isDefault = false;
+  }
+
+  public void setAllowExitInSafeMode(boolean exit) {
+    this.allowExitInSafeMode = exit;
+    this.isDefault = false;
+  }
+
+  public void setAllowManCommand(boolean allowMan) {
+    this.allowManCommand = allowMan;
+    this.isDefault = false;
+  }
+
+  public boolean permitExit() {
+    return !isSafeShell() || !isInternal() || isSshMode() || isAllowExitInSafeMode();
+  }
+}
+;

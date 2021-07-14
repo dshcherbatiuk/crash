@@ -38,17 +38,16 @@
 
 package org.crsh.cli.descriptor;
 
-import org.crsh.cli.impl.descriptor.IllegalParameterException;
-import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.impl.Multiplicity;
-import org.crsh.cli.impl.ParameterType;
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.spi.Completer;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import org.crsh.cli.impl.Multiplicity;
+import org.crsh.cli.impl.ParameterType;
+import org.crsh.cli.impl.SyntaxException;
+import org.crsh.cli.impl.descriptor.IllegalParameterException;
+import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
+import org.crsh.cli.spi.Completer;
 
 public class ArgumentDescriptor extends ParameterDescriptor {
 
@@ -63,23 +62,17 @@ public class ArgumentDescriptor extends ParameterDescriptor {
       boolean password,
       boolean unquote,
       Class<? extends Completer> completerType,
-      Annotation annotation) throws IllegalValueTypeException, IllegalParameterException {
-    super(
-        type,
-      info,
-      required,
-      password,
-      unquote,
-      completerType,
-      annotation);
+      Annotation annotation)
+      throws IllegalValueTypeException, IllegalParameterException {
+    super(type, info, required, password, unquote, completerType, annotation);
 
     //
     this.name = name;
   }
 
   /**
-   * Returns the argument name, that can be null. This value is used for display capabilities and does not play a role
-   * when a command line is parsed.
+   * Returns the argument name, that can be null. This value is used for display capabilities and
+   * does not play a role when a command line is parsed.
    *
    * @return the argument name
    */
@@ -116,8 +109,8 @@ public class ArgumentDescriptor extends ParameterDescriptor {
    * Prints the argument:
    *
    * <ul>
-   * <li>Single valued arguments use the "$arg" pattern.</li>
-   * <li>Multi valued arguments use the "... $arg" pattern.</li>
+   *   <li>Single valued arguments use the "$arg" pattern.
+   *   <li>Multi valued arguments use the "... $arg" pattern.
    * </ul>
    *
    * Where $arg is the value "arg" or the argument name when it is not null.

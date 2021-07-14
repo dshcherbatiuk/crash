@@ -19,21 +19,20 @@
 
 package org.crsh.util;
 
-import junit.framework.TestCase;
-
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import junit.framework.TestCase;
 
 public class TypeResolverTestCase extends TestCase {
 
   public void testFoo() {
     Type resolved = Utils.resolve(ThreadLocal.class, ThreadLocal.class, 0);
     assertTrue(resolved instanceof TypeVariable);
-    TypeVariable tv = (TypeVariable)resolved;
+    TypeVariable tv = (TypeVariable) resolved;
     assertEquals(ThreadLocal.class, tv.getGenericDeclaration());
     assertEquals(Object.class, Utils.resolveToClass(ThreadLocal.class, ThreadLocal.class, 0));
   }
@@ -47,9 +46,10 @@ public class TypeResolverTestCase extends TestCase {
 
   public void testZoo() {
     class A extends ThreadLocal {}
-    TypeVariable resolved = (TypeVariable)Utils.resolve(A.class, ThreadLocal.class, 0);
+    TypeVariable resolved = (TypeVariable) Utils.resolve(A.class, ThreadLocal.class, 0);
     assertEquals("T", resolved.getName());
-    assertEquals(Collections.<Type>singletonList(Object.class), Arrays.asList(resolved.getBounds()));
+    assertEquals(
+        Collections.<Type>singletonList(Object.class), Arrays.asList(resolved.getBounds()));
     assertEquals(Object.class, Utils.resolveToClass(A.class, ThreadLocal.class, 0));
   }
 
@@ -63,9 +63,10 @@ public class TypeResolverTestCase extends TestCase {
   public void testDaa() {
     Type resolved = Utils.resolve(InheritableThreadLocal.class, ThreadLocal.class, 0);
     assertTrue(resolved instanceof TypeVariable);
-    TypeVariable tv = (TypeVariable)resolved;
+    TypeVariable tv = (TypeVariable) resolved;
     assertEquals(InheritableThreadLocal.class, tv.getGenericDeclaration());
-    assertEquals(Object.class, Utils.resolveToClass(InheritableThreadLocal.class, ThreadLocal.class, 0));
+    assertEquals(
+        Object.class, Utils.resolveToClass(InheritableThreadLocal.class, ThreadLocal.class, 0));
   }
 
   public void testInstanceOf() {
@@ -78,9 +79,14 @@ public class TypeResolverTestCase extends TestCase {
   }
 
   public void testInstanceOfList() {
-    assertEquals(true, Utils.instanceOf(String.class, Arrays.asList("java.lang.String", "java.lang.Integer")));
-    assertEquals(true, Utils.instanceOf(String.class, Arrays.asList("java.lang.Integer", "java.lang.String")));
-    assertEquals(false, Utils.instanceOf(String.class, Arrays.asList("java.lang.Boolean", "java.lang.Integer")));
+    assertEquals(
+        true,
+        Utils.instanceOf(String.class, Arrays.asList("java.lang.String", "java.lang.Integer")));
+    assertEquals(
+        true,
+        Utils.instanceOf(String.class, Arrays.asList("java.lang.Integer", "java.lang.String")));
+    assertEquals(
+        false,
+        Utils.instanceOf(String.class, Arrays.asList("java.lang.Boolean", "java.lang.Integer")));
   }
-
 }

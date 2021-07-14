@@ -18,8 +18,8 @@
  */
 package org.crsh.lang.spi;
 
-import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.shell.ShellResponse;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
 
 /** @author Julien Viet */
 public abstract class ReplResponse {
@@ -43,5 +43,4 @@ public abstract class ReplResponse {
       this.response = response;
     }
   }
-
 }

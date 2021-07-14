@@ -18,11 +18,8 @@
  */
 package org.crsh.cli.impl.line;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public enum Quoting {
-
-  STRONG, WEAK
-
+  STRONG,
+  WEAK
 }

@@ -18,13 +18,6 @@
  */
 package org.crsh.lang.impl.java;
 
-import org.crsh.AbstractTestCase;
-import org.crsh.util.Utils;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-
-import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,25 +32,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.tools.JavaFileObject;
+import org.crsh.AbstractTestCase;
+import org.crsh.util.Utils;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /** @author Julien Viet */
 public class ClasspathResolverTestCase extends AbstractTestCase {
 
-  final ClassLoader parent = new ClassLoader() {
-    @Override
-    public URL getResource(String name) {
-      return null;
-    }
+  final ClassLoader parent =
+      new ClassLoader() {
+        @Override
+        public URL getResource(String name) {
+          return null;
+        }
 
-    @Override
-    public Enumeration<URL> getResources(String name) throws IOException {
-      return Collections.enumeration(Collections.<URL>emptyList());
-    }
-  };
+        @Override
+        public Enumeration<URL> getResources(String name) throws IOException {
+          return Collections.enumeration(Collections.<URL>emptyList());
+        }
+      };
 
   /** . */
   private JavaArchive archive;
-  
+
   private static List<JavaFileObject> collect(List<JavaFileObject> files) {
     TreeMap<String, JavaFileObject> map = new TreeMap<String, JavaFileObject>();
     for (JavaFileObject file : files) {
@@ -71,7 +71,8 @@ public class ClasspathResolverTestCase extends AbstractTestCase {
 
   @Override
   protected void setUp() throws Exception {
-    URL manifest = Thread.currentThread().getContextClassLoader().getResource("META-INF/MANIFEST.MF");
+    URL manifest =
+        Thread.currentThread().getContextClassLoader().getResource("META-INF/MANIFEST.MF");
     archive = ShrinkWrap.create(JavaArchive.class, "my.jar");
     archive.addClass(HashMap.class);
     archive.addClass(Map.class);
@@ -81,7 +82,7 @@ public class ClasspathResolverTestCase extends AbstractTestCase {
 
   public void testDir() throws Exception {
     File root = toExploded(archive, "");
-    ClassLoader cl = new URLClassLoader(new URL[]{root.toURI().toURL()}, parent);
+    ClassLoader cl = new URLClassLoader(new URL[] {root.toURI().toURL()}, parent);
     ClasspathResolver resolver = new ClasspathResolver(cl);
 
     // No recurse
@@ -98,10 +99,9 @@ public class ClasspathResolverTestCase extends AbstractTestCase {
     assertEndsWith("/Map.class", classes.get(2).getName());
   }
 
-
   public void testJar() throws Exception {
     File jar = toFile(this.archive, ".jar");
-    ClassLoader cl = new URLClassLoader(new URL[]{jar.toURI().toURL()}, parent);
+    ClassLoader cl = new URLClassLoader(new URL[] {jar.toURI().toURL()}, parent);
     ClasspathResolver resolver = new ClasspathResolver(cl);
 
     // No recurse
@@ -120,21 +120,27 @@ public class ClasspathResolverTestCase extends AbstractTestCase {
 
   public void testNestedJar() throws Exception {
     final File war = toFile(ShrinkWrap.create(WebArchive.class).addAsLibrary(archive), ".jar");
-    ClassLoader cl = new ClassLoader(parent) {
-      @Override
-      protected Enumeration<URL> findResources(String name) throws IOException {
-        if ("META-INF/MANIFEST.MF".equals(name)) {
-          URL u1 = new URL("jar:" + war.toURI().toURL() + "!/META-INF/MANIFEST.MF");
-          URL u2 = new URL("jar:" + ("jar:" + war.toURI().toURL() + "!/WEB-INF/lib/my.jar") + "!/META-INF/MANIFEST.MF");
-          return Collections.enumeration(Arrays.asList(u1, u2));
-        } else if ("java/util".equals(name)) {
-          String u = "jar:" + ("jar:" + war.toURI().toURL() + "!/WEB-INF/lib/my.jar") + "!/java/util/";
-          return Collections.enumeration(Collections.singleton(new URL(u)));
-        } else {
-          return super.findResources(name);
-        }
-      }
-    };
+    ClassLoader cl =
+        new ClassLoader(parent) {
+          @Override
+          protected Enumeration<URL> findResources(String name) throws IOException {
+            if ("META-INF/MANIFEST.MF".equals(name)) {
+              URL u1 = new URL("jar:" + war.toURI().toURL() + "!/META-INF/MANIFEST.MF");
+              URL u2 =
+                  new URL(
+                      "jar:"
+                          + ("jar:" + war.toURI().toURL() + "!/WEB-INF/lib/my.jar")
+                          + "!/META-INF/MANIFEST.MF");
+              return Collections.enumeration(Arrays.asList(u1, u2));
+            } else if ("java/util".equals(name)) {
+              String u =
+                  "jar:" + ("jar:" + war.toURI().toURL() + "!/WEB-INF/lib/my.jar") + "!/java/util/";
+              return Collections.enumeration(Collections.singleton(new URL(u)));
+            } else {
+              return super.findResources(name);
+            }
+          }
+        };
     ClasspathResolver resolver = new ClasspathResolver(cl);
 
     // No recurse

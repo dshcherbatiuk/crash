@@ -51,5 +51,4 @@ public enum KeyType {
 
   /** Anything not categorizable. */
   UNKNOWN
-
 }

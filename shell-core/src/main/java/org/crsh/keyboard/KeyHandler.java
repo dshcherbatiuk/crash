@@ -32,5 +32,4 @@ public interface KeyHandler {
    * @param sequence the key sequence
    */
   void handle(KeyType type, int[] sequence);
-
 }

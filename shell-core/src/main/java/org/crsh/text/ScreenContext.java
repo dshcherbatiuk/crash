@@ -21,22 +21,20 @@ package org.crsh.text;
 
 import java.io.IOException;
 
-/**
- * The screen context extends the {@link Screenable} and add information about the screen.
- */
+/** The screen context extends the {@link Screenable} and add information about the screen. */
 public interface ScreenContext extends Screenable {
 
   /**
-   * Returns the screen width in chars. When the value is not positive it means
-   * the value could not be determined.
+   * Returns the screen width in chars. When the value is not positive it means the value could not
+   * be determined.
    *
    * @return the term width
    */
   int getWidth();
 
   /**
-   * Returns the screen height in chars. When the value is not positive it means
-   * the value could not be determined.
+   * Returns the screen height in chars. When the value is not positive it means the value could not
+   * be determined.
    *
    * @return the term height
    */
@@ -48,5 +46,4 @@ public interface ScreenContext extends Screenable {
    * @throws IOException any io exception
    */
   void flush() throws IOException;
-
 }

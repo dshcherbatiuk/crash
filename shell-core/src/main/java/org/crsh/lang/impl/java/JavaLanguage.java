@@ -22,9 +22,7 @@ import org.crsh.lang.spi.*;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.shell.impl.command.ShellSession;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class JavaLanguage extends CRaSHPlugin<Language> implements Language {
 
   /** . */
@@ -42,7 +40,9 @@ public class JavaLanguage extends CRaSHPlugin<Language> implements Language {
 
   @Override
   public String getDisplayName() {
-    return System.getProperty("java.runtime.name") + " " + System.getProperty("java.runtime.version");
+    return System.getProperty("java.runtime.name")
+        + " "
+        + System.getProperty("java.runtime.version");
   }
 
   @Override

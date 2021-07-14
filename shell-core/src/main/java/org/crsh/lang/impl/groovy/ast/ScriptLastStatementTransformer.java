@@ -18,6 +18,8 @@
  */
 package org.crsh.lang.impl.groovy.ast;
 
+import java.lang.reflect.Modifier;
+import java.util.List;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
@@ -33,24 +35,22 @@ import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
 
-import java.lang.reflect.Modifier;
-import java.util.List;
-
 /**
- * <p>A transformer that tags a CRaSH script class when it has an explicit return statement.
- * Indeed Groovy script last statement are returned by default and this value is sometimes
- * not desirable in CRaSH script commands unless they are explicitly returned by the script.</p>
+ * A transformer that tags a CRaSH script class when it has an explicit return statement. Indeed
+ * Groovy script last statement are returned by default and this value is sometimes not desirable in
+ * CRaSH script commands unless they are explicitly returned by the script.
  *
  * @author Julien Viet
  */
-@GroovyASTTransformation(phase= CompilePhase.SEMANTIC_ANALYSIS)
+@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 public class ScriptLastStatementTransformer implements ASTTransformation {
 
   /** . */
   public static final String FIELD_NAME = "org_crsh_has_explicit_return";
 
   /** . */
-  private static final ClassNode GROOVY_SCRIPT_COMMAND = ClassHelper.make(GroovyScriptCommand.class);
+  private static final ClassNode GROOVY_SCRIPT_COMMAND =
+      ClassHelper.make(GroovyScriptCommand.class);
 
   @Override
   public void visit(ASTNode[] nodes, SourceUnit source) {
@@ -59,18 +59,19 @@ public class ScriptLastStatementTransformer implements ASTTransformation {
         MethodNode run = classNode.getMethod("run", new Parameter[0]);
         Statement code = run.getCode();
         if (code instanceof BlockStatement) {
-          BlockStatement block = (BlockStatement)code;
+          BlockStatement block = (BlockStatement) code;
           List<Statement> statements = block.getStatements();
           int size = statements.size();
           if (size > 0) {
             Statement last = statements.get(size - 1);
             if (last instanceof ReturnStatement) {
-              classNode.addField(new FieldNode(
-                  FIELD_NAME,
-                  Modifier.PUBLIC | Modifier.STATIC,
-                  ClassHelper.Boolean_TYPE,
-                  classNode,
-                  null));
+              classNode.addField(
+                  new FieldNode(
+                      FIELD_NAME,
+                      Modifier.PUBLIC | Modifier.STATIC,
+                      ClassHelper.Boolean_TYPE,
+                      classNode,
+                      null));
             }
           }
         }

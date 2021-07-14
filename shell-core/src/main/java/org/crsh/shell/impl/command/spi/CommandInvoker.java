@@ -18,12 +18,11 @@
  */
 package org.crsh.shell.impl.command.spi;
 
+import java.io.IOException;
 import org.crsh.command.CommandContext;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.stream.Filter;
 import org.crsh.text.ScreenContext;
-
-import java.io.IOException;
 
 /**
  * A command invoker is a filter for a {@link org.crsh.command.CommandContext} kind of consumer.
@@ -40,15 +39,14 @@ public abstract class CommandInvoker<C, P> implements Filter<C, P, CommandContex
    * @throws IOException any io exception
    * @throws CommandException anything command exception
    */
-  public final void invoke(CommandContext<? super P> consumer) throws IOException, CommandException {
+  public final void invoke(CommandContext<? super P> consumer)
+      throws IOException, CommandException {
     try {
       open(consumer);
-    }
-    finally {
+    } finally {
       try {
         flush();
-      }
-      finally {
+      } finally {
         close();
       }
     }
@@ -61,7 +59,8 @@ public abstract class CommandInvoker<C, P> implements Filter<C, P, CommandContex
   public abstract void provide(C element) throws IOException, CommandException;
 
   @Override
-  public abstract void open(CommandContext<? super P> consumer) throws IOException, CommandException;
+  public abstract void open(CommandContext<? super P> consumer)
+      throws IOException, CommandException;
 
   @Override
   public abstract void close() throws IOException, CommandException;

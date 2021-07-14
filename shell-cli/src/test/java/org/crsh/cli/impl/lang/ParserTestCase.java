@@ -19,19 +19,18 @@
 
 package org.crsh.cli.impl.lang;
 
+import java.util.Arrays;
+import java.util.List;
 import junit.framework.TestCase;
-import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
 import org.crsh.cli.Required;
+import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.parser.Event;
 import org.crsh.cli.impl.parser.Mode;
 import org.crsh.cli.impl.parser.Parser;
 import org.crsh.cli.impl.tokenizer.TokenizerImpl;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -58,24 +57,24 @@ public class ParserTestCase extends TestCase {
     }
 
     public void assertMethod(String name) {
-      Event.Subordinate event = (Event.Subordinate)parser.next();
+      Event.Subordinate event = (Event.Subordinate) parser.next();
       assertEquals(name, event.getDescriptor().getName());
     }
 
     public void assertOption(String name, String... values) {
-      Event.Option event = (Event.Option)parser.next();
+      Event.Option event = (Event.Option) parser.next();
       assertTrue(event.getParameter().getNames().contains(name));
       assertEquals(Arrays.asList(values), event.getStrings());
     }
 
     public void assertArgument(String name, String... values) {
-      Event.Argument event = (Event.Argument)parser.next();
+      Event.Argument event = (Event.Argument) parser.next();
       assertEquals(name, event.getParameter().getName());
       assertEquals(Arrays.asList(values), event.getStrings());
     }
 
     public void assertEnd(Class expectedClass, int expectedIndex) {
-      Event.Stop event = (Event.Stop)parser.next();
+      Event.Stop event = (Event.Stop) parser.next();
       assertEquals(expectedClass, event.getClass());
       assertEquals(expectedIndex, event.getIndex());
     }
@@ -83,8 +82,7 @@ public class ParserTestCase extends TestCase {
 
   public void testUnkownClassOption() throws Exception {
 
-    class A {
-    }
+    class A {}
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
     //
@@ -121,14 +119,15 @@ public class ParserTestCase extends TestCase {
   public void testClassOption() throws Exception {
 
     class A {
-      @Option(names = "o") String o;
+      @Option(names = "o")
+      String o;
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
     //
     Tester<A> tester = new Tester<A>(cmd, "-o");
     tester.assertOption("o");
-    tester.assertEnd(Event.Stop.Done.class,  2);
+    tester.assertEnd(Event.Stop.Done.class, 2);
     tester = new Tester<A>(cmd, "-o ");
     tester.assertOption("o");
     tester.assertSeparator();
@@ -210,7 +209,9 @@ public class ParserTestCase extends TestCase {
   public void testOptions1() throws Exception {
 
     class A {
-      @Option(names = "o") String o;
+      @Option(names = "o")
+      String o;
+
       @Command
       public void main(@Option(names = "p") String p) {}
     }
@@ -261,7 +262,9 @@ public class ParserTestCase extends TestCase {
   public void testOptions2() throws Exception {
 
     class A {
-      @Option(names = "o") String o;
+      @Option(names = "o")
+      String o;
+
       @Command
       public void main(@Option(names = "p") String p) {}
     }
@@ -333,7 +336,8 @@ public class ParserTestCase extends TestCase {
   public void testClassArgument() throws Exception {
 
     class A {
-      @Argument(name = "arg") String arg;
+      @Argument(name = "arg")
+      String arg;
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
@@ -455,7 +459,8 @@ public class ParserTestCase extends TestCase {
 
     class A {
       @Command
-      public void main(@Argument(name = "arg1") String arg1, @Argument(name = "arg2") String arg2) {}
+      public void main(
+          @Argument(name = "arg1") String arg1, @Argument(name = "arg2") String arg2) {}
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
@@ -476,7 +481,8 @@ public class ParserTestCase extends TestCase {
 
     class A {
       @Command
-      public void main(@Argument(name = "arg1") String arg1, @Argument(name = "arg2") String arg2) {}
+      public void main(
+          @Argument(name = "arg1") String arg1, @Argument(name = "arg2") String arg2) {}
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
@@ -497,7 +503,9 @@ public class ParserTestCase extends TestCase {
 
     class A {
       @Command
-      public void main(@Required @Argument(name = "arg1") String arg1, @Required @Argument(name = "arg2") String arg2) {}
+      public void main(
+          @Required @Argument(name = "arg1") String arg1,
+          @Required @Argument(name = "arg2") String arg2) {}
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
@@ -518,7 +526,9 @@ public class ParserTestCase extends TestCase {
 
     class A {
       @Command
-      public void main(@Required @Argument(name = "arg1") String arg1, @Required @Argument(name = "arg2") String arg2) {}
+      public void main(
+          @Required @Argument(name = "arg1") String arg1,
+          @Required @Argument(name = "arg2") String arg2) {}
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
@@ -539,7 +549,8 @@ public class ParserTestCase extends TestCase {
 
     class A {
       @Command
-      public void main(@Argument(name = "arg1") List<String> arg1, @Argument(name = "arg2") String arg2) {}
+      public void main(
+          @Argument(name = "arg1") List<String> arg1, @Argument(name = "arg2") String arg2) {}
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 
@@ -558,7 +569,8 @@ public class ParserTestCase extends TestCase {
 
     class A {
       @Command
-      public void main(@Argument(name = "arg1") List<String> arg1, @Argument(name = "arg2") String arg2) {}
+      public void main(
+          @Argument(name = "arg1") List<String> arg1, @Argument(name = "arg2") String arg2) {}
     }
     CommandDescriptor<Instance<A>> cmd = CommandFactory.DEFAULT.create(A.class);
 

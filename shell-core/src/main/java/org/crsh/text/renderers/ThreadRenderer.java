@@ -19,6 +19,14 @@
 
 package org.crsh.text.renderers;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.LineRenderer;
@@ -29,20 +37,10 @@ import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 import org.crsh.util.Utils;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 public class ThreadRenderer extends Renderer<Thread> {
 
-  /** . */
-  private static final EnumMap<Thread.State, Color> colorMapping = new EnumMap<Thread.State, Color>(Thread.State.class);
+  private static final EnumMap<Thread.State, Color> colorMapping =
+      new EnumMap<>(Thread.State.class);
 
   static {
     colorMapping.put(Thread.State.NEW, Color.cyan);
@@ -77,8 +75,7 @@ public class ThreadRenderer extends Renderer<Thread> {
     try {
       // Sleep 100ms
       Thread.sleep(100);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     }
 
@@ -113,39 +110,38 @@ public class ThreadRenderer extends Renderer<Thread> {
     }
 
     // Sort by CPU time : should be a rendering hint...
-    Collections.sort(threads, new Comparator<Thread>() {
-      public int compare(Thread o1, Thread o2) {
-        long l1 = cpus.get(o1);
-        long l2 = cpus.get(o2);
-        if (l1 < l2) {
-          return 1;
-        } else if (l1 > l2) {
-          return -1;
-        } else {
-          return 0;
-        }
-      }
-    });
+    Collections.sort(
+        threads,
+        (o1, o2) -> {
+          long l1 = cpus.get(o1);
+          long l2 = cpus.get(o2);
+          if (l1 < l2) {
+            return 1;
+          } else if (l1 > l2) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
 
-    //
-    TableElement table = new TableElement(1,3,2,1,1,1,1,1,1).overflow(Overflow.HIDDEN).rightCellPadding(1);
+    TableElement table =
+        new TableElement(1, 3, 2, 1, 1, 1, 1, 1, 1).overflow(Overflow.HIDDEN).rightCellPadding(1);
 
     // Header
     table.add(
-      new RowElement().style(Decoration.bold.fg(Color.black).bg(Color.white)).add(
-        "ID",
-        "NAME",
-        "GROUP",
-        "PRIORITY",
-        "STATE",
-        "%CPU",
-        "TIME",
-        "INTERRUPTED",
-        "DAEMON"
-      )
-    );
+        new RowElement()
+            .style(Decoration.bold.fg(Color.black).bg(Color.white))
+            .add(
+                "ID",
+                "NAME",
+                "GROUP",
+                "PRIORITY",
+                "STATE",
+                "%CPU",
+                "TIME",
+                "INTERRUPTED",
+                "DAEMON"));
 
-    //
     for (Thread thread : threads) {
       Color c = colorMapping.get(thread.getState());
       long seconds = times2.get(thread.getId()) / 1000000000;
@@ -162,11 +158,9 @@ public class ThreadRenderer extends Renderer<Thread> {
           new LabelElement(cpu),
           new LabelElement(time),
           new LabelElement(thread.isInterrupted()),
-          new LabelElement(thread.isDaemon())
-      );
+          new LabelElement(thread.isDaemon()));
     }
 
-    //
     return table.renderer();
   }
 }

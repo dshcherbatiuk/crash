@@ -32,13 +32,9 @@ public abstract class CommandMatch<C, P> {
    */
   public abstract CommandInvoker<C, P> getInvoker() throws CommandException;
 
-  /**
-   * @return the command produced type
-   */
+  /** @return the command produced type */
   public abstract Class<P> getProducedType();
 
-  /**
-   * @return the command consumed type
-   */
+  /** @return the command consumed type */
   public abstract Class<C> getConsumedType();
 }

@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViArgDigitDeleteToNextWordTestCase extends AbstractConsoleTestCase {
 
   public void testWordRight4() throws Exception {
@@ -38,5 +36,4 @@ public class ViArgDigitDeleteToNextWordTestCase extends AbstractConsoleTestCase 
     console.on(Operation.VI_NEXT_WORD);
     assertEquals("frog livers", getCurrentLine());
   }
-
 }

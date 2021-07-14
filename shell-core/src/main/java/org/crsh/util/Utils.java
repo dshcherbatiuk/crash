@@ -19,9 +19,9 @@
 
 package org.crsh.util;
 
-import javax.naming.Context;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,11 +30,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.Socket;
-import java.nio.charset.Charset;
-import java.sql.*;
-import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,28 +45,29 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.naming.Context;
 
 public class Utils {
 
-  /** . */
   private static final Iterator EMPTY_ITERATOR = Collections.emptyList().iterator();
 
-  /** . */
   private static final Pattern p = Pattern.compile("\\S+");
 
   public static <E> Iterator<E> iterator() {
     @SuppressWarnings("unchecked")
-    Iterator<E> iterator = (Iterator<E>)EMPTY_ITERATOR;
+    Iterator<E> iterator = (Iterator<E>) EMPTY_ITERATOR;
     return iterator;
   }
 
   public static <E> Iterator<E> iterator(final E element) {
     return new BaseIterator<E>() {
       boolean hasNext = true;
+
       @Override
       public boolean hasNext() {
         return hasNext;
       }
+
       @Override
       public E next() {
         if (hasNext) {
@@ -119,7 +119,7 @@ public class Utils {
   }
 
   public static int indexOf(CharSequence s, int off, char c) {
-    for (int len = s.length();off < len;off++) {
+    for (int len = s.length(); off < len; off++) {
       if (s.charAt(off) == c) {
         return off;
       }
@@ -165,33 +165,43 @@ public class Utils {
    * Return the value when it is positive otherwise return 0.
    *
    * @param value the value
+   *
    * @return the non negative value
    */
   public static int notNegative(int value) {
     return value >= 0 ? value : 0;
   }
 
-  private static final Pattern FOO = Pattern.compile("" +
-      "(\\*)" + // Wildcard *
-      "|" +
-      "(\\?)" + // Wildcard ?
-      "|" +
-      "(?:\\[([^)]+)\\])" + // Range
-      "|" +
-      "(\\\\.)" // Escape
-  );
+  private static final Pattern FOO =
+      Pattern.compile(
+          ""
+              + "(\\*)"
+              + // Wildcard *
+              "|"
+              + "(\\?)"
+              + // Wildcard ?
+              "|"
+              + "(?:\\[([^)]+)\\])"
+              + // Range
+              "|"
+              + "(\\\\.)" // Escape
+      );
 
   /**
-   * Create a pattern that transforms a glob expression into a regular expression, the following task are supported
+   * Create a pattern that transforms a glob expression into a regular expression, the following
+   * task are supported
+   *
    * <ul>
-   *   <li>* : Match any number of unknown characters</li>
-   *   <li>? : Match one unknown character</li>
-   *   <li>[characters] : Match a character as part of a group of characters</li>
-   *   <li>\ : Escape character</li>
+   *   <li>* : Match any number of unknown characters
+   *   <li>? : Match one unknown character
+   *   <li>[characters] : Match a character as part of a group of characters
+   *   <li>\ : Escape character
    * </ul>
    *
    * @param globex the glob expression
+   *
    * @return the regular expression
+   *
    * @throws NullPointerException when the globex argument is null
    */
   public static String globexToRegex(String globex) throws NullPointerException {
@@ -228,18 +238,17 @@ public class Utils {
   }
 
   /**
-<<<<<<< HEAD
-   * Close the socket and catch any exception thrown.
+   * <<<<<<< HEAD Close the socket and catch any exception thrown.
    *
    * @param socket the socket to close
+   *
    * @return any Exception thrown during the <code>close</code> operation
    */
   public static Exception close(Socket socket) {
     if (socket != null) {
       try {
         socket.close();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return e;
       }
     }
@@ -250,14 +259,14 @@ public class Utils {
    * Close the closeable and catch any exception thrown.
    *
    * @param closeable the closeable to close
+   *
    * @return any Exception thrown during the <code>close</code> operation
    */
   public static Exception close(Closeable closeable) {
     if (closeable != null) {
       try {
         closeable.close();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return e;
       }
     }
@@ -268,14 +277,14 @@ public class Utils {
    * Close the connection and catch any exception thrown.
    *
    * @param connection the socket to close
+   *
    * @return any Exception thrown during the <code>close</code> operation
    */
   public static Exception close(Connection connection) {
     if (connection != null) {
       try {
         connection.close();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return e;
       }
     }
@@ -286,14 +295,14 @@ public class Utils {
    * Close the statement and catch any exception thrown.
    *
    * @param statement the statement to close
+   *
    * @return any Exception thrown during the <code>close</code> operation
    */
   public static Exception close(java.sql.Statement statement) {
     if (statement != null) {
       try {
         statement.close();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return e;
       }
     }
@@ -304,14 +313,14 @@ public class Utils {
    * Close the result set and catch any exception thrown.
    *
    * @param rs the result set to close
+   *
    * @return any Exception thrown during the <code>close</code> operation
    */
   public static Exception close(ResultSet rs) {
     if (rs != null) {
       try {
         rs.close();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return e;
       }
     }
@@ -322,35 +331,32 @@ public class Utils {
    * Close the context and catch any exception thrown.
    *
    * @param context the context to close
+   *
    * @return any Exception thrown during the <code>close</code> operation
    */
-   public static Exception close(Context context) {
-      if (context != null) {
-         try {
-            context.close();
-         }
-         catch (Exception e) {
-           return e;
-         }
+  public static Exception close(Context context) {
+    if (context != null) {
+      try {
+        context.close();
+      } catch (Exception e) {
+        return e;
       }
-     return null;
-   }
+    }
+    return null;
+  }
 
-  public static <T extends Throwable> void rethrow(Class<T> throwableClass, Throwable cause) throws T {
+  public static <T extends Throwable> void rethrow(Class<T> throwableClass, Throwable cause)
+      throws T {
     T throwable;
 
-    //
     try {
       throwable = throwableClass.newInstance();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new AssertionError(e);
     }
 
-    //
     throwable.initCause(cause);
 
-    //
     throw throwable;
   }
 
@@ -366,14 +372,14 @@ public class Utils {
    * Flush the flushable and catch any exception thrown.
    *
    * @param flushable the flushable to flush
+   *
    * @return any Exception thrown during the <code>flush</code> operation
    */
   public static Exception flush(Flushable flushable) {
     if (flushable != null) {
       try {
         flushable.flush();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return e;
       }
     }
@@ -420,7 +426,8 @@ public class Utils {
     return foo(s, separator, 0, 0, rightPadding);
   }
 
-  private static String[] foo(CharSequence s, char separator, int count, int from, int rightPadding) {
+  private static String[] foo(
+      CharSequence s, char separator, int count, int from, int rightPadding) {
     int len = s.length();
     if (from < len) {
       int to = from;
@@ -431,17 +438,17 @@ public class Utils {
       if (to == len - 1) {
         ret = new String[count + 2 + rightPadding];
         ret[count + 1] = "";
-      }
-      else {
-        ret = to == len ? new String[count + 1 + rightPadding] : foo(s, separator, count + 1, to + 1, rightPadding);
+      } else {
+        ret =
+            to == len
+                ? new String[count + 1 + rightPadding]
+                : foo(s, separator, count + 1, to + 1, rightPadding);
       }
       ret[count] = from == to ? "" : s.subSequence(from, to).toString();
       return ret;
-    }
-    else if (from == len) {
+    } else if (from == len) {
       return new String[count + rightPadding];
-    }
-    else {
+    } else {
       throw new AssertionError();
     }
   }
@@ -457,6 +464,7 @@ public class Utils {
    * Find the longest possible common prefix of the provided char sequence.
    *
    * @param seqs the sequences
+   *
    * @return the longest possible prefix
    */
   public static String findLongestCommonPrefix(Iterable<? extends CharSequence> seqs) {
@@ -494,8 +502,7 @@ public class Utils {
     try {
       ByteArrayOutputStream baos = read(in);
       return baos.toString("UTF-8");
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
       return null;
     }
@@ -510,8 +517,7 @@ public class Utils {
       for (int l = in.read(buffer); l != -1; l = in.read(buffer)) {
         out.write(buffer, 0, l);
       }
-    }
-    finally {
+    } finally {
       close(in);
     }
   }
@@ -542,7 +548,7 @@ public class Utils {
     }
     try {
       return new File(url.toURI());
-    } catch(URISyntaxException e) {
+    } catch (URISyntaxException e) {
       return new File(url.getPath());
     }
   }
@@ -573,10 +579,11 @@ public class Utils {
       ParameterizedType parameterizedType = (ParameterizedType) type;
       return resolveToClass(parameterizedType.getRawType());
     } else if (type instanceof TypeVariable) {
-      TypeVariable resolvedTypeVariable = (TypeVariable)type;
+      TypeVariable resolvedTypeVariable = (TypeVariable) type;
       return resolveToClass(resolvedTypeVariable.getBounds()[0]);
     } else {
-      throw new UnsupportedOperationException("Type resolution of " + type + " not yet implemented");
+      throw new UnsupportedOperationException(
+          "Type resolution of " + type + " not yet implemented");
     }
   }
 
@@ -586,6 +593,7 @@ public class Utils {
    * @param implementation the type for which the parameter requires a resolution
    * @param type the type that owns the parameter
    * @param parameterIndex the parameter index
+   *
    * @return the resolved type
    */
   public static Type resolve(Type implementation, Class<?> type, int parameterIndex) {
@@ -593,7 +601,6 @@ public class Utils {
       throw new NullPointerException();
     }
 
-    //
     if (implementation == type) {
       TypeVariable<? extends Class<?>>[] tp = type.getTypeParameters();
       if (parameterIndex < tp.length) {
@@ -619,14 +626,14 @@ public class Utils {
       if (rawType == type) {
         return typeArgs[parameterIndex];
       } else if (rawType instanceof Class<?>) {
-        Class<?> classRawType = (Class<?>)rawType;
+        Class<?> classRawType = (Class<?>) rawType;
         Type resolved = resolve(classRawType, type, parameterIndex);
         if (resolved == null) {
           return null;
         } else if (resolved instanceof TypeVariable) {
-          TypeVariable resolvedTV = (TypeVariable)resolved;
+          TypeVariable resolvedTV = (TypeVariable) resolved;
           TypeVariable[] a = classRawType.getTypeParameters();
-          for (int i = 0;i < a.length;i++) {
+          for (int i = 0; i < a.length; i++) {
             if (a[i].equals(resolvedTV)) {
               return resolve(implementation, classRawType, i);
             }
@@ -639,20 +646,20 @@ public class Utils {
         throw new UnsupportedOperationException();
       }
     } else {
-      throw new UnsupportedOperationException("todo " + implementation + " " + implementation.getClass());
+      throw new UnsupportedOperationException(
+          "todo " + implementation + " " + implementation.getClass());
     }
   }
 
   public static boolean instanceOf(Class c, List<String> types) {
 
-    for (String type: types) {
+    for (String type : types) {
       if (instanceOf(c, type)) {
         return true;
       }
     }
 
     return false;
-
   }
 
   public static boolean instanceOf(Class c, String type) {
@@ -674,33 +681,36 @@ public class Utils {
     return false;
   }
 
-  /** . */
   private static final int ESCAPE = -1, SCANNING = 0, DOLLAR = 1, EVALUATING = 2;
 
   /**
    * Interpolate a string and replace the occurence from a context map, the syntax for a variable
-   * is <code>${}</code> and it can accept a default value used when the variable cannot be resolved
+   * is
+   * <code>${}</code> and it can accept a default value used when the variable cannot be resolved
    * with the <code>:-</code> separator:
    *
    * <ul>
-   *   <li><code>{}</code> + "foo" => "foo"</li>
-   *   <li><code>{}</code> + "${foo}" => ""</li>
-   *   <li><code>{}</code> + "\\${foo}" => "${foo}"</li>
-   *   <li><code>{foo:bar}</code> + "${foo}" => "bar"</li>
-   *   <li><code>{}</code> + "${foo:-bar}" => "bar"</li>
+   *   <li><code>{}</code> + "foo" => "foo"
+   *   <li><code>{}</code> + "${foo}" => ""
+   *   <li><code>{}</code> + "\\${foo}" => "${foo}"
+   *   <li><code>{foo:bar}</code> + "${foo}" => "bar"
+   *   <li><code>{}</code> + "${foo:-bar}" => "bar"
    * </ul>
    *
    * @param interpolated the value to interpolate
    * @param context the context
+   *
    * @return the interpolated string
+   *
    * @throws NullPointerException if the interpolated argument is null
    */
-  public static String interpolate(String interpolated, Map<?, ?> context) throws NullPointerException {
+  public static String interpolate(String interpolated, Map<?, ?> context)
+      throws NullPointerException {
     StringBuilder sb = new StringBuilder();
     int status = 0;
     int prev = 0;
     int length = interpolated.length();
-    for (int i = 0;i < length;i++) {
+    for (int i = 0; i < length; i++) {
       char c = interpolated.charAt(i);
       switch (status) {
         case ESCAPE:
@@ -732,7 +742,9 @@ public class Utils {
           if (c == '}') {
             int j = prev + 1;
             while (j < i) {
-              if (j < length && interpolated.charAt(j - 1) == ':' && interpolated.charAt(j) == '-') {
+              if (j < length
+                  && interpolated.charAt(j - 1) == ':'
+                  && interpolated.charAt(j) == '-') {
                 break;
               } else {
                 j++;
@@ -775,12 +787,4 @@ public class Utils {
     String userDir = System.getProperty("user.dir");
     return new File(userDir);
   }
-
-  /** . */
-  public static final Charset UTF_8;
-
-  static {
-    UTF_8 = Charset.forName("UTF-8");
-  }
-
 }

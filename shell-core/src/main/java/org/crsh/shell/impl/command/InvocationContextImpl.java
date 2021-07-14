@@ -19,42 +19,36 @@
 
 package org.crsh.shell.impl.command;
 
+import java.io.IOException;
+import java.util.Map;
 import org.crsh.command.CommandContext;
 import org.crsh.command.ShellSafety;
 import org.crsh.lang.impl.script.CommandNotFoundException;
-import org.crsh.shell.ErrorKind;
-import org.crsh.text.Screenable;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.lang.impl.script.Token;
-import org.crsh.text.ScreenContext;
 import org.crsh.lang.impl.script.PipeLineFactory;
+import org.crsh.lang.impl.script.Token;
+import org.crsh.shell.ErrorKind;
+import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.text.RenderPrintWriter;
+import org.crsh.text.ScreenContext;
+import org.crsh.text.Screenable;
 import org.crsh.text.Style;
-
-import java.io.IOException;
-import java.util.Map;
 
 public final class InvocationContextImpl<P> extends AbstractInvocationContext<P> {
 
-  /** . */
   private static final int WRITTEN = 0;
 
-  /** . */
   private static final int FLUSHED = 1;
 
-  /** . */
   private static final int CLOSED = 2;
 
-  /** . */
   private final CommandContext<P> commandContext;
 
-  /** . */
   private RenderPrintWriter writer;
 
-  /** . */
   int status;
-  ShellSafety shellSafety = null;
+
+  ShellSafety shellSafety;
 
   @Override
   public ShellSafety getShellSafety() {
@@ -69,37 +63,46 @@ public final class InvocationContextImpl<P> extends AbstractInvocationContext<P>
 
   public RenderPrintWriter getWriter() {
     if (writer == null) {
-      writer = new RenderPrintWriter(new ScreenContext() {
-        public int getWidth() {
-          return InvocationContextImpl.this.getWidth();
-        }
-        public int getHeight() {
-          return InvocationContextImpl.this.getHeight();
-        }
-        public Screenable append(CharSequence s) throws IOException {
-          InvocationContextImpl.this.append(s);
-          return this;
-        }
-        public Appendable append(char c) throws IOException {
-          InvocationContextImpl.this.append(c);
-          return this;
-        }
-        public Appendable append(CharSequence csq, int start, int end) throws IOException {
-          InvocationContextImpl.this.append(csq, start, end);
-          return this;
-        }
-        public Screenable append(Style style) throws IOException {
-          InvocationContextImpl.this.append(style);
-          return this;
-        }
-        public Screenable cls() throws IOException {
-          InvocationContextImpl.this.cls();
-          return this;
-        }
-        public void flush() throws IOException {
-          InvocationContextImpl.this.flush();
-        }
-      });
+      writer =
+          new RenderPrintWriter(
+              new ScreenContext() {
+                public int getWidth() {
+                  return InvocationContextImpl.this.getWidth();
+                }
+
+                public int getHeight() {
+                  return InvocationContextImpl.this.getHeight();
+                }
+
+                public Screenable append(CharSequence s) throws IOException {
+                  InvocationContextImpl.this.append(s);
+                  return this;
+                }
+
+                public Appendable append(char c) throws IOException {
+                  InvocationContextImpl.this.append(c);
+                  return this;
+                }
+
+                public Appendable append(CharSequence csq, int start, int end) throws IOException {
+                  InvocationContextImpl.this.append(csq, start, end);
+                  return this;
+                }
+
+                public Screenable append(Style style) throws IOException {
+                  InvocationContextImpl.this.append(style);
+                  return this;
+                }
+
+                public Screenable cls() throws IOException {
+                  InvocationContextImpl.this.cls();
+                  return this;
+                }
+
+                public void flush() throws IOException {
+                  InvocationContextImpl.this.flush();
+                }
+              });
     }
     return writer;
   }
@@ -113,13 +116,12 @@ public final class InvocationContextImpl<P> extends AbstractInvocationContext<P>
   }
 
   public CommandInvoker<?, ?> resolve(String s) throws CommandException {
-    CRaSHSession session = (CRaSHSession)getSession();
+    CRaSHSession session = (CRaSHSession) getSession();
     Token token2 = Token.parse(s);
     try {
       PipeLineFactory factory = token2.createFactory();
       return factory.create(session);
-    }
-    catch (CommandNotFoundException e) {
+    } catch (CommandNotFoundException e) {
       throw new CommandException(ErrorKind.SYNTAX, e.getMessage(), e);
     }
   }
@@ -202,8 +204,7 @@ public final class InvocationContextImpl<P> extends AbstractInvocationContext<P>
     if (status != CLOSED) {
       try {
         flush();
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         // Ignore ?
       }
       status = CLOSED;

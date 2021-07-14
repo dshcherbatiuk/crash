@@ -19,10 +19,9 @@
 
 package org.crsh.text;
 
-import org.crsh.stream.Consumer;
-
 import java.io.IOException;
 import java.util.LinkedList;
+import org.crsh.stream.Consumer;
 
 /**
  * A <code>Consumer&lt;Object&gt;</code> that renders the object stream to a {@link ScreenContext}.
@@ -47,15 +46,15 @@ public class ScreenContextConsumer implements Consumer<Object> {
   }
 
   public void provide(Object element) throws IOException {
-    Renderer current = Renderer.getRenderable(element.getClass());
+    final Renderer current = Renderer.getRenderable(element.getClass());
     if (current == null) {
       send();
       if (element instanceof CharSequence) {
-        out.append((CharSequence)element);
+        out.append((CharSequence) element);
       } else if (element instanceof CLS) {
         out.cls();
       } else if (element instanceof Style) {
-        out.append((Style)element);
+        out.append((Style) element);
       } else {
         out.append(element.toString());
       }

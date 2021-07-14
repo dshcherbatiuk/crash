@@ -20,6 +20,11 @@ package org.crsh.lang.impl.groovy;
 
 import groovy.lang.Closure;
 import groovy.lang.GroovyShell;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
@@ -31,23 +36,16 @@ import org.codehaus.groovy.control.Phases;
 import org.crsh.cli.Usage;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.command.BaseCommand;
-import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
+import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
+import org.crsh.lang.impl.groovy.command.GroovyScriptShellCommand;
 import org.crsh.lang.impl.java.ClassShellCommand;
+import org.crsh.lang.spi.CommandResolution;
+import org.crsh.plugin.PluginContext;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.ShellSession;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.lang.impl.groovy.command.GroovyScriptShellCommand;
-import org.crsh.lang.spi.CommandResolution;
-import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
-import org.crsh.plugin.PluginContext;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Collections;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** @author Julien Viet */
 public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
@@ -59,10 +57,12 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
   private static final Set<String> EXT = Collections.singleton("groovy");
 
   /** . */
-  private GroovyClassFactory<Object> objectGroovyClassFactory;
+  private final GroovyClassFactory<Object> objectGroovyClassFactory;
 
   public GroovyCompiler(PluginContext context) {
-    this.objectGroovyClassFactory = new GroovyClassFactory<Object>(context.getLoader(), Object.class, GroovyScriptCommand.class);
+    this.objectGroovyClassFactory =
+        new GroovyClassFactory<>(
+            context.getLoader(), Object.class, GroovyScriptCommand.class);
   }
 
   public Set<String> getExtensions() {
@@ -79,7 +79,7 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
    * @return a groovy shell operating on the session attributes
    */
   public static GroovyShell getGroovyShell(ShellSession session) {
-    GroovyShell shell = (GroovyShell)session.get("shell");
+    GroovyShell shell = (GroovyShell) session.get("shell");
     if (shell == null) {
       CompilerConfiguration config = new CompilerConfiguration();
       config.setRecompileGroovySource(true);
@@ -96,21 +96,21 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
       Object ret = shell.getContext().getVariable(name);
       if (ret instanceof Closure) {
         log.log(Level.FINEST, "Invoking " + name + " closure");
-        Closure c = (Closure)ret;
+        Closure c = (Closure) ret;
         ret = c.call();
       } else if (ret == null) {
         log.log(Level.FINEST, "No " + name + " will use empty");
         return def;
       }
       return String.valueOf(ret);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       log.log(Level.SEVERE, "Could not get a " + name + " message, will use empty", e);
       return def;
     }
   }
 
-  public CommandResolution compileCommand(final String name, byte[] source) throws CommandException, NullPointerException {
+  public CommandResolution compileCommand(final String name, byte[] source)
+      throws CommandException, NullPointerException {
 
     //
     if (source == null) {
@@ -121,25 +121,24 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
     final String script;
     try {
       script = new String(source, "UTF-8");
-    }
-    catch (UnsupportedEncodingException e) {
+    } catch (UnsupportedEncodingException e) {
       throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
     }
 
-    // Get the description using a partial compilation because it is much faster than compiling the class
+    // Get the description using a partial compilation because it is much faster than compiling the
+    // class
     // the class will be compiled lazyly
     String resolveDescription = null;
     CompilationUnit cu = new CompilationUnit(objectGroovyClassFactory.config);
     cu.addSource(name, script);
     try {
       cu.compile(Phases.CONVERSION);
-    }
-    catch (CompilationFailedException e) {
+    } catch (CompilationFailedException e) {
       throw new CommandException(ErrorKind.INTERNAL, "Could not compile command", e);
     }
     CompileUnit ast = cu.getAST();
     if (ast.getClasses().size() > 0) {
-      ClassNode classNode= (ClassNode)ast.getClasses().get(0);
+      ClassNode classNode = ast.getClasses().get(0);
       if (classNode != null) {
         for (AnnotationNode annotation : classNode.getAnnotations()) {
           if (annotation.getClassNode().getName().equals(Usage.class.getSimpleName())) {
@@ -164,10 +163,12 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
     //
     return new CommandResolution() {
       Command<?> command;
+
       @Override
       public String getDescription() {
         return description;
       }
+
       @Override
       public Command<?> getCommand() throws CommandException {
         if (command == null) {
@@ -176,22 +177,21 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
             Class<? extends BaseCommand> cmd = clazz.asSubclass(BaseCommand.class);
             try {
               command = make(cmd);
+            } catch (IntrospectionException e) {
+              throw new CommandException(
+                  ErrorKind.INTERNAL, "Invalid cli annotations for command " + name, e);
             }
-            catch (IntrospectionException e) {
-              throw new CommandException(ErrorKind.INTERNAL, "Invalid cli annotations for command " + name, e);
-            }
-          }
-          else if (GroovyScriptCommand.class.isAssignableFrom(clazz)) {
+          } else if (GroovyScriptCommand.class.isAssignableFrom(clazz)) {
             Class<? extends GroovyScriptCommand> cmd = clazz.asSubclass(GroovyScriptCommand.class);
             try {
               command = make2(cmd);
+            } catch (IntrospectionException e) {
+              throw new CommandException(
+                  ErrorKind.INTERNAL, "Invalid cli annotations for command " + name, e);
             }
-            catch (IntrospectionException e) {
-              throw new CommandException(ErrorKind.INTERNAL, "Invalid cli annotations for command " + name, e);
-            }
-          }
-          else {
-            throw new CommandException(ErrorKind.INTERNAL, "Could not create command " + name + " instance");
+          } else {
+            throw new CommandException(
+                ErrorKind.INTERNAL, "Could not create command " + name + " instance");
           }
         }
         return command;
@@ -199,11 +199,13 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
     };
   }
 
-  private <C extends BaseCommand> ClassShellCommand<C> make(Class<C> clazz) throws IntrospectionException {
+  private <C extends BaseCommand> ClassShellCommand<C> make(Class<C> clazz)
+      throws IntrospectionException {
     return new ClassShellCommand<C>(clazz, ShellSafetyFactory.getCurrentThreadShellSafety());
   }
 
-  private <C extends GroovyScriptCommand> GroovyScriptShellCommand<C> make2(Class<C> clazz) throws IntrospectionException {
+  private <C extends GroovyScriptCommand> GroovyScriptShellCommand<C> make2(Class<C> clazz)
+      throws IntrospectionException {
     return new GroovyScriptShellCommand<C>(clazz);
   }
 }

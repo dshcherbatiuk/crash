@@ -69,7 +69,7 @@ class LabelReader implements LineReader {
           to.append(BlankSequence.create(missing));
         }
       } else {
-        for (int i = 0;i < width;i++) {
+        for (int i = 0; i < width; i++) {
           to.append(' ');
         }
       }

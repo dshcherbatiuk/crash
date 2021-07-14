@@ -18,14 +18,12 @@
  */
 package org.crsh.cli.impl.lang;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public interface Instance<T> {
 
   /**
-   * Resolve the specified contextual type to an instance or return null if no object able
-   * to satisfy the class type was resolved.
+   * Resolve the specified contextual type to an instance or return null if no object able to
+   * satisfy the class type was resolved.
    *
    * @param type the type to resolve
    * @param <T> the generic type parameter
@@ -40,5 +38,4 @@ public interface Instance<T> {
    * @throws Exception any exception preventing to obtain the instance
    */
   T get() throws Exception;
-
 }

@@ -20,9 +20,7 @@
 package org.crsh.cli.impl;
 
 public enum Multiplicity {
-
   SINGLE,
 
   MULTI
-
 }

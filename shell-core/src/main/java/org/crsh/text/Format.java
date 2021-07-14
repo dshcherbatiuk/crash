@@ -33,63 +33,65 @@ public abstract class Format {
   public static final PreHtml PRE_HTML = new PreHtml();
 
   public static class Text extends Format {
-    protected Text() {
-    }
+    protected Text() {}
+
     @Override
-    public void begin(Appendable to) throws IOException {
-    }
+    public void begin(Appendable to) {}
+
     @Override
     public void write(CharSequence s, Appendable to) throws IOException {
       if (s.length() > 0) {
         to.append(s);
       }
     }
+
     @Override
-    public void write(Style style, Appendable to) throws IOException {
-    }
+    public void write(Style style, Appendable to) throws IOException {}
+
     @Override
-    public void cls(Appendable to) throws IOException {
-    }
+    public void cls(Appendable to) throws IOException {}
+
     @Override
-    public void end(Appendable to) throws IOException {
-    }
+    public void end(Appendable to) throws IOException {}
   }
 
   public static class Ansi extends Format {
-    protected Ansi() {
-    }
+    protected Ansi() {}
+
     @Override
-    public void begin(Appendable to) throws IOException {
-    }
+    public void begin(Appendable to) {}
+
     @Override
     public void write(CharSequence s, Appendable to) throws IOException {
       if (s.length() > 0) {
         to.append(s);
       }
     }
+
     @Override
     public void write(Style style, Appendable to) throws IOException {
       style.writeAnsiTo(to);
     }
+
     @Override
-    public void cls(Appendable to) throws IOException {
-    }
+    public void cls(Appendable to) throws IOException {}
+
     @Override
-    public void end(Appendable to) throws IOException {
-    }
+    public void end(Appendable to) throws IOException {}
   }
 
   public static class PreHtml extends Format {
-    protected PreHtml() {
-    }
+    protected PreHtml() {}
+
     @Override
     public void begin(Appendable to) throws IOException {
       to.append("<pre>");
     }
+
     @Override
     public void write(CharSequence s, Appendable to) throws IOException {
       if (s.length() > 0) {
-        for (int i = 0;i < s.length();i++) {
+        for (int i = 0; i < s.length(); i++) {
           char c = s.charAt(i);
           switch (c) {
             case '>':
@@ -113,12 +115,13 @@ public abstract class Format {
         }
       }
     }
+
     @Override
-    public void write(Style style, Appendable to) throws IOException {
-    }
+    public void write(Style style, Appendable to) throws IOException {}
+
     @Override
-    public void cls(Appendable to) throws IOException {
-    }
+    public void cls(Appendable to) throws IOException {}
+
     @Override
     public void end(Appendable to) throws IOException {
       to.append("</pre>");

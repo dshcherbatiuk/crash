@@ -19,23 +19,21 @@
 package org.crsh.lang.impl.groovy;
 
 import groovy.lang.GroovyShell;
+import java.io.IOException;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
+import org.crsh.cli.impl.line.LineParser;
 import org.crsh.cli.spi.Completion;
 import org.crsh.command.CommandContext;
-import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.lang.spi.Language;
+import org.crsh.lang.spi.Repl;
 import org.crsh.lang.spi.ReplResponse;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.InvocationContextImpl;
 import org.crsh.shell.impl.command.ShellSession;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.lang.spi.Repl;
-import org.crsh.cli.impl.line.LineParser;
-
-import java.io.IOException;
 
 /**
  * Groovy REPL implementation.
@@ -65,64 +63,72 @@ public class GroovyRepl implements Repl {
 
   public ReplResponse eval(final ShellSession session, final String r2) {
 
-
     GroovyLineEscaper foo = new GroovyLineEscaper();
     LineParser parser = new LineParser(foo);
     parser.append(r2);
     final String request = foo.buffer.toString();
 
-
     //
-    CommandInvoker<Void, Object> invoker = new CommandInvoker<Void, Object>() {
-      public void provide(Void element) throws IOException {
-        throw new UnsupportedOperationException("Should not be invoked");
-      }
-      public Class<Void> getConsumedType() {
-        return Void.class;
-      }
-      public void flush() throws IOException {
-      }
-      public Class<Object> getProducedType() {
-        return Object.class;
-      }
-      CommandContext<Object> consumer;
-      public void open(CommandContext<? super Object> consumer) throws IOException, CommandException {
-        this.consumer = (CommandContext<Object>)consumer;
-        GroovyShell shell = GroovyCompiler.getGroovyShell(session);
-        ShellBinding binding = (ShellBinding)shell.getContext();
-        binding.setCurrent(new InvocationContextImpl<Object>(this.consumer, ShellSafetyFactory.getCurrentThreadShellSafety()));
-        Object o;
-        try {
-          o = shell.evaluate(request);
-        }
-        finally {
-          binding.setCurrent(null);
-        }
-        if (o != null) {
-          try {
-            consumer.provide(o);
+    CommandInvoker<Void, Object> invoker =
+        new CommandInvoker<Void, Object>() {
+          public void provide(Void element) {
+            throw new UnsupportedOperationException("Should not be invoked");
           }
-          catch (IOException e) {
-            throw e;
+
+          public Class<Void> getConsumedType() {
+            return Void.class;
           }
-          catch (CommandException e) {
-            throw e;
+
+          public void flush() {}
+
+          public Class<Object> getProducedType() {
+            return Object.class;
           }
-          catch (Exception e) {
-            throw new CommandException(ErrorKind.EVALUATION, "An error occured during the evalution of '" + request + "'", e);
+
+          CommandContext<Object> consumer;
+
+          public void open(CommandContext<? super Object> consumer)
+              throws IOException, CommandException {
+            this.consumer = consumer;
+            GroovyShell shell = GroovyCompiler.getGroovyShell(session);
+            ShellBinding binding = (ShellBinding) shell.getContext();
+            binding.setCurrent(
+                new InvocationContextImpl<>(
+                    this.consumer, ShellSafetyFactory.getCurrentThreadShellSafety()));
+            Object o;
+            try {
+              o = shell.evaluate(request);
+            } finally {
+              binding.setCurrent(null);
+            }
+            if (o != null) {
+              try {
+                consumer.provide(o);
+              } catch (IOException e) {
+                throw e;
+              } catch (CommandException e) {
+                throw e;
+              } catch (Exception e) {
+                throw new CommandException(
+                    ErrorKind.EVALUATION,
+                    "An error occured during the evalution of '" + request + "'",
+                    e);
+              }
+            }
           }
-        }
-      }
-      public void close() throws IOException, CommandException {
-        try {
-          consumer.flush();
-          consumer.close();
-        }
-        catch (Exception e) {
-          throw new CommandException(ErrorKind.EVALUATION, "An error occured during the evalution of '" + request + "'", e);
-        }
-      }
-    };
+
+          public void close() throws CommandException {
+            try {
+              consumer.flush();
+              consumer.close();
+            } catch (Exception e) {
+              throw new CommandException(
+                  ErrorKind.EVALUATION,
+                  "An error occured during the evalution of '" + request + "'",
+                  e);
+            }
+          }
+        };
     return new ReplResponse.Invoke(invoker);
   }
 

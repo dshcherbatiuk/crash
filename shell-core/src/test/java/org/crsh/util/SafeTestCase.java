@@ -19,77 +19,86 @@
 
 package org.crsh.util;
 
-import junit.framework.TestCase;
-
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
+import junit.framework.TestCase;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class SafeTestCase extends TestCase {
 
   public void testClose() {
-    Exception closed = Utils.close(new Closeable() {
-      public void close() throws IOException {
-      }
-    });
+    Exception closed =
+        Utils.close(
+            new Closeable() {
+              public void close() throws IOException {}
+            });
     assertNull(closed);
     final IOException ioe = new IOException();
-    closed = Utils.close(new Closeable() {
-      public void close() throws IOException {
-        throw ioe;
-      }
-    });
+    closed =
+        Utils.close(
+            new Closeable() {
+              public void close() throws IOException {
+                throw ioe;
+              }
+            });
     assertSame(ioe, closed);
     final RuntimeException re = new RuntimeException();
-    closed = Utils.close(new Closeable() {
-      public void close() throws IOException {
-        throw re;
-      }
-    });
+    closed =
+        Utils.close(
+            new Closeable() {
+              public void close() throws IOException {
+                throw re;
+              }
+            });
     assertSame(re, closed);
     final Error thrown = new Error();
     try {
-      Utils.close(new Closeable() {
-        public void close() throws IOException {
-          throw thrown;
-        }
-      });
-    }
-    catch (Error caught) {
+      Utils.close(
+          new Closeable() {
+            public void close() throws IOException {
+              throw thrown;
+            }
+          });
+    } catch (Error caught) {
       assertSame(thrown, caught);
     }
   }
 
   public void testFlush() {
-    Exception flushed = Utils.flush(new Flushable() {
-      public void flush() throws IOException {
-      }
-    });
+    Exception flushed =
+        Utils.flush(
+            new Flushable() {
+              public void flush() throws IOException {}
+            });
     assertNull(flushed);
     final IOException ioe = new IOException();
-    flushed = Utils.flush(new Flushable() {
-      public void flush() throws IOException {
-        throw ioe;
-      }
-    });
+    flushed =
+        Utils.flush(
+            new Flushable() {
+              public void flush() throws IOException {
+                throw ioe;
+              }
+            });
     assertSame(ioe, flushed);
     final RuntimeException re = new RuntimeException();
-    flushed = Utils.flush(new Flushable() {
-      public void flush() throws IOException {
-        throw re;
-      }
-    });
+    flushed =
+        Utils.flush(
+            new Flushable() {
+              public void flush() throws IOException {
+                throw re;
+              }
+            });
     assertSame(re, flushed);
     final Error thrown = new Error();
     try {
-      Utils.flush(new Flushable() {
-        public void flush() throws IOException {
-          throw thrown;
-        }
-      });
-    }
-    catch (Error caught) {
+      Utils.flush(
+          new Flushable() {
+            public void flush() throws IOException {
+              throw thrown;
+            }
+          });
+    } catch (Error caught) {
       assertSame(thrown, caught);
     }
   }

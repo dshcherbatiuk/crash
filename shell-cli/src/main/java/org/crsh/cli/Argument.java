@@ -19,17 +19,14 @@
 
 package org.crsh.cli;
 
-import org.crsh.cli.completers.EmptyCompleter;
-import org.crsh.cli.spi.Completer;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.crsh.cli.completers.EmptyCompleter;
+import org.crsh.cli.spi.Completer;
 
-/**
- * A command argument.
- */
+/** A command argument. */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Argument {

@@ -19,9 +19,8 @@
 
 package org.crsh.util;
 
-import junit.framework.TestCase;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+import junit.framework.TestCase;
 
 public class StatementTestCase extends TestCase {
 
@@ -43,12 +42,14 @@ public class StatementTestCase extends TestCase {
       protected void run() throws Throwable {
         throw new Exception();
       }
-    }.with(new Statement() {
-      @Override
-      protected void run() throws Throwable {
-        done.set(true);
-      }
-    }).all();
+    }.with(
+            new Statement() {
+              @Override
+              protected void run() throws Throwable {
+                done.set(true);
+              }
+            })
+        .all();
     assertTrue(done.get());
   }
 
@@ -59,12 +60,14 @@ public class StatementTestCase extends TestCase {
       protected void run() throws Throwable {
         throw new Exception();
       }
-    }.with(new Statement() {
-      @Override
-      protected void run() throws Throwable {
-        done.set(true);
-      }
-    }).all();
+    }.with(
+            new Statement() {
+              @Override
+              protected void run() throws Throwable {
+                done.set(true);
+              }
+            })
+        .all();
     assertTrue(done.get());
   }
 
@@ -75,12 +78,14 @@ public class StatementTestCase extends TestCase {
       protected void run() throws Throwable {
         throw new Error();
       }
-    }.with(new Statement() {
-      @Override
-      protected void run() throws Throwable {
-        done.set(true);
-      }
-    }).all();
+    }.with(
+            new Statement() {
+              @Override
+              protected void run() throws Throwable {
+                done.set(true);
+              }
+            })
+        .all();
     assertTrue(done.get());
   }
 
@@ -91,12 +96,14 @@ public class StatementTestCase extends TestCase {
       protected void run() throws Throwable {
         throw new Throwable();
       }
-    }.with(new Statement() {
-      @Override
-      protected void run() throws Throwable {
-        done.set(true);
-      }
-    }).all();
+    }.with(
+            new Statement() {
+              @Override
+              protected void run() throws Throwable {
+                done.set(true);
+              }
+            })
+        .all();
     assertTrue(done.get());
   }
 }

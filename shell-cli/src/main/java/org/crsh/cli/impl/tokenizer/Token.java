@@ -21,8 +21,7 @@ package org.crsh.cli.impl.tokenizer;
 
 public abstract class Token {
 
-
-  public final static class Whitespace extends Token {
+  public static final class Whitespace extends Token {
 
     public Whitespace(int index, String raw) {
       super(index, raw);
@@ -34,7 +33,7 @@ public abstract class Token {
         return true;
       }
       if (obj instanceof Whitespace) {
-        Whitespace that = (Whitespace)obj;
+        Whitespace that = (Whitespace) obj;
         return super.equals(obj) && index == that.index;
       }
       return false;
@@ -62,26 +61,28 @@ public abstract class Token {
         this.name = name;
       }
 
-      public final static class Short extends Option {
+      public static final class Short extends Option {
         public Short(int index, String raw, String value) {
           super(index, raw, value, value.substring(1));
         }
+
         public Short(int index, String value) {
           this(index, value, value);
         }
       }
 
-      public final static class Long extends Option {
+      public static final class Long extends Option {
         public Long(int index, String value) {
           this(index, value, value);
         }
+
         public Long(int index, String raw, String value) {
           super(index, raw, value, value.substring(2));
         }
       }
     }
 
-    public final static class Word extends Literal {
+    public static final class Word extends Literal {
       public Word(int index, String raw, String value) {
         super(index, raw, value);
       }
@@ -119,7 +120,7 @@ public abstract class Token {
         return true;
       }
       if (obj.getClass().equals(getClass())) {
-        Literal that = (Literal)obj;
+        Literal that = (Literal) obj;
         return super.equals(obj) && index == that.index && value.equals(that.value);
       }
       return false;
@@ -127,7 +128,14 @@ public abstract class Token {
 
     @Override
     public String toString() {
-      return getClass().getSimpleName() + "[index=" + index + ",raw=" + raw + ",value=" + value + "]";
+      return getClass().getSimpleName()
+          + "[index="
+          + index
+          + ",raw="
+          + raw
+          + ",value="
+          + value
+          + "]";
     }
   }
 
@@ -184,7 +192,7 @@ public abstract class Token {
       return true;
     }
     if (obj instanceof Token) {
-      Token that = (Token)obj;
+      Token that = (Token) obj;
       return index == that.index && raw.equals(that.raw);
     }
     return false;

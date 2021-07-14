@@ -77,7 +77,8 @@ class PropertyManager {
    * @return the property object
    * @throws NullPointerException if any argument is null
    */
-  private <T> Property<T> getProperty(String propertyName, Class<T> type) throws NullPointerException {
+  private <T> Property<T> getProperty(String propertyName, Class<T> type)
+      throws NullPointerException {
     if (propertyName == null) {
       throw new NullPointerException("No null property name accepted");
     }
@@ -88,14 +89,15 @@ class PropertyManager {
     if (property != null) {
       PropertyDescriptor<?> descriptor = property.getDescriptor();
       if (type.equals(descriptor.getType())) {
-        return (Property<T>)property;
+        return (Property<T>) property;
       }
     }
     return null;
   }
 
   /**
-   * Set a context property to a new value. If the provided value is null, then the property is removed.
+   * Set a context property to a new value. If the provided value is null, then the property is
+   * removed.
    *
    * @param desc the property descriptor
    * @param value the property value
@@ -125,7 +127,8 @@ class PropertyManager {
    * @throws NullPointerException if the descriptor argument or the value is null
    * @throws IllegalArgumentException if the string value cannot be converted to the property type
    */
-  <T> void parseProperty(PropertyDescriptor<T> desc, String value) throws NullPointerException, IllegalArgumentException {
+  <T> void parseProperty(PropertyDescriptor<T> desc, String value)
+      throws NullPointerException, IllegalArgumentException {
     if (desc == null) {
       throw new NullPointerException("No null descriptor allowed");
     }

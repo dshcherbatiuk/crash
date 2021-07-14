@@ -18,15 +18,14 @@
  */
 package org.crsh.console;
 
-import org.crsh.text.Screenable;
-import org.crsh.shell.ShellProcess;
-import org.crsh.shell.ShellProcessContext;
-import org.crsh.shell.ShellResponse;
-import org.crsh.text.Style;
-
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
+import org.crsh.shell.ShellProcess;
+import org.crsh.shell.ShellProcessContext;
+import org.crsh.shell.ShellResponse;
+import org.crsh.text.Screenable;
+import org.crsh.text.Style;
 
 /**
  * A process execution state machine.
@@ -35,13 +34,12 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 class ProcessHandler extends Plugin implements ShellProcessContext {
 
-  /**
-   * A thread reading a line.
-   */
+  /** A thread reading a line. */
   class Reader {
     final Thread thread;
     final Editor editor;
     final ArrayBlockingQueue<String> line;
+
     Reader(Thread thread, boolean echo) {
       this.thread = thread;
       this.editor = new Editor(console, echo);
@@ -143,7 +141,6 @@ class ProcessHandler extends Plugin implements ShellProcessContext {
     console.driver.flush();
   }
 
-
   @Override
   public void end(ShellResponse response) {
 
@@ -168,8 +165,7 @@ class ProcessHandler extends Plugin implements ShellProcessContext {
       }
       console.driver.writeCRLF();
       console.driver.flush();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       // Log it
     }
 

@@ -19,13 +19,6 @@
 
 package org.crsh.standalone;
 
-import org.crsh.plugin.PluginContext;
-import org.crsh.plugin.PluginLifeCycle;
-import org.crsh.plugin.ServiceLoaderDiscovery;
-import org.crsh.vfs.FS;
-import org.crsh.vfs.Path;
-import org.crsh.vfs.spi.FSDriver;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -34,13 +27,16 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
+import org.crsh.plugin.PluginContext;
+import org.crsh.plugin.PluginLifeCycle;
+import org.crsh.plugin.ServiceLoaderDiscovery;
+import org.crsh.vfs.FS;
+import org.crsh.vfs.Path;
+import org.crsh.vfs.spi.FSDriver;
 
-/**
- * A boostrap for starting a standalone CRaSH.
- */
+/** A boostrap for starting a standalone CRaSH. */
 public class Bootstrap extends PluginLifeCycle {
 
-  /** . */
   protected final Logger log = Logger.getLogger(getClass().getName());
 
   /** The configuration file system. */
@@ -56,7 +52,8 @@ public class Bootstrap extends PluginLifeCycle {
   private Map<String, Object> attributes;
 
   /**
-   * Create a bootstrap instance with the base classloader and an empty and unmodifiable attribute map.
+   * Create a bootstrap instance with the base classloader and an empty and unmodifiable attribute
+   * map.
    *
    * @param baseLoader the base classloader crash will use
    * @param confFS the conf file system
@@ -76,11 +73,12 @@ public class Bootstrap extends PluginLifeCycle {
     this.attributes = Collections.emptyMap();
     this.confFS = confFS;
     this.cmdFS = cmdFS;
-    this.loader = new URLClassLoader(new URL[]{}, baseLoader);
+    this.loader = new URLClassLoader(new URL[] {}, baseLoader);
   }
 
   /**
-   * Create a bootstrap instance with the base classloader and an empty and unmodifiable attribute map.
+   * Create a bootstrap instance with the base classloader and an empty and unmodifiable attribute
+   * map.
    *
    * @param baseLoader the base classloader crash will use
    * @throws NullPointerException if any argument is null
@@ -141,7 +139,8 @@ public class Bootstrap extends PluginLifeCycle {
    * @throws IOException any io exception
    * @throws URISyntaxException any uri syntax exception
    */
-  public Bootstrap addToConfPath(Path path) throws NullPointerException, IOException, URISyntaxException {
+  public Bootstrap addToConfPath(Path path)
+      throws NullPointerException, IOException, URISyntaxException {
     if (path == null) {
       throw new NullPointerException("No null conf path");
     }
@@ -193,7 +192,8 @@ public class Bootstrap extends PluginLifeCycle {
    * @throws IOException any io exception
    * @throws URISyntaxException any uri syntax exception
    */
-  public Bootstrap addToCmdPath(Path path) throws NullPointerException, IOException, URISyntaxException {
+  public Bootstrap addToCmdPath(Path path)
+      throws NullPointerException, IOException, URISyntaxException {
     if (path == null) {
       throw new NullPointerException("No null command path");
     }
@@ -213,12 +213,7 @@ public class Bootstrap extends PluginLifeCycle {
     ServiceLoaderDiscovery discovery = new ServiceLoaderDiscovery(loader);
 
     //
-    PluginContext context = new PluginContext(
-      discovery,
-      attributes,
-      cmdFS,
-      confFS,
-      loader);
+    PluginContext context = new PluginContext(discovery, attributes, cmdFS, confFS, loader);
 
     //
     context.refresh();

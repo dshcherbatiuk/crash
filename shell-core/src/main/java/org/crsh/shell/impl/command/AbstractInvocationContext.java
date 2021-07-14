@@ -20,9 +20,7 @@ package org.crsh.shell.impl.command;
 
 import org.crsh.command.InvocationContext;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public abstract class AbstractInvocationContext<P> implements InvocationContext<P> {
 
   /**

@@ -23,8 +23,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Provides the text for a usage, this method can be used to annotate a command class, a command method or
- * a command parameter.
+ * Provides the text for a usage, this method can be used to annotate a command class, a command
+ * method or a command parameter.
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Usage {

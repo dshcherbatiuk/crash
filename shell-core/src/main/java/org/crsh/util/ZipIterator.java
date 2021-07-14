@@ -51,45 +51,54 @@ public abstract class ZipIterator implements Closeable {
           if (entry.getName().equals(path)) {
             InputStreamFactory resolved = container.getStreamFactory();
             final InputStream nested = resolved.open();
-            InputStream filter = new InputStream() {
-              @Override
-              public int read() throws IOException {
-                return nested.read();
-              }
-              @Override
-              public int read(byte[] b) throws IOException {
-                return nested.read(b);
-              }
-              @Override
-              public int read(byte[] b, int off, int len) throws IOException {
-                return nested.read(b, off, len);
-              }
-              @Override
-              public long skip(long n) throws IOException {
-                return nested.skip(n);
-              }
-              @Override
-              public int available() throws IOException {
-                return nested.available();
-              }
-              @Override
-              public void close() throws IOException {
-                Utils.close(nested);
-                Utils.close(container);
-              }
-              @Override
-              public synchronized void mark(int readlimit) {
-                nested.mark(readlimit);
-              }
-              @Override
-              public synchronized void reset() throws IOException {
-                nested.reset();
-              }
-              @Override
-              public boolean markSupported() {
-                return nested.markSupported();
-              }
-            };
+            InputStream filter =
+                new InputStream() {
+                  @Override
+                  public int read() throws IOException {
+                    return nested.read();
+                  }
+
+                  @Override
+                  public int read(byte[] b) throws IOException {
+                    return nested.read(b);
+                  }
+
+                  @Override
+                  public int read(byte[] b, int off, int len) throws IOException {
+                    return nested.read(b, off, len);
+                  }
+
+                  @Override
+                  public long skip(long n) throws IOException {
+                    return nested.skip(n);
+                  }
+
+                  @Override
+                  public int available() throws IOException {
+                    return nested.available();
+                  }
+
+                  @Override
+                  public void close() throws IOException {
+                    Utils.close(nested);
+                    Utils.close(container);
+                  }
+
+                  @Override
+                  public synchronized void mark(int readlimit) {
+                    nested.mark(readlimit);
+                  }
+
+                  @Override
+                  public synchronized void reset() throws IOException {
+                    nested.reset();
+                  }
+
+                  @Override
+                  public boolean markSupported() {
+                    return nested.markSupported();
+                  }
+                };
             zip = create(filter);
             break;
           }
@@ -99,8 +108,7 @@ public abstract class ZipIterator implements Closeable {
         } else {
           throw new IOException("Cannot resolve " + url);
         }
-      }
-      finally {
+      } finally {
         // We close the container if we return nothing
         // otherwise it will be the responsibility of the caller to close the zip
         // with the wrapper that will close both the container and the nested zip
@@ -116,27 +124,27 @@ public abstract class ZipIterator implements Closeable {
   static ZipIterator create(File file) throws IOException {
     // The fast way (but that requires a File object)
     final ZipFile jarFile = new ZipFile(file);
-    final Enumeration<? extends ZipEntry> en = jarFile.entries();en.hasMoreElements();
+    final Enumeration<? extends ZipEntry> en = jarFile.entries();
+    en.hasMoreElements();
     return new ZipIterator() {
       ZipEntry next;
+
       @Override
-      public boolean hasNext() throws IOException {
+      public boolean hasNext() {
         return en.hasMoreElements();
       }
+
       @Override
-      public ZipEntry next() throws IOException {
+      public ZipEntry next() {
         return next = en.nextElement();
       }
-      public void close() throws IOException {
-      }
+
+      public void close() {}
+
       @Override
-      public InputStreamFactory getStreamFactory() throws IOException {
+      public InputStreamFactory getStreamFactory() {
         final ZipEntry capture = next;
-        return new InputStreamFactory() {
-          public InputStream open() throws IOException {
-            return jarFile.getInputStream(capture);
-          }
-        };
+        return () -> jarFile.getInputStream(capture);
       }
     };
   }
@@ -147,12 +155,14 @@ public abstract class ZipIterator implements Closeable {
     final ZipInputStream zip = new ZipInputStream(in);
     return new ZipIterator() {
       ZipEntry next;
+
       public boolean hasNext() throws IOException {
         if (next == null) {
           next = zip.getNextEntry();
         }
         return next != null;
       }
+
       public ZipEntry next() throws IOException {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -161,6 +171,7 @@ public abstract class ZipIterator implements Closeable {
         next = null;
         return tmp;
       }
+
       @Override
       public InputStreamFactory getStreamFactory() throws IOException {
         while (true) {
@@ -179,6 +190,7 @@ public abstract class ZipIterator implements Closeable {
           }
         };
       }
+
       public void close() throws IOException {
         zip.close();
       }
@@ -196,5 +208,4 @@ public abstract class ZipIterator implements Closeable {
    * @throws IOException anything that would prevent to obtain a stream factory
    */
   public abstract InputStreamFactory getStreamFactory() throws IOException;
-
 }

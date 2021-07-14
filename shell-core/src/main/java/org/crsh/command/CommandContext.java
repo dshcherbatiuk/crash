@@ -18,8 +18,8 @@
  */
 package org.crsh.command;
 
-import org.crsh.stream.Consumer;
 import org.crsh.shell.InteractionContext;
+import org.crsh.stream.Consumer;
 
 /**
  * The command context provides the services for invoking a command.
@@ -29,5 +29,4 @@ import org.crsh.shell.InteractionContext;
 public interface CommandContext<P> extends Consumer<P>, InteractionContext, RuntimeContext {
 
   void close() throws Exception;
-
 }

@@ -23,23 +23,21 @@ import groovy.lang.MissingMethodException;
 import org.codehaus.groovy.runtime.InvokerInvocationException;
 import org.crsh.command.InvocationContext;
 import org.crsh.command.RuntimeContext;
-import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.lang.impl.groovy.closure.PipeLineClosure;
-import org.crsh.shell.Shell;
 import org.crsh.shell.impl.command.CRaSH;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.util.SafeCallable;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class Helper {
 
-  public static Object invokeMethod(RuntimeContext context, String name, Object args, MissingMethodException ex) {
+  public static Object invokeMethod(
+      RuntimeContext context, String name, Object args, MissingMethodException ex) {
     if (context instanceof InvocationContext<?>) {
-      SafeCallable executed = Helper.resolveMethodInvocation((InvocationContext)context, name, args);
+      SafeCallable executed =
+          Helper.resolveMethodInvocation((InvocationContext) context, name, args);
       if (executed != null) {
         return executed.call();
       }
@@ -48,9 +46,9 @@ public class Helper {
     //
     Object o = context.getSession().get(name);
     if (o instanceof Closure) {
-      Closure closure = (Closure)o;
+      Closure closure = (Closure) o;
       if (args instanceof Object[]) {
-        Object[] array = (Object[])args;
+        Object[] array = (Object[]) args;
         if (array.length == 0) {
           return closure.call();
         } else {
@@ -64,11 +62,13 @@ public class Helper {
     }
   }
 
-  public static PipeLineClosure resolveProperty(final InvocationContext context, final String property) {
-    CRaSH crash = (CRaSH)context.getSession().get("crash");
+  public static PipeLineClosure resolveProperty(
+      final InvocationContext context, final String property) {
+    CRaSH crash = (CRaSH) context.getSession().get("crash");
     if (crash != null) {
       try {
-        Command<?> cmd = crash.getCommandSafetyCheck(property, ShellSafetyFactory.getCurrentThreadShellSafety());
+        Command<?> cmd =
+            crash.getCommandSafetyCheck(property, ShellSafetyFactory.getCurrentThreadShellSafety());
         if (cmd != null) {
           return new PipeLineClosure(context, property, cmd);
         } else {
@@ -82,23 +82,20 @@ public class Helper {
     }
   }
 
-  public static SafeCallable resolveMethodInvocation(final InvocationContext context, final String name, final Object args) {
-    CRaSH crash = (CRaSH)context.getSession().get("crash");
+  public static SafeCallable resolveMethodInvocation(
+      final InvocationContext context, final String name, final Object args) {
+    CRaSH crash = (CRaSH) context.getSession().get("crash");
     if (crash != null) {
       final Command<?> cmd;
       try {
         cmd = crash.getCommandSafetyCheck(name, ShellSafetyFactory.getCurrentThreadShellSafety());
-      }
-      catch (CommandException ce) {
+      } catch (CommandException ce) {
         throw new InvokerInvocationException(ce);
       }
       if (cmd != null) {
-        return new SafeCallable() {
-          @Override
-          public Object call() {
-            PipeLineClosure closure = new PipeLineClosure(context, name, cmd);
-            return closure.call((Object[])args);
-          }
+        return () -> {
+          PipeLineClosure closure = new PipeLineClosure(context, name, cmd);
+          return closure.call((Object[]) args);
         };
       }
     }

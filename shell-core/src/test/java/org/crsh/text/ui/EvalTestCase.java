@@ -23,39 +23,39 @@ import org.crsh.shell.AbstractShellTestCase;
 
 public class EvalTestCase extends AbstractShellTestCase {
 
-
   public void testProvideRenderable() {
     String foo =
-        "class foo {\n" +
-        "  @Command\n" +
-        "  public void main() {\n" +
-        "    def builder = new org.crsh.text.ui.UIBuilder().eval {" +
-        "      bar()\n" +
-        "    }\n" +
-        "    out << builder\n" +
-        "  }\n" +
-        "}";
+        "class foo {\n"
+            + "  @Command\n"
+            + "  public void main() {\n"
+            + "    def builder = new org.crsh.text.ui.UIBuilder().eval {"
+            + "      bar()\n"
+            + "    }\n"
+            + "    out << builder\n"
+            + "  }\n"
+            + "}";
     lifeCycle.bindGroovy("foo", foo);
     lifeCycle.bindGroovy("bar", "context.provide([a:1]);");
 
     //
     assertEquals(
-        "a                              \n" +
-        "--                             \n" +
-        "1                              \n", assertOk("foo"));
+        "a                              \n"
+            + "--                             \n"
+            + "1                              \n",
+        assertOk("foo"));
   }
 
   public void testProvideText() {
     String foo =
-        "class foo {\n" +
-            "  @Command\n" +
-            "  public void main() {\n" +
-            "    def builder = new org.crsh.text.ui.UIBuilder().eval {" +
-            "      bar()\n" +
-            "    }\n" +
-            "    out << builder\n" +
-            "  }\n" +
-            "}";
+        "class foo {\n"
+            + "  @Command\n"
+            + "  public void main() {\n"
+            + "    def builder = new org.crsh.text.ui.UIBuilder().eval {"
+            + "      bar()\n"
+            + "    }\n"
+            + "    out << builder\n"
+            + "  }\n"
+            + "}";
     lifeCycle.bindGroovy("foo", foo);
     lifeCycle.bindGroovy("bar", "out << 'hello';");
 
@@ -65,15 +65,15 @@ public class EvalTestCase extends AbstractShellTestCase {
 
   public void testEvalCommandInEval() {
     String foo =
-        "class foo {\n" +
-            "  @Command\n" +
-            "  public void main() {\n" +
-            "    def builder = new org.crsh.text.ui.UIBuilder().eval {" +
-            "      execute('echo bar')\n" +
-            "    }\n" +
-            "    out << builder\n" +
-            "  }\n" +
-            "}";
+        "class foo {\n"
+            + "  @Command\n"
+            + "  public void main() {\n"
+            + "    def builder = new org.crsh.text.ui.UIBuilder().eval {"
+            + "      execute('echo bar')\n"
+            + "    }\n"
+            + "    out << builder\n"
+            + "  }\n"
+            + "}";
     lifeCycle.bindGroovy("foo", foo);
 
     //
@@ -82,12 +82,12 @@ public class EvalTestCase extends AbstractShellTestCase {
 
   public void testEvalCommandInCommand() {
     String foo =
-        "class foo {\n" +
-            "  @Command\n" +
-            "  public void main() {\n" +
-            "    execute('echo bar')\n" +
-            "  }\n" +
-            "}";
+        "class foo {\n"
+            + "  @Command\n"
+            + "  public void main() {\n"
+            + "    execute('echo bar')\n"
+            + "  }\n"
+            + "}";
     lifeCycle.bindGroovy("foo", foo);
 
     //
@@ -95,15 +95,14 @@ public class EvalTestCase extends AbstractShellTestCase {
   }
 
   public void testContextLeftShift() {
-    String bar = "context << 'juu'\n" +
-        "return null";
+    String bar = "context << 'juu'\n" + "return null";
     String foo =
-        "class foo {\n" +
-            "  @Command\n" +
-            "  public void main() {\n" +
-            "    execute('bar')\n" +
-            "  }\n" +
-            "}";
+        "class foo {\n"
+            + "  @Command\n"
+            + "  public void main() {\n"
+            + "    execute('bar')\n"
+            + "  }\n"
+            + "}";
     lifeCycle.bindGroovy("bar", bar);
     lifeCycle.bindGroovy("foo", foo);
 

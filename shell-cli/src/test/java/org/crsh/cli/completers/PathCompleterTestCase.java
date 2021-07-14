@@ -1,24 +1,24 @@
 package org.crsh.cli.completers;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-import org.crsh.cli.spi.Completion;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+import org.crsh.cli.spi.Completion;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class PathCompleterTestCase extends TestCase {
 
   final String sep = File.separator;
+
   static class NodeCompleter extends AbstractPathCompleter<File> {
 
     /** . */
     private File current;
 
-    /** . */ 
+    /** . */
     private final File root;
 
     NodeCompleter(File root) {
@@ -116,7 +116,7 @@ public class PathCompleterTestCase extends TestCase {
 
     //
     assertCompletion(sep, Completion.create("foo" + sep, false));
-    assertCompletion(sep+"f", Completion.create("f", "oo" + sep, false));
+    assertCompletion(sep + "f", Completion.create("f", "oo" + sep, false));
     assertCompletion(sep + "foo", Completion.create(sep, false));
     assertCompletion(sep + "foo" + sep, Completion.create("bar", true));
     assertCompletion(sep + "foo" + sep + "b", Completion.create("b", "ar", true));
@@ -142,9 +142,9 @@ public class PathCompleterTestCase extends TestCase {
     assertCompletion(sep + "f", Completion.create("f", "oo" + sep, false));
     assertCompletion(sep + "foo", Completion.create(sep, false));
     assertCompletion(sep + "foo" + sep, Completion.create("bar" + sep, false));
-    assertCompletion(sep + "foo" + sep +"b", Completion.create("b", "ar" + sep, false));
-    assertCompletion(sep + "foo" + sep +"bar", Completion.create(sep, false));
-    assertCompletion(sep + "foo" + sep +"bar" + sep, Completion.create());
+    assertCompletion(sep + "foo" + sep + "b", Completion.create("b", "ar" + sep, false));
+    assertCompletion(sep + "foo" + sep + "bar", Completion.create(sep, false));
+    assertCompletion(sep + "foo" + sep + "bar" + sep, Completion.create());
 
     //
     File juu = new File(bar, "juu");
@@ -153,12 +153,13 @@ public class PathCompleterTestCase extends TestCase {
     assertCompletion(sep + "f", Completion.create("f", "oo" + sep, false));
     assertCompletion(sep + "foo", Completion.create(sep, false));
     assertCompletion(sep + "foo" + sep, Completion.create("bar" + sep, false));
-    assertCompletion(sep + "foo" + sep +"b", Completion.create("b", "ar" + sep, false));
-    assertCompletion(sep + "foo" + sep +"bar", Completion.create(sep, false));
-    assertCompletion(sep + "foo" + sep +"bar" + sep, Completion.create("juu" + sep, false));
-    assertCompletion(sep + "foo" + sep +"bar" + sep +"j", Completion.create("j", "uu" + sep, false));
-    assertCompletion(sep + "foo" + sep +"bar" + sep +"juu", Completion.create(sep, false));
-    assertCompletion(sep + "foo" + sep +"bar" + sep +"juu" + sep, Completion.create());
+    assertCompletion(sep + "foo" + sep + "b", Completion.create("b", "ar" + sep, false));
+    assertCompletion(sep + "foo" + sep + "bar", Completion.create(sep, false));
+    assertCompletion(sep + "foo" + sep + "bar" + sep, Completion.create("juu" + sep, false));
+    assertCompletion(
+        sep + "foo" + sep + "bar" + sep + "j", Completion.create("j", "uu" + sep, false));
+    assertCompletion(sep + "foo" + sep + "bar" + sep + "juu", Completion.create(sep, false));
+    assertCompletion(sep + "foo" + sep + "bar" + sep + "juu" + sep, Completion.create());
   }
 
   public void testRootRelativeDir() throws Exception {
@@ -180,9 +181,9 @@ public class PathCompleterTestCase extends TestCase {
     assertCompletion("f", Completion.create("f", "oo" + sep, false));
     assertCompletion("foo", Completion.create(sep, false));
     assertCompletion("foo" + sep, Completion.create("bar" + sep, false));
-    assertCompletion("foo" + sep +"b", Completion.create("b", "ar" + sep, false));
-    assertCompletion("foo" + sep +"bar", Completion.create(sep, false));
-    assertCompletion("foo" + sep +"bar" + sep, Completion.create());
+    assertCompletion("foo" + sep + "b", Completion.create("b", "ar" + sep, false));
+    assertCompletion("foo" + sep + "bar", Completion.create(sep, false));
+    assertCompletion("foo" + sep + "bar" + sep, Completion.create());
   }
 
   public void testSubRelativeDir() throws Exception {
@@ -209,13 +210,13 @@ public class PathCompleterTestCase extends TestCase {
     assertCompletion("f", Completion.create("f", "oo" + sep, false));
     assertCompletion("foo", Completion.create(sep, false));
     assertCompletion("foo" + sep, Completion.create("bar" + sep, false));
-    assertCompletion("foo" + sep +"b", Completion.create("b", "ar" + sep, false));
-    assertCompletion("foo" + sep +"bar", Completion.create(sep, false));
-    assertCompletion("foo" + sep +"bar" + sep, Completion.create());
+    assertCompletion("foo" + sep + "b", Completion.create("b", "ar" + sep, false));
+    assertCompletion("foo" + sep + "bar", Completion.create(sep, false));
+    assertCompletion("foo" + sep + "bar" + sep, Completion.create());
   }
 
   private void assertCompletion(String path, Completion expected) throws Exception {
-    Completion completions = completer.complete (null, path);
+    Completion completions = completer.complete(null, path);
     assertEquals(expected, completions);
   }
 }

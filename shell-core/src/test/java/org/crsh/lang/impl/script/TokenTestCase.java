@@ -51,6 +51,7 @@ public class TokenTestCase extends TestCase {
     //
     new TestTokenizer("a b").assertCommand("a b").assertEOF();
   }
+
   public void testPipe() {
     new TestTokenizer("|").assertCommand("").assertCommand("").assertEOF();
   }

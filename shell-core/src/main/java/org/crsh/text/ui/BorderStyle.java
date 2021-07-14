@@ -20,7 +20,6 @@
 package org.crsh.text.ui;
 
 public enum BorderStyle {
-
   DASHED('-', '|', ' '),
 
   STAR('*', '*', '*');

@@ -28,13 +28,10 @@ public class TreeRendererTestCase extends AbstractRendererTestCase {
     elt.addChild(new LabelElement("1\n1"));
     elt.addChild(new LabelElement("2"));
 
-    assertRender(elt, 4,
-        "+-1 ",
-        "| 1 ",
-        "+-2 ");
+    assertRender(elt, 4, "+-1 ", "| 1 ", "+-2 ");
   }
 
-/*
+  /*
   public void testFoo() throws Exception {
     TreeElement elt = new TreeElement();
     elt.addChild(new LabelElement("1\n1"));
@@ -50,18 +47,14 @@ public class TreeRendererTestCase extends AbstractRendererTestCase {
 
   public void testNested() throws Exception {
     TreeElement elt = new TreeElement(new LabelElement("foo"));
-    elt.addChild(new TreeElement(new LabelElement("bar")).addChild(new LabelElement("1\n1")).addChild(new LabelElement("2\n2")));
+    elt.addChild(
+        new TreeElement(new LabelElement("bar"))
+            .addChild(new LabelElement("1\n1"))
+            .addChild(new LabelElement("2\n2")));
     elt.addChild(new TreeElement().addChild(new LabelElement("3")).addChild(new LabelElement("4")));
 
-    assertRender(elt, 6,
-        "foo   ",
-        "+-bar ",
-        "| +-1 ",
-        "| | 1 ",
-        "| +-2 ",
-        "|   2 ",
-        "+-+-3 ",
-        "  +-4 ");
+    assertRender(
+        elt, 6, "foo   ", "+-bar ", "| +-1 ", "| | 1 ", "| +-2 ", "|   2 ", "+-+-3 ", "  +-4 ");
   }
 
   public void testTooLarge() throws IOException {
@@ -69,7 +62,9 @@ public class TreeRendererTestCase extends AbstractRendererTestCase {
     elt.addChild(new LabelElement("foo value is very very very too large for the console"));
     elt.addChild(new LabelElement("bar\n"));
 
-    assertRender(elt, 32,
+    assertRender(
+        elt,
+        32,
         "+-foo value is very very very to",
         "| o large for the console       ",
         "+-bar                           ",

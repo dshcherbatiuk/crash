@@ -18,19 +18,18 @@
  */
 package org.crsh.lang.impl.java;
 
-import org.crsh.cli.descriptor.Format;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.command.ShellSafetyFactory;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.shell.impl.command.ShellSession;
-import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.lang.spi.CommandResolution;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import org.crsh.cli.descriptor.Format;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.command.ShellSafetyFactory;
+import org.crsh.lang.spi.CommandResolution;
+import org.crsh.shell.ErrorKind;
+import org.crsh.shell.impl.command.ShellSession;
+import org.crsh.shell.impl.command.spi.Command;
+import org.crsh.shell.impl.command.spi.CommandException;
 
 /** @author Julien Viet */
 public class JavaCompiler implements org.crsh.lang.spi.Compiler {
@@ -53,17 +52,17 @@ public class JavaCompiler implements org.crsh.lang.spi.Compiler {
     return EXT;
   }
 
-  public CommandResolution compileCommand(String name, byte[] source) throws CommandException, NullPointerException {
+  public CommandResolution compileCommand(String name, byte[] source)
+      throws CommandException, NullPointerException {
     String script = new String(source);
     List<JavaClassFileObject> classFiles;
     try {
       classFiles = compiler.compile(name, script);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new CommandException(ErrorKind.INTERNAL, "Could not access command", e);
-    }
-    catch (CompilationFailureException e) {
-        throw new CommandException(ErrorKind.INTERNAL, "Could not compile command: " + e.getMessage(), e);
+    } catch (CompilationFailureException e) {
+      throw new CommandException(
+          ErrorKind.INTERNAL, "Could not compile command: " + e.getMessage(), e);
     }
     for (JavaClassFileObject classFile : classFiles) {
       String className = classFile.getClassName();
@@ -74,9 +73,9 @@ public class JavaCompiler implements org.crsh.lang.spi.Compiler {
           Class<?> clazz = loader.loadClass(classFile.getClassName());
           final ClassShellCommand command;
           try {
-            command = new ClassShellCommand(clazz, ShellSafetyFactory.getCurrentThreadShellSafety());
-          }
-          catch (IntrospectionException e) {
+            command =
+                new ClassShellCommand(clazz, ShellSafetyFactory.getCurrentThreadShellSafety());
+          } catch (IntrospectionException e) {
             throw new CommandException(ErrorKind.INTERNAL, "Invalid cli annotations", e);
           }
           final String description = command.describe(name, Format.DESCRIBE);
@@ -85,13 +84,13 @@ public class JavaCompiler implements org.crsh.lang.spi.Compiler {
             public String getDescription() {
               return description;
             }
+
             @Override
-            public Command<Object> getCommand() throws CommandException {
+            public Command<Object> getCommand() {
               return command;
             }
           };
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
           throw new CommandException(ErrorKind.INTERNAL, "Command cannot be loaded", e);
         }
       }

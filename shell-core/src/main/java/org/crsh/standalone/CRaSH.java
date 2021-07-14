@@ -20,7 +20,23 @@
 package org.crsh.standalone;
 
 import com.sun.tools.attach.VirtualMachine;
-import jline.AnsiWindowsTerminal;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.List;
+import java.util.Properties;
+import java.util.jar.Attributes;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import jline.Terminal;
 import jline.TerminalFactory;
 import jline.console.ConsoleReader;
@@ -56,31 +72,11 @@ import org.crsh.vfs.spi.file.FileMountFactory;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
 import org.fusesource.jansi.AnsiConsole;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
-import java.util.Properties;
-import java.util.jar.Attributes;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
 @Named("crash")
 public class CRaSH {
 
-  /** . */
-  private static Logger log = Logger.getLogger(CRaSH.class.getName());
+  private static Logger LOGGER = Logger.getLogger(CRaSH.class.getName());
 
-  /** . */
   private final CommandDescriptor<Instance<CRaSH>> descriptor;
 
   public CRaSH() throws IntrospectionException {
@@ -91,7 +87,7 @@ public class CRaSH {
     if (src.hasChildren()) {
       if (!dst.exists()) {
         if (dst.mkdir()) {
-          log.fine("Could not create dir " + dst.getCanonicalPath());
+          LOGGER.fine("Could not create dir " + dst.getCanonicalPath());
         }
       }
       if (dst.exists() && dst.isDirectory()) {
@@ -103,7 +99,8 @@ public class CRaSH {
       if (!dst.exists()) {
         Resource resource = src.getResource();
         if (resource != null) {
-          log.info("Copied command " + src.getPath().getValue() + " to " + dst.getCanonicalPath());
+          LOGGER
+              .info("Copied command " + src.getPath().getValue() + " to " + dst.getCanonicalPath());
           Utils.copy(new ByteArrayInputStream(resource.getContent()), new FileOutputStream(dst));
         }
       }
@@ -115,7 +112,8 @@ public class CRaSH {
       if (!dst.exists()) {
         Resource resource = ResourceManager.loadConf(src);
         if (resource != null) {
-          log.info("Copied resource " + src.getPath().getValue() + " to " + dst.getCanonicalPath());
+          LOGGER.info(
+              "Copied resource " + src.getPath().getValue() + " to " + dst.getCanonicalPath());
           Utils.copy(new ByteArrayInputStream(resource.getContent()), new FileOutputStream(dst));
         }
       }
@@ -125,7 +123,7 @@ public class CRaSH {
   private String toString(FS.Builder builder) {
     StringBuilder sb = new StringBuilder();
     List<Mount<?>> mounts = builder.getMounts();
-    for (int i = 0;i < mounts.size();i++) {
+    for (int i = 0; i < mounts.size(); i++) {
       Mount<?> mount = mounts.get(i);
       if (i > 0) {
         sb.append(';');
@@ -137,33 +135,27 @@ public class CRaSH {
 
   private FS.Builder createBuilder() throws IOException {
     FileMountFactory fileDriver = new FileMountFactory(Utils.getCurrentDirectory());
-    ClassPathMountFactory classpathDriver = new ClassPathMountFactory(Thread.currentThread().getContextClassLoader());
+    ClassPathMountFactory classpathDriver =
+        new ClassPathMountFactory(Thread.currentThread().getContextClassLoader());
     return new FS.Builder().register("file", fileDriver).register("classpath", classpathDriver);
   }
 
   @Command
   public void main(
-    @Option(names= {"non-interactive"})
-    @Usage("non interactive mode, the JVM io will not be used")
-    Boolean nonInteractive,
-    @Option(names={"c","cmd"})
-    @Usage("the command mounts")
-    String cmd,
-    @Option(names={"conf"})
-    @Usage("the conf mounts")
-    String conf,
-    @Option(names={"p","property"})
-    @Usage("set a property of the form a=b")
-    List<String> properties,
-    @Option(names = {"cmd-folder"})
-    @Usage("a folder in which commands should be extracted")
-    String cmdFolder,
-    @Option(names = {"conf-folder"})
-    @Usage("a folder in which configuration should be extracted")
-    String confFolder,
-    @Argument(name = "pid")
-    @Usage("the optional list of JVM process id to attach to")
-    List<Integer> pids) throws Exception {
+      @Option(names = {"non-interactive"})
+      @Usage("non interactive mode, the JVM io will not be used")
+          Boolean nonInteractive,
+      @Option(names = {"c", "cmd"}) @Usage("the command mounts") String cmd,
+      @Option(names = {"conf"}) @Usage("the conf mounts") String conf,
+      @Option(names = {"p", "property"}) @Usage("set a property of the form a=b")
+          List<String> properties,
+      @Option(names = {"cmd-folder"}) @Usage("a folder in which commands should be extracted")
+          String cmdFolder,
+      @Option(names = {"conf-folder"}) @Usage("a folder in which configuration should be extracted")
+          String confFolder,
+      @Argument(name = "pid") @Usage("the optional list of JVM process id to attach to")
+          List<Integer> pids)
+      throws Exception {
 
     //
     boolean interactive = nonInteractive == null || !nonInteractive;
@@ -179,7 +171,7 @@ public class CRaSH {
         throw new Exception("Directory " + dst.getAbsolutePath() + " does not exist");
       }
       org.crsh.vfs.File f = confBuilder.build().get(Path.get("/"));
-      log.info("Extracting conf resources to " + dst.getAbsolutePath());
+      LOGGER.info("Extracting conf resources to " + dst.getAbsolutePath());
       for (org.crsh.vfs.File child : f.children()) {
         if (!child.hasChildren()) {
           copyConf(child, new File(dst, child.getName()));
@@ -199,15 +191,14 @@ public class CRaSH {
         throw new Exception("Directory " + dst.getAbsolutePath() + " does not exist");
       }
       org.crsh.vfs.File f = cmdBuilder.build().get(Path.get("/"));
-      log.info("Extracting command resources to " + dst.getAbsolutePath());
+      LOGGER.info("Extracting command resources to " + dst.getAbsolutePath());
       copyCmd(f, dst);
       cmdBuilder = createBuilder().mount("file", Path.get(dst));
     }
 
     //
-    log.log(Level.INFO, "conf mounts: " + confBuilder.toString());
-    log.log(Level.INFO, "cmd mounts: " + cmdBuilder.toString());
-
+    LOGGER.log(Level.INFO, "conf mounts: " + confBuilder.toString());
+    LOGGER.log(Level.INFO, "cmd mounts: " + cmdBuilder.toString());
 
     //
     CloseableList closeable = new CloseableList();
@@ -230,8 +221,9 @@ public class CRaSH {
             buffer.append(' ');
           }
           String fileName = file.getCanonicalPath();
-          if(fileName.charAt(0) != '/' && fileName.charAt(1) == ':') {
-            // On window, the value of Class-Path in Manifest file must in form: /C:/path/lib/abc.jar
+          if (fileName.charAt(0) != '/' && fileName.charAt(1) == ':') {
+            // On window, the value of Class-Path in Manifest file must in form:
+            // /C:/path/lib/abc.jar
             fileName = fileName.replace(File.separatorChar, '/');
             buffer.append("/").append(fileName);
 
@@ -253,7 +245,7 @@ public class CRaSH {
       agentFile.deleteOnExit();
       JarOutputStream out = new JarOutputStream(new FileOutputStream(agentFile), manifest);
       out.close();
-      log.log(Level.INFO, "Created agent jar " + agentFile.getCanonicalPath());
+      LOGGER.log(Level.INFO, "Created agent jar " + agentFile.getCanonicalPath());
 
       // Build the options
       StringBuilder sb = new StringBuilder();
@@ -279,37 +271,45 @@ public class CRaSH {
       if (interactive) {
         RemoteServer server = new RemoteServer(0);
         int port = server.bind();
-        log.log(Level.INFO, "Callback server set on port " + port);
+        LOGGER.log(Level.INFO, "Callback server set on port " + port);
         sb.append(port);
         String options = sb.toString();
         Integer pid = pids.get(0);
         final VirtualMachine vm = VirtualMachine.attach("" + pid);
-        log.log(Level.INFO, "Loading agent with command " + options + " as agent " + agentFile.getCanonicalPath());
+        LOGGER.log(
+            Level.INFO,
+            "Loading agent with command " + options + " as agent " + agentFile.getCanonicalPath());
         vm.loadAgent(agentFile.getCanonicalPath(), options);
         server.accept();
         shell = server.getShell();
-        closeable.add(new Closeable() {
-          public void close() throws IOException {
-            vm.detach();
-          }
-        });
+        closeable.add(
+            new Closeable() {
+              public void close() throws IOException {
+                vm.detach();
+              }
+            });
       } else {
         for (Integer pid : pids) {
-          log.log(Level.INFO, "Attaching to remote process " + pid);
+          LOGGER.log(Level.INFO, "Attaching to remote process " + pid);
           VirtualMachine vm = VirtualMachine.attach("" + pid);
           String options = sb.toString();
-          log.log(Level.INFO, "Loading agent with command " + options + " as agent " + agentFile.getCanonicalPath());
+          LOGGER.log(
+              Level.INFO,
+              "Loading agent with command "
+                  + options
+                  + " as agent "
+                  + agentFile.getCanonicalPath());
           vm.loadAgent(agentFile.getCanonicalPath(), options);
         }
         shell = null;
       }
     } else {
-      final Bootstrap bootstrap = new Bootstrap(
-          Thread.currentThread().getContextClassLoader(),
-          confBuilder.build(),
-          cmdBuilder.build());
+      final Bootstrap bootstrap =
+          new Bootstrap(
+              Thread.currentThread().getContextClassLoader(),
+              confBuilder.build(),
+              cmdBuilder.build());
 
-      //
       if (properties != null) {
         Properties config = new Properties();
         for (String property : properties) {
@@ -324,23 +324,26 @@ public class CRaSH {
       }
 
       // Register shutdown hook
-      Runtime.getRuntime().addShutdownHook(new Thread() {
-        @Override
-        public void run() {
-          // Should trigger some kind of run interruption
-        }
-      });
+      Runtime.getRuntime()
+          .addShutdownHook(
+              new Thread() {
+                @Override
+                public void run() {
+                  // Should trigger some kind of run interruption
+                }
+              });
 
       // Do bootstrap
       bootstrap.bootstrap();
-      Runtime.getRuntime().addShutdownHook(new Thread(){
-        @Override
-        public void run() {
-          bootstrap.shutdown();
-        }
-      });
+      Runtime.getRuntime()
+          .addShutdownHook(
+              new Thread() {
+                @Override
+                public void run() {
+                  bootstrap.shutdown();
+                }
+              });
 
-      //
       if (interactive) {
         ShellFactory factory = bootstrap.getContext().getPlugin(ShellFactory.class);
         ShellSafety shellSafety = ShellSafetyFactory.getCurrentThreadShellSafety();
@@ -355,22 +358,16 @@ public class CRaSH {
     //
     if (shell != null) {
 
-      //
       final Terminal term = TerminalFactory.create();
 
-      //
-      Runtime.getRuntime().addShutdownHook(new Thread() {
-        @Override
-        public void run() {
-          try {
-            term.restore();
-          }
-          catch (Exception ignore) {
-          }
-        }
-      });
+      Runtime.getRuntime()
+          .addShutdownHook(new Thread(() -> {
+            try {
+              term.restore();
+            } catch (Exception ignore) {
+            }
+          }));
 
-      //
       String encoding = Configuration.getEncoding();
 
       // Use AnsiConsole only if term doesn't support Ansi
@@ -378,8 +375,18 @@ public class CRaSH {
       PrintStream err;
       boolean ansi;
       if (term.isAnsiSupported()) {
-        out = new PrintStream(new BufferedOutputStream(term.wrapOutIfNeeded(new FileOutputStream(FileDescriptor.out)), 16384), false, encoding);
-        err = new PrintStream(new BufferedOutputStream(term.wrapOutIfNeeded(new FileOutputStream(FileDescriptor.err)), 16384), false, encoding);
+        out =
+            new PrintStream(
+                new BufferedOutputStream(
+                    term.wrapOutIfNeeded(new FileOutputStream(FileDescriptor.out)), 16384),
+                false,
+                encoding);
+        err =
+            new PrintStream(
+                new BufferedOutputStream(
+                    term.wrapOutIfNeeded(new FileOutputStream(FileDescriptor.err)), 16384),
+                false,
+                encoding);
         ansi = true;
       } else {
         out = AnsiConsole.out;
@@ -391,33 +398,22 @@ public class CRaSH {
       FileInputStream in = new FileInputStream(FileDescriptor.in);
       ConsoleReader reader = new ConsoleReader(null, in, out, term);
 
-      //
       final JLineProcessor processor = new JLineProcessor(ansi, shell, reader, out);
 
-      //
-      InterruptHandler interruptHandler = new InterruptHandler(new Runnable() {
-        @Override
-        public void run() {
-          processor.interrupt();
-        }
-      });
+      InterruptHandler interruptHandler =
+          new InterruptHandler(() -> processor.interrupt());
       interruptHandler.install();
 
-      //
       Thread thread = new Thread(processor);
       thread.setDaemon(true);
       thread.start();
 
-      //
       try {
         processor.closed();
-      }
-      catch (Throwable t) {
+      } catch (Throwable t) {
         t.printStackTrace();
-      }
-      finally {
+      } finally {
 
-        //
         if (closeable != null) {
           Utils.close(closeable);
         }
@@ -431,8 +427,8 @@ public class CRaSH {
   public static void main(String[] args) throws Exception {
 
     StringBuilder line = new StringBuilder();
-    for (int i = 0;i < args.length;i++) {
-      if (i  > 0) {
+    for (int i = 0; i < args.length; i++) {
+      if (i > 0) {
         line.append(' ');
       }
       Delimiter.EMPTY.escape(args[i], line);

@@ -18,15 +18,12 @@
  */
 package org.crsh.vfs.spi.ram;
 
+import java.io.IOException;
 import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.Mount;
 
-import java.io.IOException;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class RAMMountFactory implements FSMountFactory<Path> {
 
   @Override

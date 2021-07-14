@@ -19,9 +19,8 @@
 
 package org.crsh.cli.impl.lang;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
+import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>

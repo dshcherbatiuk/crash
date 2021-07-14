@@ -18,21 +18,18 @@
  */
 package org.crsh.console.operations;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
-import test.shell.sync.SyncProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import test.shell.sync.SyncProcess;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class InterruptTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {
@@ -87,18 +84,21 @@ public class InterruptTestCase extends AbstractConsoleTestCase {
   }
 
   public void testProcess() throws Exception {
-    final ArrayBlockingQueue<ShellProcessContext> contexts = new ArrayBlockingQueue<ShellProcessContext>(1);
+    final ArrayBlockingQueue<ShellProcessContext> contexts =
+        new ArrayBlockingQueue<ShellProcessContext>(1);
     final CountDownLatch latch = new CountDownLatch(1);
-    shell.addProcess(new SyncProcess() {
-      @Override
-      public void run(String request, ShellProcessContext context) throws Exception {
-        contexts.add(context);
-      }
-      @Override
-      public void cancel() {
-        latch.countDown();
-      }
-    });
+    shell.addProcess(
+        new SyncProcess() {
+          @Override
+          public void run(String request, ShellProcessContext context) throws Exception {
+            contexts.add(context);
+          }
+
+          @Override
+          public void cancel() {
+            latch.countDown();
+          }
+        });
     console.init();
     console.on(KeyStrokes.of("foo"));
     console.on(KeyStrokes.ENTER);

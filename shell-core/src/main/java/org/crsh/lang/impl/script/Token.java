@@ -22,9 +22,7 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.util.Utils;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class Token {
 
   /** . */
@@ -76,7 +74,8 @@ public class Token {
       } else {
         if (lastQuote == c) {
           lastQuote = null;
-        }      }
+        }
+      }
       pos++;
     }
     Token next = pos < s.length() ? parse(s, pos + 1) : null;

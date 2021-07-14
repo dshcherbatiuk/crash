@@ -42,8 +42,7 @@ import org.crsh.cli.impl.CLIException;
 
 public class InvocationException extends CLIException {
 
-  public InvocationException() {
-  }
+  public InvocationException() {}
 
   public InvocationException(String message) {
     super(message);

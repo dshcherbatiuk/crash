@@ -19,10 +19,6 @@
 
 package org.crsh.vfs.spi.ram;
 
-import org.crsh.util.Utils;
-import org.crsh.vfs.Path;
-import org.crsh.vfs.spi.AbstractFSDriver;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,25 +30,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import org.crsh.util.Utils;
+import org.crsh.vfs.Path;
+import org.crsh.vfs.spi.AbstractFSDriver;
 
 public class RAMDriver extends AbstractFSDriver<Path> {
 
-  /** . */
   private final Path root;
 
-  /** . */
   final HashMap<Path, String> entries;
 
-  /** . */
   URL baseURL;
 
   public RAMDriver() {
     try {
       this.root = Path.get("/");
-      this.entries = new HashMap<Path, String>();
+      this.entries = new HashMap<>();
       this.baseURL = new URL("ram", null, 0, "/", new RAMURLStreamHandler(this));
-    }
-    catch (MalformedURLException e) {
+    } catch (MalformedURLException e) {
       throw new UndeclaredThrowableException(e);
     }
   }
@@ -95,6 +90,7 @@ public class RAMDriver extends AbstractFSDriver<Path> {
   }
 
   public Iterator<InputStream> open(Path handle) throws IOException {
-    return Utils.<InputStream>iterator(new ByteArrayInputStream(entries.get(handle).getBytes("UTF-8")));
+    return Utils.iterator(
+        new ByteArrayInputStream(entries.get(handle).getBytes("UTF-8")));
   }
 }

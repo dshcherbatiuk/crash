@@ -21,9 +21,7 @@ package org.crsh.lang.impl.script;
 import org.crsh.shell.AbstractShellTestCase;
 import org.crsh.shell.ErrorKind;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ScriptTestCase extends AbstractShellTestCase {
 
   public void testBye() {
@@ -38,9 +36,7 @@ public class ScriptTestCase extends AbstractShellTestCase {
   }
 
   public void testExecute() {
-    lifeCycle.bindScript("test",
-        "echo abc\n" +
-            "echo def");
+    lifeCycle.bindScript("test", "echo abc\n" + "echo def");
     assertEquals("abcdef", assertOk("test"));
   }
 

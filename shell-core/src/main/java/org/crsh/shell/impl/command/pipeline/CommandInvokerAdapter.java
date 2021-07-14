@@ -18,20 +18,19 @@
  */
 package org.crsh.shell.impl.command.pipeline;
 
-import org.crsh.command.CommandContext;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.stream.Consumer;
-import org.crsh.stream.Producer;
-import org.crsh.text.Screenable;
-import org.crsh.text.ScreenContext;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.text.CLS;
-import org.crsh.text.ScreenContextConsumer;
-import org.crsh.text.Style;
-
 import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Map;
+import org.crsh.command.CommandContext;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.crsh.stream.Consumer;
+import org.crsh.stream.Producer;
+import org.crsh.text.CLS;
+import org.crsh.text.ScreenContext;
+import org.crsh.text.ScreenContextConsumer;
+import org.crsh.text.Screenable;
+import org.crsh.text.Style;
 
 /** @author Julien Viet */
 class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
@@ -64,7 +63,8 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
   /** . */
   private final boolean clsConsumer;
 
-  CommandInvokerAdapter(CommandInvoker<C, P> command, Class<C> consumedType, Class<P> producedType) {
+  CommandInvokerAdapter(
+      CommandInvoker<C, P> command, Class<C> consumedType, Class<P> producedType) {
     this.consumedType = consumedType;
     this.producedType = producedType;
     this.consumer = null;
@@ -112,23 +112,21 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     //
     try {
       command.open(consumer);
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Exception) {
-        throw (Exception)cause;
+        throw (Exception) cause;
       } else if (cause instanceof Error) {
-        throw (Error)cause;
+        throw (Error) cause;
       } else {
         throw new UndeclaredThrowableException(cause);
       }
     }
 
-    //
     ScreenContext screenContext = command.getScreenContext();
-    ScreenContextConsumer adapter = screenContext != null ? new ScreenContextConsumer(screenContext) : null;
+    ScreenContextConsumer adapter =
+        screenContext != null ? new ScreenContextConsumer(screenContext) : null;
 
-    //
     this.screenContext = screenContext;
     this.adapter = adapter;
     this.consumer = consumer;
@@ -145,20 +143,19 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
   }
 
   @Override
-  public void provide(Object element) throws Exception  {
+  public void provide(Object element) throws Exception {
     if (adapter != null) {
       adapter.provide(element);
     }
     if (consumedType.isInstance(element)) {
       try {
         command.provide(consumedType.cast(element));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         Throwable cause = e.getCause();
         if (cause instanceof Exception) {
-          throw (Exception)cause;
+          throw (Exception) cause;
         } else if (cause instanceof Error) {
-          throw (Error)cause;
+          throw (Error) cause;
         } else {
           throw new UndeclaredThrowableException(cause);
         }
@@ -174,13 +171,12 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     if (charSequenceConsumer) {
       try {
         command.provide(consumedType.cast(Character.toString(c)));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         Throwable cause = e.getCause();
         if (cause instanceof RuntimeException) {
-          throw (RuntimeException)cause;
+          throw (RuntimeException) cause;
         } else if (cause instanceof Error) {
-          throw (Error)cause;
+          throw (Error) cause;
         } else {
           throw new UndeclaredThrowableException(cause);
         }
@@ -197,13 +193,12 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     if (charSequenceConsumer) {
       try {
         command.provide(consumedType.cast(s));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         Throwable cause = e.getCause();
         if (cause instanceof RuntimeException) {
-          throw (RuntimeException)cause;
+          throw (RuntimeException) cause;
         } else if (cause instanceof Error) {
-          throw (Error)cause;
+          throw (Error) cause;
         } else {
           throw new UndeclaredThrowableException(cause);
         }
@@ -220,13 +215,12 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     if (charSequenceConsumer) {
       try {
         command.provide(consumedType.cast(csq.subSequence(start, end)));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         Throwable cause = e.getCause();
         if (cause instanceof RuntimeException) {
-          throw (RuntimeException)cause;
+          throw (RuntimeException) cause;
         } else if (cause instanceof Error) {
-          throw (Error)cause;
+          throw (Error) cause;
         } else {
           throw new UndeclaredThrowableException(cause);
         }
@@ -243,13 +237,12 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     if (styleConsumer) {
       try {
         command.provide(consumedType.cast(style));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         Throwable cause = e.getCause();
         if (cause instanceof RuntimeException) {
-          throw (RuntimeException)cause;
+          throw (RuntimeException) cause;
         } else if (cause instanceof Error) {
-          throw (Error)cause;
+          throw (Error) cause;
         } else {
           throw new UndeclaredThrowableException(cause);
         }
@@ -266,13 +259,12 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     if (clsConsumer) {
       try {
         command.provide(consumedType.cast(CLS.INSTANCE));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         Throwable cause = e.getCause();
         if (cause instanceof RuntimeException) {
-          throw (RuntimeException)cause;
+          throw (RuntimeException) cause;
         } else if (cause instanceof Error) {
-          throw (Error)cause;
+          throw (Error) cause;
         } else {
           throw new UndeclaredThrowableException(cause);
         }
@@ -294,13 +286,12 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     }
     try {
       command.close();
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Exception) {
-        throw (Exception)cause;
+        throw (Exception) cause;
       } else if (cause instanceof Error) {
-        throw (Error)cause;
+        throw (Error) cause;
       } else {
         throw new UndeclaredThrowableException(cause);
       }

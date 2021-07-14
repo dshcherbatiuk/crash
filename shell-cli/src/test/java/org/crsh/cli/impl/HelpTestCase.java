@@ -18,6 +18,8 @@
  */
 package org.crsh.cli.impl;
 
+import java.util.Collections;
+import java.util.List;
 import junit.framework.TestCase;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
@@ -31,9 +33,6 @@ import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.Util;
 
-import java.util.Collections;
-import java.util.List;
-
 /** @author Julien Viet */
 public class HelpTestCase extends TestCase {
 
@@ -45,9 +44,15 @@ public class HelpTestCase extends TestCase {
   }
 
   public void testFoo() throws Exception {
-    CommandDescriptor<Instance<A>> desc = HelpDescriptor.create(CommandFactory.DEFAULT.create(A.class));
+    CommandDescriptor<Instance<A>> desc =
+        HelpDescriptor.create(CommandFactory.DEFAULT.create(A.class));
     InvocationMatcher<Instance<A>> matcher = desc.matcher();
-    InvocationMatch<Instance<A>> match = matcher.options(Collections.<String, List<?>>singletonMap("h", Collections.singletonList(Boolean.TRUE))).arguments(Collections.emptyList());
+    InvocationMatch<Instance<A>> match =
+        matcher
+            .options(
+                Collections.<String, List<?>>singletonMap(
+                    "h", Collections.singletonList(Boolean.TRUE)))
+            .arguments(Collections.emptyList());
     CommandInvoker<Instance<A>, ?> invoker = match.getInvoker();
     Object ret = invoker.invoke(Util.wrap(new A()));
     assertTrue(ret instanceof Help);
@@ -69,7 +74,9 @@ public class HelpTestCase extends TestCase {
   }
 
   public class B3 {
-    @Option(names = "h") boolean help;
+    @Option(names = "h")
+    boolean help;
+
     @Command
     public String main() {
       return "my help " + help;
@@ -77,7 +84,9 @@ public class HelpTestCase extends TestCase {
   }
 
   public class B4 {
-    @Option(names = "help") boolean help;
+    @Option(names = "help")
+    boolean help;
+
     @Command
     public String main() {
       return "my help " + help;
@@ -92,9 +101,15 @@ public class HelpTestCase extends TestCase {
   }
 
   public <C> void assertPreserveHelp(Class<C> clazz, C instance, String option) throws Exception {
-    CommandDescriptor<Instance<C>> desc = HelpDescriptor.create(CommandFactory.DEFAULT.create(clazz));
+    CommandDescriptor<Instance<C>> desc =
+        HelpDescriptor.create(CommandFactory.DEFAULT.create(clazz));
     InvocationMatcher<Instance<C>> matcher = desc.matcher();
-    InvocationMatch<Instance<C>> match = matcher.options(Collections.<String, List<?>>singletonMap(option, Collections.singletonList(Boolean.TRUE))).arguments(Collections.emptyList());
+    InvocationMatch<Instance<C>> match =
+        matcher
+            .options(
+                Collections.<String, List<?>>singletonMap(
+                    option, Collections.singletonList(Boolean.TRUE)))
+            .arguments(Collections.emptyList());
     CommandInvoker<Instance<C>, ?> invoker = match.getInvoker();
     Object ret = invoker.invoke(Util.wrap(instance));
     assertEquals("my help " + true, ret);
@@ -119,19 +134,27 @@ public class HelpTestCase extends TestCase {
     assertPreserveHelpInSubCommand1(C2.class, new C2(), "help");
   }
 
-  public <C> void assertPreserveHelpInSubCommand1(Class<C> clazz, C instance, String option) throws Exception {
-    CommandDescriptor<Instance<C>> desc = HelpDescriptor.create(CommandFactory.DEFAULT.create(clazz));
+  public <C> void assertPreserveHelpInSubCommand1(Class<C> clazz, C instance, String option)
+      throws Exception {
+    CommandDescriptor<Instance<C>> desc =
+        HelpDescriptor.create(CommandFactory.DEFAULT.create(clazz));
     InvocationMatcher<Instance<C>> matcher = desc.matcher();
-    InvocationMatch<Instance<C>> match = matcher.
-        subordinate("sub").
-        options(Collections.<String, List<?>>singletonMap(option, Collections.singletonList(Boolean.TRUE))).arguments(Collections.emptyList());
+    InvocationMatch<Instance<C>> match =
+        matcher
+            .subordinate("sub")
+            .options(
+                Collections.<String, List<?>>singletonMap(
+                    option, Collections.singletonList(Boolean.TRUE)))
+            .arguments(Collections.emptyList());
     CommandInvoker<Instance<C>, ?> invoker = match.getInvoker();
     Object ret = invoker.invoke(Util.wrap(instance));
     assertEquals("my help " + true, ret);
   }
 
   public class D1 {
-    @Option(names = "h") boolean help;
+    @Option(names = "h")
+    boolean help;
+
     @Command
     public String sub() {
       return "my help " + help;
@@ -139,7 +162,9 @@ public class HelpTestCase extends TestCase {
   }
 
   public class D2 {
-    @Option(names = "help") boolean help;
+    @Option(names = "help")
+    boolean help;
+
     @Command
     public String sub() {
       return "my help " + help;
@@ -150,12 +175,19 @@ public class HelpTestCase extends TestCase {
     assertPreserveHelpInSubCommand2(D1.class, new D1(), "h");
     assertPreserveHelpInSubCommand2(D2.class, new D2(), "help");
   }
-  public <C> void assertPreserveHelpInSubCommand2(Class<C> clazz, C instance, String option) throws Exception {
-    CommandDescriptor<Instance<C>> desc = HelpDescriptor.create(CommandFactory.DEFAULT.create(clazz));
+
+  public <C> void assertPreserveHelpInSubCommand2(Class<C> clazz, C instance, String option)
+      throws Exception {
+    CommandDescriptor<Instance<C>> desc =
+        HelpDescriptor.create(CommandFactory.DEFAULT.create(clazz));
     InvocationMatcher<Instance<C>> matcher = desc.matcher();
-    InvocationMatch<Instance<C>> match = matcher.
-        options(Collections.<String, List<?>>singletonMap(option, Collections.singletonList(Boolean.TRUE))).arguments(Collections.emptyList()).
-        subordinate("sub");
+    InvocationMatch<Instance<C>> match =
+        matcher
+            .options(
+                Collections.<String, List<?>>singletonMap(
+                    option, Collections.singletonList(Boolean.TRUE)))
+            .arguments(Collections.emptyList())
+            .subordinate("sub");
     CommandInvoker<Instance<C>, ?> invoker = match.getInvoker();
     Object ret = invoker.invoke(Util.wrap(instance));
     assertEquals("my help " + true, ret);

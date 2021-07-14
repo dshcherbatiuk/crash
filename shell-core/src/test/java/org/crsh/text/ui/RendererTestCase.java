@@ -19,6 +19,9 @@
 
 package org.crsh.text.ui;
 
+import static org.crsh.text.ui.Element.label;
+import static org.crsh.text.ui.Element.row;
+
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.LineReader;
@@ -26,102 +29,105 @@ import org.crsh.text.LineRenderer;
 import org.crsh.text.RenderAppendable;
 import org.crsh.text.Style;
 
-import static org.crsh.text.ui.Element.label;
-import static org.crsh.text.ui.Element.row;
-
 public class RendererTestCase extends AbstractRendererTestCase {
 
   public void testInNode() throws Exception {
 
     TableElement tableElement = new TableElement();
 
-    tableElement.
-        add(row().
-            add(label("a")).
-            add(label("b"))).
-        add(row().
-            add(label("c")).
-            add(label("d")));
+    tableElement
+        .add(row().add(label("a")).add(label("b")))
+        .add(row().add(label("c")).add(label("d")));
 
     TreeElement node = new TreeElement();
     node.addChild(label("foo"));
     node.addChild(tableElement);
     node.addChild(label("bar"));
 
-    assertRender(node, 32,
+    assertRender(
+        node,
+        32,
         "+-foo                           ",
         "+-ab                            ",
         "| cd                            ",
-        "+-bar                           "
-        );
+        "+-bar                           ");
   }
 
   public void testCascading() throws Exception {
 
-    Element custom = new Element() {
+    Element custom =
+        new Element() {
 
-      LabelElement foo = new LabelElement("foo");
-      LabelElement bar = new LabelElement("bar").style(Style.style(Decoration.bold_off));
-      LabelElement juu = new LabelElement("juu");
+          LabelElement foo = new LabelElement("foo");
+          LabelElement bar = new LabelElement("bar").style(Style.style(Decoration.bold_off));
+          LabelElement juu = new LabelElement("juu");
 
-      @Override
-      public LineRenderer renderer() {
-        return new LineRenderer() {
           @Override
-          public int getActualWidth() {
-            return 9;
-          }
-          @Override
-          public int getMinWidth() {
-            return 1;
-          }
-          @Override
-          public int getActualHeight(int width) {
-            throw new UnsupportedOperationException();
-          }
-          @Override
-          public int getMinHeight(int width) {
-            throw new UnsupportedOperationException();
-          }
-          @Override
-          public LineReader reader(final int width) {
-            return new LineReader() {
-
-              boolean done = false;
-
-              public boolean hasLine() {
-                return !done;
+          public LineRenderer renderer() {
+            return new LineRenderer() {
+              @Override
+              public int getActualWidth() {
+                return 9;
               }
 
-              public void renderLine(RenderAppendable to) throws IllegalStateException {
-                if (done) {
-                  throw new IllegalStateException();
-                }
-                foo.renderer().reader(3).renderLine(to);
-                bar.renderer().reader(3).renderLine(to);
-                juu.renderer().reader(3).renderLine(to);
-                done = true;
+              @Override
+              public int getMinWidth() {
+                return 1;
+              }
+
+              @Override
+              public int getActualHeight(int width) {
+                throw new UnsupportedOperationException();
+              }
+
+              @Override
+              public int getMinHeight(int width) {
+                throw new UnsupportedOperationException();
+              }
+
+              @Override
+              public LineReader reader(final int width) {
+                return new LineReader() {
+
+                  boolean done = false;
+
+                  public boolean hasLine() {
+                    return !done;
+                  }
+
+                  public void renderLine(RenderAppendable to) throws IllegalStateException {
+                    if (done) {
+                      throw new IllegalStateException();
+                    }
+                    foo.renderer().reader(3).renderLine(to);
+                    bar.renderer().reader(3).renderLine(to);
+                    juu.renderer().reader(3).renderLine(to);
+                    done = true;
+                  }
+                };
               }
             };
           }
         };
-      }
-    };
 
-    TableElement table = new TableElement().style(Style.style(Decoration.bold)).add(
-        row().style(Color.red.fg()).add(custom));
+    TableElement table =
+        new TableElement()
+            .style(Style.style(Decoration.bold))
+            .add(row().style(Color.red.fg()).add(custom));
     assertRender(table, 32, "\033[1;31mfoo\033[22mbar\033[1mjuu\033[0m                       ");
   }
 
   public void testStyleOff() {
-    TableElement table = new TableElement().
-        border(BorderStyle.DASHED).
-        separator(BorderStyle.DASHED).
-        style(Style.style(Decoration.bold)).
-        add(
-            row().style(Style.style(Decoration.underline)).add(label("foo"), label("bar")));
+    TableElement table =
+        new TableElement()
+            .border(BorderStyle.DASHED)
+            .separator(BorderStyle.DASHED)
+            .style(Style.style(Decoration.bold))
+            .add(row().style(Style.style(Decoration.underline)).add(label("foo"), label("bar")));
 
-    assertRender(table, 32,
+    assertRender(
+        table,
+        32,
         " -------                        ",
         "|\033[1;4mfoo\033[0m|\033[1;4mbar\033[0m|                       ",
         " -------                        ");

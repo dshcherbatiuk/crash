@@ -19,12 +19,11 @@
 
 package org.crsh.cli.completers;
 
+import java.io.File;
+import java.util.Collection;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.spi.Completer;
 import org.crsh.cli.spi.Completion;
-
-import java.io.File;
-import java.util.Collection;
 
 public abstract class AbstractPathCompleter<P> implements Completer {
 
@@ -51,7 +50,7 @@ public abstract class AbstractPathCompleter<P> implements Completer {
     if (!prefix.startsWith(sep)) {
       String currentPath = getCurrentPath();
 
-        if (!currentPath.endsWith(sep)) {
+      if (!currentPath.endsWith(sep)) {
         currentPath += sep;
       }
       if (prefix.length() > 0) {
@@ -61,7 +60,7 @@ public abstract class AbstractPathCompleter<P> implements Completer {
       }
     }
 
-      //
+    //
     P f = getPath(prefix);
 
     //

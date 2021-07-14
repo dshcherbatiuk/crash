@@ -19,23 +19,22 @@
 
 package org.crsh.cli.impl.lang;
 
-import org.crsh.cli.descriptor.ArgumentDescriptor;
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.descriptor.Description;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.cli.descriptor.OptionDescriptor;
-import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.impl.invocation.CommandInvoker;
-import org.crsh.cli.impl.invocation.InvocationException;
-import org.crsh.cli.impl.invocation.InvocationMatch;
-import org.crsh.cli.impl.invocation.ParameterMatch;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
+import org.crsh.cli.descriptor.ArgumentDescriptor;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.Description;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.impl.SyntaxException;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.cli.impl.invocation.CommandInvoker;
+import org.crsh.cli.impl.invocation.InvocationException;
+import org.crsh.cli.impl.invocation.InvocationMatch;
+import org.crsh.cli.impl.invocation.ParameterMatch;
 
 class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
 
@@ -45,11 +44,8 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
   /** . */
   private final Method method;
 
-  public MethodDescriptor(
-    ClassDescriptor<T> owner,
-    Method method,
-    String name,
-    Description info) throws IntrospectionException {
+  public MethodDescriptor(ClassDescriptor<T> owner, Method method, String name, Description info)
+      throws IntrospectionException {
     super(name, info);
 
     //
@@ -58,7 +54,8 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
   }
 
   @Override
-  protected void addParameter(ParameterDescriptor parameter) throws IntrospectionException, NullPointerException, IllegalArgumentException {
+  protected void addParameter(ParameterDescriptor parameter)
+      throws IntrospectionException, NullPointerException, IllegalArgumentException {
     super.addParameter(parameter);
   }
 
@@ -82,44 +79,54 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
     return getInvoker2(match, type);
   }
 
-  static void bind(InvocationMatch<?> match, Iterable<ParameterDescriptor> parameters, Object target, Object[] args) throws SyntaxException, InvocationException {
+  static void bind(
+      InvocationMatch<?> match,
+      Iterable<ParameterDescriptor> parameters,
+      Object target,
+      Object[] args)
+      throws SyntaxException, InvocationException {
     for (ParameterDescriptor parameter : parameters) {
       ParameterMatch parameterMatch = match.getParameter(parameter);
       Object value = parameterMatch != null ? parameterMatch.computeValue() : null;
       if (value == null) {
         if (parameter.getDeclaredType().isPrimitive() || parameter.isRequired()) {
           if (parameter instanceof ArgumentDescriptor) {
-            ArgumentDescriptor argument = (ArgumentDescriptor)parameter;
+            ArgumentDescriptor argument = (ArgumentDescriptor) parameter;
             throw new SyntaxException("Missing argument " + argument.getName());
           } else {
-            OptionDescriptor option = (OptionDescriptor)parameter;
+            OptionDescriptor option = (OptionDescriptor) parameter;
             throw new SyntaxException("Missing option " + option.getNames());
           }
         }
       } else {
-        ((Binding)parameter).set(target, args, value);
+        ((Binding) parameter).set(target, args, value);
       }
     }
   }
 
-  private <V> ObjectCommandInvoker<T, V> getInvoker2(final InvocationMatch<Instance<T>> match, final Class<V> returnType) {
+  private <V> ObjectCommandInvoker<T, V> getInvoker2(
+      final InvocationMatch<Instance<T>> match, final Class<V> returnType) {
     return new ObjectCommandInvoker<T, V>(match) {
       @Override
       public Class<V> getReturnType() {
         return returnType;
       }
+
       @Override
       public Type getGenericReturnType() {
         return getMethod().getGenericReturnType();
       }
+
       @Override
       public Class<?>[] getParameterTypes() {
         return getMethod().getParameterTypes();
       }
+
       @Override
       public Type[] getGenericParameterTypes() {
         return getMethod().getGenericParameterTypes();
       }
+
       @Override
       public V invoke(Instance<T> commandInstance) throws InvocationException, SyntaxException {
 
@@ -127,8 +134,7 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
         T command = null;
         try {
           command = commandInstance.get();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           throw new InvocationException(e);
         }
 
@@ -146,7 +152,7 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
         bind(match, getParameters(), command, mArgs);
 
         // Fill missing contextual parameters and make primitive check
-        for (int i = 0;i < mArgs.length;i++) {
+        for (int i = 0; i < mArgs.length; i++) {
           Class<?> parameterType = parameterTypes[i];
           if (mArgs[i] == null) {
             Object v = commandInstance.resolve(parameterType);
@@ -155,7 +161,8 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
             }
           }
           if (mArgs[i] == null && parameterType.isPrimitive()) {
-            throw new SyntaxException("Method argument at position " + i + " of " + m + " is missing");
+            throw new SyntaxException(
+                "Method argument at position " + i + " of " + m + " is missing");
           }
         }
 
@@ -163,16 +170,14 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
         try {
           Object ret = m.invoke(command, mArgs);
           return returnType.cast(ret);
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
           Throwable t = e.getTargetException();
           if (t instanceof Error) {
-            throw (Error)t;
+            throw (Error) t;
           } else {
             throw new InvocationException(t);
           }
-        }
-        catch (IllegalAccessException t) {
+        } catch (IllegalAccessException t) {
           throw new InvocationException(t);
         }
       }

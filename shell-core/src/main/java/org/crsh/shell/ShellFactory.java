@@ -19,11 +19,9 @@
 
 package org.crsh.shell;
 
-
+import java.security.Principal;
 import org.crsh.auth.AuthInfo;
 import org.crsh.command.ShellSafety;
-
-import java.security.Principal;
 
 public interface ShellFactory {
 

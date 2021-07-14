@@ -19,24 +19,23 @@
 
 package org.crsh.cli.impl;
 
-import org.crsh.cli.descriptor.ArgumentDescriptor;
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.descriptor.OptionDescriptor;
-import junit.framework.TestCase;
-import org.crsh.cli.Argument;
-import org.crsh.cli.Command;
-import org.crsh.cli.Option;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.cli.impl.lang.Instance;
-import org.crsh.cli.type.ValueType;
-import org.crsh.cli.impl.lang.CommandFactory;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
+import junit.framework.TestCase;
+import org.crsh.cli.Argument;
+import org.crsh.cli.Command;
+import org.crsh.cli.Option;
+import org.crsh.cli.descriptor.ArgumentDescriptor;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.impl.descriptor.IntrospectionException;
+import org.crsh.cli.impl.lang.CommandFactory;
+import org.crsh.cli.impl.lang.Instance;
+import org.crsh.cli.type.ValueType;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -45,8 +44,7 @@ import java.util.List;
 public class CommandInfoTestCase extends TestCase {
 
   public void testCommandImplicitDescription() throws IntrospectionException {
-    class A {
-    }
+    class A {}
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals("", c.getUsage());
     assertEquals(0, c.getArguments().size());
@@ -54,8 +52,7 @@ public class CommandInfoTestCase extends TestCase {
   }
 
   public void testCommandDescription() throws IntrospectionException {
-    class A {
-    }
+    class A {}
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals("", c.getUsage());
     assertEquals(0, c.getArguments().size());
@@ -68,9 +65,9 @@ public class CommandInfoTestCase extends TestCase {
       private int i;
     }
     CommandDescriptor<Instance<A>> ai = CommandFactory.DEFAULT.create(A.class);
-    assertEquals(1,ai.getOptions().size());
+    assertEquals(1, ai.getOptions().size());
     OptionDescriptor i = ai.getOption("-i");
-    assertEquals(Arrays.asList("i"),i.getNames());
+    assertEquals(Arrays.asList("i"), i.getNames());
   }
 
   public void testOptionWithUpperCase() throws IntrospectionException {
@@ -79,15 +76,14 @@ public class CommandInfoTestCase extends TestCase {
       private int i;
     }
     CommandDescriptor<Instance<A>> ai = CommandFactory.DEFAULT.create(A.class);
-    assertEquals(1,ai.getOptions().size());
+    assertEquals(1, ai.getOptions().size());
     OptionDescriptor i = ai.getOption("-I");
-    assertEquals(Arrays.asList("I"),i.getNames());
+    assertEquals(Arrays.asList("I"), i.getNames());
   }
 
   public void testArgument1() throws IntrospectionException {
     class A {
-      @Argument()
-      private int i;
+      @Argument() private int i;
     }
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals(1, c.getArguments().size());
@@ -99,10 +95,8 @@ public class CommandInfoTestCase extends TestCase {
 
   public void testArgument2() throws IntrospectionException {
     class A {
-      @Argument
-      private int i;
-      @Argument
-      private List<Integer> j;
+      @Argument private int i;
+      @Argument private List<Integer> j;
     }
     CommandDescriptor<Instance<A>> c = CommandFactory.DEFAULT.create(A.class);
     assertEquals(2, c.getArguments().size());
@@ -117,16 +111,13 @@ public class CommandInfoTestCase extends TestCase {
 
   public void testArgument3() throws IntrospectionException {
     class A {
-      @Argument
-      private List<Integer> i;
-      @Argument
-      private List<Integer> j;
+      @Argument private List<Integer> i;
+      @Argument private List<Integer> j;
     }
     try {
       CommandFactory.DEFAULT.create(A.class);
       fail();
-    }
-    catch (IntrospectionException e) {
+    } catch (IntrospectionException e) {
     }
   }
 
@@ -134,8 +125,7 @@ public class CommandInfoTestCase extends TestCase {
 
     class A {
       @Command
-      void b() {
-      }
+      void b() {}
     }
 
     CommandDescriptor<Instance<A>> a = CommandFactory.DEFAULT.create(A.class);
@@ -146,17 +136,15 @@ public class CommandInfoTestCase extends TestCase {
 
     class A {
       @Command
-      void b() {
-      }
+      void b() {}
+
       @Command
-      void c() {
-      }
+      void c() {}
     }
 
     CommandDescriptor<Instance<A>> a = CommandFactory.DEFAULT.create(A.class);
     CommandDescriptor<?> b = a.getSubordinate("b");
     assertNotNull(b);
-
   }
 
   public void testOverlappingOption() throws IntrospectionException {
@@ -164,36 +152,33 @@ public class CommandInfoTestCase extends TestCase {
     class A {
       @Option(names = "a")
       String a;
+
       @Command
-      void b(@Option(names = "a") String a) {
-      }
+      void b(@Option(names = "a") String a) {}
     }
 
     try {
       CommandFactory.DEFAULT.create(A.class);
       fail();
-    }
-    catch (IntrospectionException e) {
+    } catch (IntrospectionException e) {
     }
   }
 
   @Target({ElementType.FIELD})
   @Retention(RetentionPolicy.RUNTIME)
-  @Option(names="l")
-  @interface Level {
-  }
+  @Option(names = "l")
+  @interface Level {}
 
   public void testAnnotation() throws IntrospectionException {
 
     class A {
-      @Level
-      String l;
+      @Level String l;
     }
 
     CommandDescriptor<Instance<A>> a = CommandFactory.DEFAULT.create(A.class);
-    assertEquals(1,a.getOptions().size());
+    assertEquals(1, a.getOptions().size());
     OptionDescriptor i = a.getOption("-l");
-    assertEquals(Arrays.asList("l"),i.getNames());
+    assertEquals(Arrays.asList("l"), i.getNames());
     assertTrue(i.getAnnotation() instanceof Level);
   }
 }

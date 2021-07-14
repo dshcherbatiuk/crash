@@ -19,22 +19,18 @@
 
 package org.crsh.vfs;
 
-import org.crsh.util.Utils;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import org.crsh.util.Utils;
 
 public class Resource {
 
-  /** . */
   private final String name;
 
-  /** . */
   private final byte[] content;
 
-  /** . */
-  private long timestamp;
+  private final long timestamp;
 
   public Resource(String name, byte[] content, long timestamp) {
     this.name = name;

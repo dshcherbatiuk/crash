@@ -18,27 +18,25 @@
  */
 package org.crsh.command.base.factory;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.naming.Binding;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class TypedContext extends EmptyContext {
 
-    @Override
-    public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
+  @Override
+  public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
 
-      if (name == "") {
-        List<Binding> l = new ArrayList<Binding>();
-        l.add(new Binding("String", "Bar", ""));
-        l.add(new Binding("ArrayList", "Bar", new ArrayList()));
-        return new Bindings(l);
-      } else {
-        throw new NamingException();
-      }
+    if (name == "") {
+      List<Binding> l = new ArrayList<Binding>();
+      l.add(new Binding("String", "Bar", ""));
+      l.add(new Binding("ArrayList", "Bar", new ArrayList()));
+      return new Bindings(l);
+    } else {
+      throw new NamingException();
     }
   }
+}

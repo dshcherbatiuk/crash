@@ -19,10 +19,16 @@
 
 package test.command;
 
-import org.crsh.cli.descriptor.ParameterDescriptor;
+import java.io.IOException;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.naming.NamingException;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
+import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.spi.Completer;
 import org.crsh.cli.spi.Completion;
 import org.crsh.command.BaseCommand;
@@ -30,17 +36,10 @@ import org.crsh.command.Pipe;
 import org.crsh.command.ScriptException;
 import org.crsh.groovy.GroovyCommand;
 import org.crsh.text.CLS;
-import org.crsh.text.Screenable;
 import org.crsh.text.ScreenContext;
+import org.crsh.text.Screenable;
 import org.crsh.text.Style;
 import test.text.Value;
-
-import javax.naming.NamingException;
-import java.io.IOException;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Commands {
 
@@ -50,8 +49,7 @@ public class Commands {
   public static class Noop extends BaseCommand {
     @Command
     public Pipe<Object, Object> main() throws IOException {
-      return new Pipe<Object, Object>() {
-      };
+      return new Pipe<Object, Object>() {};
     }
   }
 
@@ -69,7 +67,7 @@ public class Commands {
     }
 
     @Command
-    public void main(final @Option(names={"opt"}) String opt, @Argument List<String> args) {
+    public void main(final @Option(names = {"opt"}) String opt, @Argument List<String> args) {
       Parameterized.opt = opt;
       if (args != null) {
         Parameterized.args = new ArrayList<String>(args);
@@ -133,11 +131,13 @@ public class Commands {
     public Pipe<Object, Integer> main() {
       return new Pipe<Object, Integer>() {
         int count = 0;
+
         @Override
         public void provide(Object element) throws ScriptException, IOException {
           System.out.println("getClass().getName() = " + getClass().getName());
           count++;
         }
+
         @Override
         public void close() throws Exception {
           context.provide(count);
@@ -151,17 +151,18 @@ public class Commands {
     public Pipe<String, String> main() {
       return new Pipe<String, String>() {
         List<String> buffer = new ArrayList<String>();
+
         @Override
         public void provide(String element) throws ScriptException, IOException {
           buffer.add(element);
         }
+
         @Override
         public void flush() throws IOException {
           for (String s : buffer) {
             try {
               context.provide(s);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               throw new UndeclaredThrowableException(e);
             }
           }
@@ -225,14 +226,42 @@ public class Commands {
   public static class ConsumeChunk extends BaseCommand {
 
     static class ConsumePipe extends Pipe<CharSequence, Object> implements ScreenContext {
-      public int getWidth() { return context.getWidth(); }
-      public int getHeight() { return context.getHeight(); }
-      public Appendable append(char c) throws IOException { list.add("" + c); return this; }
-      public Appendable append(CharSequence s) throws IOException { list.add(s); return this; }
-      public Appendable append(CharSequence csq, int start, int end) throws IOException { list.add(csq.subSequence(start, end)); return this; }
-      public Screenable append(Style style) throws IOException { list.add(style); return this; }
-      public Screenable cls() throws IOException { list.add(CLS.INSTANCE); return this; }
-      public void provide(CharSequence element) throws ScriptException, IOException { list.add(element); }
+      public int getWidth() {
+        return context.getWidth();
+      }
+
+      public int getHeight() {
+        return context.getHeight();
+      }
+
+      public Appendable append(char c) throws IOException {
+        list.add("" + c);
+        return this;
+      }
+
+      public Appendable append(CharSequence s) throws IOException {
+        list.add(s);
+        return this;
+      }
+
+      public Appendable append(CharSequence csq, int start, int end) throws IOException {
+        list.add(csq.subSequence(start, end));
+        return this;
+      }
+
+      public Screenable append(Style style) throws IOException {
+        list.add(style);
+        return this;
+      }
+
+      public Screenable cls() throws IOException {
+        list.add(CLS.INSTANCE);
+        return this;
+      }
+
+      public void provide(CharSequence element) throws ScriptException, IOException {
+        list.add(element);
+      }
     }
 
     @Command
@@ -255,7 +284,8 @@ public class Commands {
 
   public static class ParameterizedConsumeToList extends BaseCommand {
     @Command
-    public Pipe<String, Object> main(final @Option(names={"opt"}) String opt, @Argument List<String> args) {
+    public Pipe<String, Object> main(
+        final @Option(names = {"opt"}) String opt, @Argument List<String> args) {
       if (args != null) {
         for (String arg : args) {
           list.add((opt != null ? opt : "") + arg);
@@ -352,18 +382,18 @@ public class Commands {
     public CannotInstantiate() {
       throw new RuntimeException();
     }
+
     @Command
-    public void main() {
-    }
+    public void main() {}
   }
 
   public static class Complete extends BaseCommand implements Completer {
     public Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
       return Completion.builder(prefix).add("bar", true).build();
     }
+
     @Command
-    public void main(@Argument(completer = Complete.class) String arg) {
-    }
+    public void main(@Argument(completer = Complete.class) String arg) {}
   }
 
   public static class CompleteWithSession extends BaseCommand implements Completer {
@@ -375,9 +405,9 @@ public class Commands {
       }
       return ret.build();
     }
+
     @Command
-    public void main(@Argument(completer = CompleteWithSession.class) String arg) {
-    }
+    public void main(@Argument(completer = CompleteWithSession.class) String arg) {}
   }
 
   public static class SubordinateProduceInteger extends BaseCommand {

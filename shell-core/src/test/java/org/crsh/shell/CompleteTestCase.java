@@ -19,11 +19,10 @@
 
 package org.crsh.shell;
 
+import java.util.Collections;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.spi.Completion;
 import test.command.Commands;
-
-import java.util.Collections;
 
 public class CompleteTestCase extends AbstractShellTestCase {
 

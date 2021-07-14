@@ -21,15 +21,14 @@ package org.crsh.lang.impl.groovy.command;
 import groovy.lang.MissingMethodException;
 import groovy.lang.MissingPropertyException;
 import groovy.lang.Script;
-import org.crsh.lang.impl.groovy.Helper;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.command.InvocationContext;
-import org.crsh.lang.impl.groovy.closure.PipeLineClosure;
-import org.crsh.text.RenderPrintWriter;
-
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.LinkedList;
+import org.crsh.command.InvocationContext;
+import org.crsh.lang.impl.groovy.Helper;
+import org.crsh.lang.impl.groovy.closure.PipeLineClosure;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.crsh.text.RenderPrintWriter;
 
 public abstract class GroovyScriptCommand extends Script {
 
@@ -79,13 +78,12 @@ public abstract class GroovyScriptCommand extends Script {
     try {
       CommandInvoker invoker = context.resolve(s);
       invoker.invoke(context);
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Exception) {
-        throw (Exception)cause;
+        throw (Exception) cause;
       } else if (cause instanceof Error) {
-        throw (Error)cause;
+        throw (Error) cause;
       } else {
         throw new UndeclaredThrowableException(cause);
       }
@@ -93,7 +91,7 @@ public abstract class GroovyScriptCommand extends Script {
   }
 
   public final InvocationContext<?> peekContext() {
-    return (InvocationContext<?>)context;
+    return (InvocationContext<?>) context;
   }
 
   @Override
@@ -102,8 +100,7 @@ public abstract class GroovyScriptCommand extends Script {
     //
     try {
       return super.invokeMethod(name, args);
-    }
-    catch (MissingMethodException missing) {
+    } catch (MissingMethodException missing) {
       return Helper.invokeMethod(context, name, args, missing);
     }
   }
@@ -111,7 +108,7 @@ public abstract class GroovyScriptCommand extends Script {
   @Override
   public final Object getProperty(String property) {
     if ("out".equals(property)) {
-      return ((InvocationContext<?>)context).getWriter();
+      return ((InvocationContext<?>) context).getWriter();
     } else if ("context".equals(property)) {
       return context;
     } else {
@@ -121,8 +118,7 @@ public abstract class GroovyScriptCommand extends Script {
       }
       try {
         return super.getProperty(property);
-      }
-      catch (MissingPropertyException e) {
+      } catch (MissingPropertyException e) {
         return null;
       }
     }

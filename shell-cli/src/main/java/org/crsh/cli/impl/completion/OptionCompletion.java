@@ -19,11 +19,10 @@
 
 package org.crsh.cli.impl.completion;
 
+import java.util.Set;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.tokenizer.Token;
-
-import java.util.Set;
 
 class OptionCompletion<T> extends Completion {
 
@@ -40,8 +39,12 @@ class OptionCompletion<T> extends Completion {
 
   @Override
   public CompletionMatch complete() throws CompletionException {
-    org.crsh.cli.spi.Completion.Builder builder = org.crsh.cli.spi.Completion.builder(prefix.getValue());
-    Set<String> optionNames = prefix instanceof Token.Literal.Option.Short ? descriptor.getShortOptionNames() : descriptor.getLongOptionNames();
+    org.crsh.cli.spi.Completion.Builder builder =
+        org.crsh.cli.spi.Completion.builder(prefix.getValue());
+    Set<String> optionNames =
+        prefix instanceof Token.Literal.Option.Short
+            ? descriptor.getShortOptionNames()
+            : descriptor.getLongOptionNames();
     for (String optionName : optionNames) {
       if (optionName.startsWith(prefix.getValue())) {
         builder.add(optionName.substring(prefix.getValue().length()), true);

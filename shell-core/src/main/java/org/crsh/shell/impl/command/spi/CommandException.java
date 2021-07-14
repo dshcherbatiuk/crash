@@ -21,13 +21,10 @@ package org.crsh.shell.impl.command.spi;
 
 import org.crsh.shell.ErrorKind;
 
-/**
- * Signals a general command exception.
- */
+/** Signals a general command exception. */
 public final class CommandException extends Exception {
 
-  /** . */
-  private final ErrorKind errorKind ;
+  private final ErrorKind errorKind;
 
   public CommandException(ErrorKind errorKind, String message) {
     super(message);

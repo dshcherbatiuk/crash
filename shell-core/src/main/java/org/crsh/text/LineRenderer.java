@@ -21,40 +21,44 @@ package org.crsh.text;
 
 import java.util.Iterator;
 
-/**
- * A line oriented renderer.
- */
+/** A line oriented renderer. */
 public abstract class LineRenderer {
 
-  public static final LineRenderer NULL = new LineRenderer() {
-    @Override
-    public int getActualWidth() {
-      return 0;
-    }
-    @Override
-    public int getMinWidth() {
-      return 0;
-    }
-    @Override
-    public int getMinHeight(int width) {
-      return 0;
-    }
-    @Override
-    public int getActualHeight(int width) {
-      return 0;
-    }
-    @Override
-    public LineReader reader(int width) {
-      return new LineReader() {
-        public boolean hasLine() {
-          return false;
+  public static final LineRenderer NULL =
+      new LineRenderer() {
+        @Override
+        public int getActualWidth() {
+          return 0;
         }
-        public void renderLine(RenderAppendable to) throws IllegalStateException {
-          throw new IllegalStateException();
+
+        @Override
+        public int getMinWidth() {
+          return 0;
+        }
+
+        @Override
+        public int getMinHeight(int width) {
+          return 0;
+        }
+
+        @Override
+        public int getActualHeight(int width) {
+          return 0;
+        }
+
+        @Override
+        public LineReader reader(int width) {
+          return new LineReader() {
+            public boolean hasLine() {
+              return false;
+            }
+
+            public void renderLine(RenderAppendable to) throws IllegalStateException {
+              throw new IllegalStateException();
+            }
+          };
         }
       };
-    }
-  };
 
   public static LineRenderer vertical(Iterable<? extends LineRenderer> renderers) {
     Iterator<? extends LineRenderer> i = renderers.iterator();
@@ -101,10 +105,11 @@ public abstract class LineRenderer {
   public abstract int getActualHeight(int width);
 
   /**
-   * Create a renderer for the specified width and height or return null if the element does not provide any output
-   * for the specified dimensions. The default implementation delegates to the {@link #reader(int)} method when the
-   * <code>height</code> argument is not positive otherwise it returns null. Subclasses should override this method
-   * when they want to provide content that can adapts to the specified height.
+   * Create a renderer for the specified width and height or return null if the element does not
+   * provide any output for the specified dimensions. The default implementation delegates to the
+   * {@link #reader(int)} method when the <code>height</code> argument is not positive otherwise it
+   * returns null. Subclasses should override this method when they want to provide content that can
+   * adapts to the specified height.
    *
    * @param width the width
    * @param height the height
@@ -119,7 +124,8 @@ public abstract class LineRenderer {
   }
 
   /**
-   * Create a renderer for the specified width or return null if the element does not provide any output.
+   * Create a renderer for the specified width or return null if the element does not provide any
+   * output.
    *
    * @param width the width
    * @return the renderer

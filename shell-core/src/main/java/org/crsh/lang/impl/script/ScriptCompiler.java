@@ -18,6 +18,14 @@
  */
 package org.crsh.lang.impl.script;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.impl.SyntaxException;
@@ -37,18 +45,7 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.shell.impl.command.spi.CommandMatch;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ScriptCompiler implements Compiler {
 
   /** . */
@@ -67,53 +64,57 @@ public class ScriptCompiler implements Compiler {
   }
 
   @Override
-  public CommandResolution compileCommand(final String name, final byte[] source) throws CommandException, NullPointerException {
+  public CommandResolution compileCommand(final String name, final byte[] source)
+      throws NullPointerException {
 
     return new CommandResolution() {
       @Override
       public String getDescription() {
         return "";
       }
+
       @Override
       public Command<?> getCommand() throws CommandException {
 
         //
         final CommandDescriptor<Object> descriptor;
         try {
-          descriptor = new CommandDescriptor<Object>(name, new Description()) {
-            @Override
-            public CommandDescriptor<Object> getOwner() {
-              return null;
-            }
-
-            @Override
-            public Map<String, ? extends CommandDescriptor<Object>> getSubordinates() {
-              return Collections.emptyMap();
-            }
-
-            @Override
-            public org.crsh.cli.impl.invocation.CommandInvoker<Object, ?> getInvoker(InvocationMatch<Object> match) {
-              return new org.crsh.cli.impl.invocation.CommandInvoker<Object, Object>(match) {
+          descriptor =
+              new CommandDescriptor<Object>(name, new Description()) {
                 @Override
-                public Class<Object> getReturnType() {
-                  return Object.class;
+                public CommandDescriptor<Object> getOwner() {
+                  return null;
                 }
 
                 @Override
-                public Type getGenericReturnType() {
-                  return Object.class;
+                public Map<String, ? extends CommandDescriptor<Object>> getSubordinates() {
+                  return Collections.emptyMap();
                 }
 
                 @Override
-                public Object invoke(Object command) throws InvocationException, SyntaxException {
-                  throw new UnsupportedOperationException("Not used");
+                public org.crsh.cli.impl.invocation.CommandInvoker<Object, ?> getInvoker(
+                    InvocationMatch<Object> match) {
+                  return new org.crsh.cli.impl.invocation.CommandInvoker<Object, Object>(match) {
+                    @Override
+                    public Class<Object> getReturnType() {
+                      return Object.class;
+                    }
+
+                    @Override
+                    public Type getGenericReturnType() {
+                      return Object.class;
+                    }
+
+                    @Override
+                    public Object invoke(Object command) {
+                      throw new UnsupportedOperationException("Not used");
+                    }
+                  };
                 }
               };
-            }
-          };
-        }
-        catch (IntrospectionException e) {
-          throw new CommandException(ErrorKind.SYNTAX, "Script " + name + " failed unexpectedly", e);
+        } catch (IntrospectionException e) {
+          throw new CommandException(
+              ErrorKind.SYNTAX, "Script " + name + " failed unexpectedly", e);
         }
 
         return new Command<Object>() {
@@ -121,10 +122,12 @@ public class ScriptCompiler implements Compiler {
           public CommandDescriptor<Object> getDescriptor() {
             return descriptor;
           }
+
           @Override
           protected Completer getCompleter(RuntimeContext context) {
             return null;
           }
+
           @Override
           protected CommandMatch<?, ?> resolve(InvocationMatch<Object> match) {
             return new CommandMatch<Void, Object>() {
@@ -136,8 +139,7 @@ public class ScriptCompiler implements Compiler {
                   private CommandContext<?> consumer;
 
                   @Override
-                  public void provide(Void element) throws IOException {
-                  }
+                  public void provide(Void element) {}
 
                   @Override
                   public Class<Void> getConsumedType() {
@@ -163,10 +165,11 @@ public class ScriptCompiler implements Compiler {
                   public void close() throws IOException, CommandException {
 
                     // Execute sequentially the script
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(source)));
+                    BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(new ByteArrayInputStream(source)));
 
                     // A bit nasty but well it's ok
-                    ShellSession session = (ShellSession)consumer.getSession();
+                    ShellSession session = (ShellSession) consumer.getSession();
 
                     while (true) {
                       String request = reader.readLine();
@@ -179,12 +182,16 @@ public class ScriptCompiler implements Compiler {
                       }
                       ReplResponse response = ScriptRepl.getInstance().eval(session, request);
                       if (response instanceof ReplResponse.Response) {
-                        ReplResponse.Response shellResponse = (ReplResponse.Response)response;
-                        Exception ex = new Exception("Was not expecting response " + shellResponse.response);
-                        throw new CommandException(ErrorKind.EVALUATION, "Failure when evaluating '" + request + "'  in script " + name, ex);
+                        ReplResponse.Response shellResponse = (ReplResponse.Response) response;
+                        Exception ex =
+                            new Exception("Was not expecting response " + shellResponse.response);
+                        throw new CommandException(
+                            ErrorKind.EVALUATION,
+                            "Failure when evaluating '" + request + "'  in script " + name,
+                            ex);
                       } else if (response instanceof ReplResponse.Invoke) {
-                        ReplResponse.Invoke invokeResponse = (ReplResponse.Invoke)response;
-                        CommandInvoker invoker =  invokeResponse.invoker;
+                        ReplResponse.Invoke invokeResponse = (ReplResponse.Invoke) response;
+                        CommandInvoker invoker = invokeResponse.invoker;
                         invoker.invoke(consumer);
                       }
                     }
@@ -192,8 +199,7 @@ public class ScriptCompiler implements Compiler {
                     //
                     try {
                       consumer.close();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                       // ?
                     }
 
@@ -202,10 +208,12 @@ public class ScriptCompiler implements Compiler {
                   }
                 };
               }
+
               @Override
               public Class<Object> getProducedType() {
                 return Object.class;
               }
+
               @Override
               public Class<Void> getConsumedType() {
                 return Void.class;

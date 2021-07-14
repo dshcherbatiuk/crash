@@ -19,25 +19,21 @@
 
 package org.crsh.vfs;
 
-import org.crsh.util.Utils;
-import org.crsh.vfs.spi.FSDriver;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.crsh.util.Utils;
+import org.crsh.vfs.spi.FSDriver;
 
 class Handle<H> {
 
-  /** . */
   private final FSDriver<H> driver;
 
-  /** . */
   final String name;
 
-  /** . */
   final H handle;
 
   Handle(FSDriver<H> driver, H handle) throws IOException {

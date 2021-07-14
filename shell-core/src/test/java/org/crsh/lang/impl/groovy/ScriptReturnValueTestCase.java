@@ -20,16 +20,13 @@ package org.crsh.lang.impl.groovy;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
 import org.crsh.shell.AbstractShellTestCase;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ScriptReturnValueTestCase extends AbstractShellTestCase {
 
   public void testExplicitReturnFromDefaultScript() throws Exception {
@@ -62,8 +59,7 @@ public class ScriptReturnValueTestCase extends AbstractShellTestCase {
     try {
       script.getClass().getDeclaredField("org_crsh_has_explicit_return");
       fail();
-    }
-    catch (NoSuchFieldException e) {
+    } catch (NoSuchFieldException e) {
       // Ok
     }
   }

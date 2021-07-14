@@ -19,19 +19,16 @@
 
 package org.crsh.lang.impl.script;
 
+import java.util.LinkedList;
+import java.util.regex.Pattern;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.ShellSession;
+import org.crsh.shell.impl.command.pipeline.PipeLine;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.shell.impl.command.pipeline.PipeLine;
 
-import java.util.LinkedList;
-import java.util.regex.Pattern;
-
-/**
- * A factory for a pipeline.
- */
+/** A factory for a pipeline. */
 public class PipeLineFactory {
 
   /** . */
@@ -67,7 +64,7 @@ public class PipeLineFactory {
       StringBuilder sb = new StringBuilder("syntax error near unexpected token");
       if (next != null) {
         sb.append(' ');
-        for (PipeLineFactory factory = next;factory != null;factory = factory.next) {
+        for (PipeLineFactory factory = next; factory != null; factory = factory.next) {
           sb.append('|').append(factory.line);
         }
       }
@@ -83,9 +80,10 @@ public class PipeLineFactory {
     return next;
   }
 
-  public CommandInvoker<Void, Object> create(ShellSession session) throws CommandNotFoundException, CommandException {
-    LinkedList<CommandInvoker> pipes = new LinkedList<CommandInvoker>();
-    for (PipeLineFactory current = this;current != null;current = current.next) {
+  public CommandInvoker<Void, Object> create(ShellSession session)
+      throws CommandNotFoundException, CommandException {
+    LinkedList<CommandInvoker> pipes = new LinkedList<>();
+    for (PipeLineFactory current = this; current != null; current = current.next) {
       Command<?> command = session.getCommand(current.name);
       if (command == null) {
         throw new CommandNotFoundException(current.name);

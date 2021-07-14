@@ -19,17 +19,12 @@
 package org.crsh.console.operations;
 
 import jline.console.Operation;
-import org.crsh.console.AbstractConsoleTestCase;
-import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class YankTestCase extends AbstractPasteTestCase {
 
   public void testEmacs() {
     console.init();
     doTest(Operation.YANK);
   }
-
 }

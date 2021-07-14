@@ -21,9 +21,7 @@ package org.crsh.console;
 import org.crsh.AbstractTestCase;
 import test.shell.sync.SyncShell;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public abstract class AbstractConsoleTestCase extends AbstractTestCase {
 
   /** . */
@@ -41,29 +39,31 @@ public abstract class AbstractConsoleTestCase extends AbstractTestCase {
   @Override
   protected void setUp() throws Exception {
     prompt = "";
-    console = new Console(
-        shell = new SyncShell() {
-          @Override
-          public String getPrompt() {
-            return prompt;
-          }
-        },
-        driver = new TestDriver());
+    console =
+        new Console(
+            shell =
+                new SyncShell() {
+                  @Override
+                  public String getPrompt() {
+                    return prompt;
+                  }
+                },
+            driver = new TestDriver());
   }
 
   protected final String getCurrentLine() {
-    return ((Editor)console.handler.get()).getCurrentLine();
+    return ((Editor) console.handler.get()).getCurrentLine();
   }
 
   protected final int getCurrentCursor() {
-    return ((Editor)console.handler.get()).getCurrentPosition();
+    return ((Editor) console.handler.get()).getCurrentPosition();
   }
 
   protected final String getClipboard() {
-    return ((Editor)console.handler.get()).getKillBuffer();
+    return ((Editor) console.handler.get()).getKillBuffer();
   }
 
   protected final void setClipboard(String s) {
-    ((Editor)console.handler.get()).setKillBuffer(s);
+    ((Editor) console.handler.get()).setKillBuffer(s);
   }
 }

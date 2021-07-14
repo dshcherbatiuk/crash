@@ -24,12 +24,12 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 /**
- * <p>A driver for the file system, this interface is the Service Provider Interface (SPI) part
- * provided by CRaSH.</p>
+ * A driver for the file system, this interface is the Service Provider Interface (SPI) part
+ * provided by CRaSH.
  *
  * <p>The driver works with handles which are opaque objects that model a path in the file system,
  * an handle can represent a file or a directory and is considered as non modifiable from the file
- * system perspective.</p>
+ * system perspective.
  *
  * @param <H> the handle generic type.
  */
@@ -62,8 +62,8 @@ public interface FSDriver<H> {
   boolean isDir(H handle) throws IOException;
 
   /**
-   * Return the specific child of a directory handle, null should be returned if no such
-   * child exist.
+   * Return the specific child of a directory handle, null should be returned if no such child
+   * exist.
    *
    * @param handle the directory handle
    * @param name the child name
@@ -98,5 +98,4 @@ public interface FSDriver<H> {
    * @throws IOException any io exception
    */
   Iterator<InputStream> open(H handle) throws IOException;
-
 }

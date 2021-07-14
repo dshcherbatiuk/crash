@@ -30,7 +30,7 @@ class GroovyLineEscaper extends LineParser.Visitor {
 
   /** . */
   final StringBuilder buffer = new StringBuilder();
-  
+
   @Override
   public void onChar(int index, Quoting quoting, boolean backslash, char c) {
     if (quoting != null && c == '\n') {

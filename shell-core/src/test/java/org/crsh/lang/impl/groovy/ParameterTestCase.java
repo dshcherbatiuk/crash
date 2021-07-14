@@ -24,12 +24,13 @@ import org.crsh.shell.AbstractShellTestCase;
 public class ParameterTestCase extends AbstractShellTestCase {
 
   /** . */
-  private final String option_command = "class option_command {\n" +
-      "@Command\n" +
-      "public String main(@Option(names=['o','option']) String opt) {\n" +
-      "return opt;" +
-      "}\n" +
-      "}";
+  private final String option_command =
+      "class option_command {\n"
+          + "@Command\n"
+          + "public String main(@Option(names=['o','option']) String opt) {\n"
+          + "return opt;"
+          + "}\n"
+          + "}";
 
   public void testShortOption() throws Exception {
 
@@ -38,12 +39,13 @@ public class ParameterTestCase extends AbstractShellTestCase {
     assertEquals("bar", assertOk("option_command -o bar"));
 
     //
-    String foo = "class foo {\n" +
-        "@Command\n" +
-        "public String main() {\n" +
-        "option_command o:'bar'\n" +
-        "}\n" +
-        "}";
+    String foo =
+        "class foo {\n"
+            + "@Command\n"
+            + "public String main() {\n"
+            + "option_command o:'bar'\n"
+            + "}\n"
+            + "}";
     lifeCycle.bindGroovy("foo", foo);
     lifeCycle.bindGroovy("option_command", option_command);
 
@@ -61,12 +63,13 @@ public class ParameterTestCase extends AbstractShellTestCase {
   }
 
   public void testLongOption() throws Exception {
-    String foo = "class foo {\n" +
-        "@Command\n" +
-        "public String main() {\n" +
-        "option_command option:'bar'\n" +
-        "}\n" +
-        "}";
+    String foo =
+        "class foo {\n"
+            + "@Command\n"
+            + "public String main() {\n"
+            + "option_command option:'bar'\n"
+            + "}\n"
+            + "}";
     lifeCycle.bindGroovy("foo", foo);
     lifeCycle.bindGroovy("option_command", option_command);
 

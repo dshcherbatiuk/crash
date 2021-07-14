@@ -23,9 +23,10 @@ import java.util.Map;
 
 /**
  * The minimum set of services that a command needs for executing properly:
+ *
  * <ul>
- *   <li>a session map</li>
- *   <li>an attribute map</li>
+ *   <li>a session map
+ *   <li>an attribute map
  * </ul>
  */
 public interface RuntimeContext {
@@ -43,5 +44,4 @@ public interface RuntimeContext {
    * @return the attributes map
    */
   Map<String, Object> getAttributes();
-
 }

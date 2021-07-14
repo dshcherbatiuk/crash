@@ -35,5 +35,4 @@ public class ThreadCompleter implements Completer {
     }
     return b.build();
   }
-
 }

@@ -18,19 +18,18 @@
  */
 package org.crsh.console;
 
-import jline.console.Operation;
-import org.crsh.keyboard.KeyHandler;
-import org.crsh.keyboard.KeyType;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellProcess;
-import org.crsh.util.Utils;
-
 import java.io.IOException;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jline.console.Operation;
+import org.crsh.keyboard.KeyHandler;
+import org.crsh.keyboard.KeyType;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellProcess;
+import org.crsh.util.Utils;
 
 /**
  * A console state machine, which delegates the state machine to the {@link Plugin} implementation.
@@ -109,9 +108,7 @@ public class Console {
     return status == RUNNING;
   }
 
-  /**
-   * Initiali
-   */
+  /** Initiali */
   public void init() {
     // Take care of pormpt
     String welcome = shell.getWelcome();
@@ -119,8 +116,7 @@ public class Console {
       try {
         driver.write(welcome);
         driver.flush();
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         // Log it
       }
     }
@@ -143,7 +139,7 @@ public class Console {
       if (current == null) {
         throw new IllegalStateException("Not initialized");
       } else if (current instanceof ProcessHandler) {
-        ProcessHandler processHandler = (ProcessHandler)current;
+        ProcessHandler processHandler = (ProcessHandler) current;
         ProcessHandler.Reader reader = processHandler.editor.get();
         if (reader != null) {
           reader.thread.interrupt();
@@ -170,7 +166,6 @@ public class Console {
     }
   }
 
-
   void close() {
     if (status == RUNNING) {
       status = CLOSED;
@@ -178,17 +173,14 @@ public class Console {
     }
   }
 
-  /**
-   * Switch to edit.
-   */
+  /** Switch to edit. */
   Editor edit() {
     String prompt = shell.getPrompt();
     if (prompt != null && prompt.length() > 0) {
       try {
         driver.write(prompt);
         driver.flush();
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         // Swallow for now...
       }
     }
@@ -197,9 +189,7 @@ public class Console {
     return editor;
   }
 
-  /**
-   * Process the state machine.
-   */
+  /** Process the state machine. */
   void iterate() {
     while (status == RUNNING) {
       Plugin current = handler.get();
@@ -208,7 +198,7 @@ public class Console {
         if (current == null) {
           throw new IllegalStateException("Not initialized");
         } else if (current instanceof Editor) {
-          Editor editor = (Editor)current;
+          Editor editor = (Editor) current;
           EditorAction action = editor.getMode().on(key);
           if (action != null) {
             String line = editor.append(action, key.sequence);
@@ -220,7 +210,7 @@ public class Console {
             }
           }
         } else if (current instanceof ProcessHandler) {
-          ProcessHandler processHandler = (ProcessHandler)current;
+          ProcessHandler processHandler = (ProcessHandler) current;
           ProcessHandler.Reader reader = processHandler.editor.get();
           if (reader != null) {
             EditorAction action = editor.getMode().on(key);
@@ -244,8 +234,7 @@ public class Console {
               KeyType type = key.map();
               try {
                 keyHandler.handle(type, key.sequence);
-              }
-              catch (Throwable t) {
+              } catch (Throwable t) {
                 // Perhaps handle better this and treat error / exception differently
                 log.log(Level.SEVERE, "Key handler " + keyHandler + " failure", t);
               }

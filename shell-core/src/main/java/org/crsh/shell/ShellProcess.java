@@ -21,15 +21,13 @@ package org.crsh.shell;
 
 import org.crsh.keyboard.KeyHandler;
 
-/**
- * A shell process.
- */
+/** A shell process. */
 public interface ShellProcess {
 
   /**
-   * Begin the process. The client of this method should make no assumption whether the process is executed
-   * in a synchronous or asynchronous manner. The process will be termined when the process signals it
-   * with an invocation of the {@link ShellProcessContext#end(ShellResponse)} method.
+   * Begin the process. The client of this method should make no assumption whether the process is
+   * executed in a synchronous or asynchronous manner. The process will be termined when the process
+   * signals it with an invocation of the {@link ShellProcessContext#end(ShellResponse)} method.
    *
    * @param processContext the process context
    * @throws IllegalStateException if the process is already executing or has been executed
@@ -44,13 +42,12 @@ public interface ShellProcess {
   KeyHandler getKeyHandler() throws IllegalStateException;
 
   /**
-   * Signals the process it should be cancelled. This method cannot be be called before the process has started,
-   * it can be called multiple times after the process has started. The cancellation of the process is asynchronous,
-   * the cancellation of the process will terminate the current context lifecycle by calling the
-   * {@link org.crsh.shell.ShellProcessContext#end(ShellResponse)} method.
+   * Signals the process it should be cancelled. This method cannot be be called before the process
+   * has started, it can be called multiple times after the process has started. The cancellation of
+   * the process is asynchronous, the cancellation of the process will terminate the current context
+   * lifecycle by calling the {@link org.crsh.shell.ShellProcessContext#end(ShellResponse)} method.
    *
    * @throws IllegalStateException if the execution has not yet started
    */
   void cancel() throws IllegalStateException;
-
 }

@@ -19,14 +19,13 @@
 
 package org.crsh.vfs.spi.url;
 
-import org.crsh.vfs.spi.AbstractFSDriver;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.crsh.vfs.spi.AbstractFSDriver;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class URLDriver extends AbstractFSDriver<Node> {

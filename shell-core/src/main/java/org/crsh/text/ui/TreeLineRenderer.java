@@ -19,21 +19,18 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.LineReader;
-import org.crsh.text.LineRenderer;
-import org.crsh.text.RenderAppendable;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.crsh.text.LineReader;
+import org.crsh.text.LineRenderer;
+import org.crsh.text.RenderAppendable;
 
 class TreeLineRenderer extends LineRenderer {
 
-  /** . */
   private final LineRenderer value;
 
-  /** . */
   private final List<LineRenderer> children;
 
   TreeLineRenderer(TreeElement tree) {
@@ -79,19 +76,16 @@ class TreeLineRenderer extends LineRenderer {
   @Override
   public LineReader reader(final int width) {
 
-
-    final LinkedList<LineReader> readers  = new LinkedList<LineReader>();
+    final LinkedList<LineReader> readers = new LinkedList<LineReader>();
     for (LineRenderer child : children) {
       readers.addLast(child.reader(width - 2));
     }
 
-    //
     return new LineReader() {
 
-      /** . */
-      LineReader value = TreeLineRenderer.this.value != null ? TreeLineRenderer.this.value.reader(width) : null;
+      LineReader value =
+          TreeLineRenderer.this.value != null ? TreeLineRenderer.this.value.reader(width) : null;
 
-      /** . */
       boolean node = true;
 
       public boolean hasLine() {

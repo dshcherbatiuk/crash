@@ -19,20 +19,17 @@
 
 package org.crsh.text.renderers;
 
-import org.crsh.text.LineRenderer;
-import org.crsh.text.Renderer;
-import org.crsh.text.ui.LabelElement;
-import org.crsh.text.ui.Overflow;
-import org.crsh.text.ui.RowElement;
-import org.crsh.text.ui.TableElement;
-import org.crsh.util.Utils;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import org.crsh.text.LineRenderer;
+import org.crsh.text.Renderer;
+import org.crsh.text.ui.Overflow;
+import org.crsh.text.ui.TableElement;
+import org.crsh.util.Utils;
 
 public class FileRenderer extends Renderer<File> {
 
@@ -51,25 +48,18 @@ public class FileRenderer extends Renderer<File> {
     SimpleDateFormat format = new SimpleDateFormat("MMM dd HH:mm");
     Date date = new Date();
 
-    //
     for (File file : files) {
-      String mode = (file.isDirectory() ? "d" : "-")
-          + (file.canRead() ? "r" : "-")
-          + (file.canWrite() ? "w" : "-")
-          + (file.canExecute() ? "x" : "-")
-          ;
+      String mode =
+          (file.isDirectory() ? "d" : "-")
+              + (file.canRead() ? "r" : "-")
+              + (file.canWrite() ? "w" : "-")
+              + (file.canExecute() ? "x" : "-");
       String length = Long.toString(file.length());
       date.setTime(file.lastModified());
       String lastModified = format.format(date);
-      table.row(
-        mode,
-        length,
-        lastModified,
-        file.getName()
-      );
+      table.row(mode, length, lastModified, file.getName());
     }
 
-    //
     return table.renderer();
   }
 }

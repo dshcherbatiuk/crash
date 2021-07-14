@@ -40,8 +40,7 @@ package org.crsh.cli.impl.descriptor;
 
 public class IllegalParameterException extends IntrospectionException {
 
-  public IllegalParameterException() {
-  }
+  public IllegalParameterException() {}
 
   public IllegalParameterException(String message) {
     super(message);

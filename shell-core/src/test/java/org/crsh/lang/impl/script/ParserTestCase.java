@@ -53,8 +53,7 @@ public class ParserTestCase extends TestCase {
     try {
       Token.parse(s).createFactory();
       fail();
-    }
-    catch (CommandException e) {
+    } catch (CommandException e) {
       assertEquals(ErrorKind.SYNTAX, e.getErrorKind());
     }
   }

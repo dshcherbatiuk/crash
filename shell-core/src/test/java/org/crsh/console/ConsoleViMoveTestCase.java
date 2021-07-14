@@ -29,31 +29,31 @@ public class ConsoleViMoveTestCase extends AbstractConsoleTestCase {
 
   // Yank left
   public void testMoveLeft8() throws Exception {
-/*
-        console.setKeyMap(KeyMap.VI_INSERT);
-        b = (new Buffer("word"))
-            .escape()
-            .append("3y")
-            .append(left)
-            .append("p")
-            .enter();
-        assertLine("wordwor", b, true);
-*/
+    /*
+            console.setKeyMap(KeyMap.VI_INSERT);
+            b = (new Buffer("word"))
+                .escape()
+                .append("3y")
+                .append(left)
+                .append("p")
+                .enter();
+            assertLine("wordwor", b, true);
+    */
   }
 
   // Yank move right
   public void testMoveRight6() throws Exception {
     // Not implemented for the moment
-/*
-        console.setKeyMap(KeyMap.VI_INSERT);
-        b = (new Buffer("a bunch of words"))
-            .escape()
-            .append("010y")
-            .append(right)
-            .append("$p")
-            .enter();
-        assertLine("a bunch of wordsa bunch of", b, true);
-*/
+    /*
+            console.setKeyMap(KeyMap.VI_INSERT);
+            b = (new Buffer("a bunch of words"))
+                .escape()
+                .append("010y")
+                .append(right)
+                .append("$p")
+                .enter();
+            assertLine("a bunch of wordsa bunch of", b, true);
+    */
   }
 
   // Yank to EOL
@@ -69,30 +69,30 @@ public class ConsoleViMoveTestCase extends AbstractConsoleTestCase {
     console.on(Operation.END_OF_LINE);
     console.on(Operation.END_OF_LINE);
     console.on(Operation.VI_PUT);
-//    console.on(KeyEvent.of("opsticks"));
-//    assertEquals("chopsticks", getCurrentLine());
+    //    console.on(KeyEvent.of("opsticks"));
+    //    assertEquals("chopsticks", getCurrentLine());
   }
 
   public void testWordRight6() {
-/*
-        b = (new Buffer("big brown pickles"))
-            .escape()
-            .append("02yw$p")
-            .enter();
-        assertLine("big brown picklesbig brown ", b, false);
-*/
+    /*
+            b = (new Buffer("big brown pickles"))
+                .escape()
+                .append("02yw$p")
+                .enter();
+            assertLine("big brown picklesbig brown ", b, false);
+    */
   }
 
   public void test_yy1() throws Exception {
-//        /*
-//         * This tests "yy" or yank-to + yank-to, which should yank the whole line
-//         */
-//    console.setKeyMap(KeyMap.VI_INSERT);
-//    Buffer b = (new Buffer("abcdef"))
-//        .escape()
-//        .append("yyp")
-//        .enter();
-//    assertLine("abcdefabcdef", b, true);
+    //        /*
+    //         * This tests "yy" or yank-to + yank-to, which should yank the whole line
+    //         */
+    //    console.setKeyMap(KeyMap.VI_INSERT);
+    //    Buffer b = (new Buffer("abcdef"))
+    //        .escape()
+    //        .append("yyp")
+    //        .enter();
+    //    assertLine("abcdefabcdef", b, true);
   }
 
   public void testMoveModeAfterAcceptInMultiline() {
@@ -103,6 +103,5 @@ public class ConsoleViMoveTestCase extends AbstractConsoleTestCase {
     console.toMove();
     console.on(Operation.VI_MOVE_ACCEPT_LINE);
     assertEquals(Mode.VI_INSERT, console.getMode());
- }
-
+  }
 }

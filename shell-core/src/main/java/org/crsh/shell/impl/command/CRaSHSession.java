@@ -18,43 +18,39 @@
  */
 package org.crsh.shell.impl.command;
 
-import org.crsh.auth.AuthInfo;
-import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.command.ShellSafety;
-import org.crsh.command.ShellSafetyFactory;
-import org.crsh.lang.spi.Compiler;
-import org.crsh.lang.spi.Language;
-import org.crsh.lang.spi.Repl;
-import org.crsh.lang.spi.ReplResponse;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.command.RuntimeContext;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.lang.impl.script.ScriptRepl;
-import org.crsh.plugin.PluginContext;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellProcess;
-import org.crsh.shell.ShellResponse;
-
 import java.io.Closeable;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.crsh.auth.AuthInfo;
+import org.crsh.cli.impl.completion.CompletionMatch;
+import org.crsh.command.RuntimeContext;
+import org.crsh.command.ShellSafety;
+import org.crsh.command.ShellSafetyFactory;
+import org.crsh.lang.impl.script.ScriptRepl;
+import org.crsh.lang.spi.Compiler;
+import org.crsh.lang.spi.Language;
+import org.crsh.lang.spi.Repl;
+import org.crsh.lang.spi.ReplResponse;
+import org.crsh.plugin.PluginContext;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellProcess;
+import org.crsh.shell.ShellResponse;
+import org.crsh.shell.impl.command.spi.Command;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-public class CRaSHSession extends HashMap<String, Object> implements Shell, Closeable, RuntimeContext, ShellSession {
+public class CRaSHSession extends HashMap<String, Object>
+    implements Shell, Closeable, RuntimeContext, ShellSession {
 
-  /** . */
   static final Logger log = Logger.getLogger(CRaSHSession.class.getName());
 
-  /** . */
   static final Logger accessLog = Logger.getLogger("org.crsh.shell.access");
 
-  /** . */
   public final CRaSH crash;
 
-  /** . */
   final Principal user;
 
   final AuthInfo authInfo;
@@ -81,8 +77,7 @@ public class CRaSHSession extends HashMap<String, Object> implements Shell, Clos
       for (Language manager : crash.langs) {
         manager.init(this);
       }
-    }
-    finally {
+    } finally {
       setPreviousLoader(previous);
     }
   }
@@ -128,13 +123,13 @@ public class CRaSHSession extends HashMap<String, Object> implements Shell, Clos
       for (Language manager : crash.langs) {
         manager.destroy(this);
       }
-    }
-    finally {
+    } finally {
       setPreviousLoader(previous);
     }
   }
 
-  // Shell implementation **********************************************************************************************
+  // Shell implementation
+  // **********************************************************************************************
 
   public String getWelcome() {
     ClassLoader previous = setCRaSHLoader();
@@ -145,8 +140,7 @@ public class CRaSHSession extends HashMap<String, Object> implements Shell, Clos
       } else {
         return "";
       }
-    }
-    finally {
+    } finally {
       setPreviousLoader(previous);
     }
   }
@@ -160,8 +154,7 @@ public class CRaSHSession extends HashMap<String, Object> implements Shell, Clos
       } else {
         return "% ";
       }
-    }
-    finally {
+    } finally {
       setPreviousLoader(previous);
     }
   }
@@ -171,30 +164,28 @@ public class CRaSHSession extends HashMap<String, Object> implements Shell, Clos
     String trimmedRequest = request.trim();
     final StringBuilder msg = new StringBuilder();
     final ShellResponse response;
-    if (("bye".equals(trimmedRequest) || "exit".equals(trimmedRequest)) && shellSafety.permitExit()) {
+    if (("bye".equals(trimmedRequest) || "exit".equals(trimmedRequest))
+        && shellSafety.permitExit()) {
       response = ShellResponse.close();
     } else {
       ReplResponse r = repl.eval(this, request);
       if (r instanceof ReplResponse.Response) {
-        ReplResponse.Response rr = (ReplResponse.Response)r;
+        ReplResponse.Response rr = (ReplResponse.Response) r;
         response = rr.response;
       } else {
-        final CommandInvoker<Void, ?> pipeLine = ((ReplResponse.Invoke)r).invoker;
+        final CommandInvoker<Void, ?> pipeLine = ((ReplResponse.Invoke) r).invoker;
         return new CRaSHCommandProcess(this, request, pipeLine);
       }
     }
     return new CRaSHResponseProcess(this, request, msg, response);
   }
 
-  /**
-   * For now basic implementation
-   */
+  /** For now basic implementation */
   public CompletionMatch complete(final String prefix) {
     ClassLoader previous = setCRaSHLoader();
     try {
       return repl.complete(this, prefix);
-    }
-    finally {
+    } finally {
       setPreviousLoader(previous);
     }
   }
@@ -209,5 +200,4 @@ public class CRaSHSession extends HashMap<String, Object> implements Shell, Clos
   void setPreviousLoader(ClassLoader previous) {
     Thread.currentThread().setContextClassLoader(previous);
   }
-
 }

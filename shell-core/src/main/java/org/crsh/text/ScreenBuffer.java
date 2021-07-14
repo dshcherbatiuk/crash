@@ -60,11 +60,11 @@ public class ScreenBuffer implements Iterable<Object>, Serializable, Screenable 
     format.begin(appendable);
     for (Object chunk : this) {
       if (chunk instanceof Style) {
-        format.write((Style)chunk, appendable);
+        format.write((Style) chunk, appendable);
       } else if (chunk instanceof CLS) {
         format.cls(appendable);
       } else {
-        format.write((CharSequence)chunk, appendable);
+        format.write((CharSequence) chunk, appendable);
       }
     }
     format.end(appendable);
@@ -129,9 +129,9 @@ public class ScreenBuffer implements Iterable<Object>, Serializable, Screenable 
         if (chunk instanceof CLS) {
           out.cls();
         } else if (chunk instanceof CharSequence) {
-          out.append((CharSequence)chunk);
+          out.append((CharSequence) chunk);
         } else {
-          out.append((Style)chunk);
+          out.append((Style) chunk);
         }
       }
     }
@@ -156,11 +156,11 @@ public class ScreenBuffer implements Iterable<Object>, Serializable, Screenable 
       throw new NullPointerException("No null accepted");
     }
     if (o instanceof ScreenBuffer) {
-      append((ScreenBuffer)o);
+      append((ScreenBuffer) o);
     } else if (o instanceof Style) {
-      append((Style)o);
-    } else if (o instanceof CharSequence){
-      append(((CharSequence)o));
+      append((Style) o);
+    } else if (o instanceof CharSequence) {
+      append(((CharSequence) o));
     } else if (o instanceof CLS) {
       cls();
     } else {
@@ -192,7 +192,7 @@ public class ScreenBuffer implements Iterable<Object>, Serializable, Screenable 
       return true;
     }
     if (obj instanceof ScreenBuffer) {
-      ScreenBuffer that = (ScreenBuffer)obj;
+      ScreenBuffer that = (ScreenBuffer) obj;
       return toString().equals(that.toString());
     }
     return false;
@@ -203,8 +203,7 @@ public class ScreenBuffer implements Iterable<Object>, Serializable, Screenable 
     StringBuilder sb = new StringBuilder();
     try {
       format(Format.TEXT, sb);
-    }
-    catch (IOException ignore) {
+    } catch (IOException ignore) {
     }
     return sb.toString();
   }

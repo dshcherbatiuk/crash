@@ -47,8 +47,7 @@ public class ServerProcess implements ShellProcess {
     status = 1;
     try {
       server.execute(this, processContext);
-    }
-    finally {
+    } finally {
       status = 2;
     }
   }

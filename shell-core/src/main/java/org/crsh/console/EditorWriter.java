@@ -21,9 +21,7 @@ package org.crsh.console;
 
 import java.io.IOException;
 
-/**
- * Wraps {@link org.crsh.telnet.term.spi.TermIO} and care about CRLF.
- */
+/** Wraps {@link org.crsh.telnet.term.spi.TermIO} and care about CRLF. */
 class EditorWriter {
 
   /** . */
@@ -45,7 +43,7 @@ class EditorWriter {
   void write(CharSequence s) throws IOException {
     int len = s.length();
     if (len > 0) {
-      for (int i = 0;i < len;i++) {
+      for (int i = 0; i < len; i++) {
         char c = s.charAt(i);
         writeNoFlush(c);
       }

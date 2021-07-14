@@ -39,7 +39,8 @@ class GroovyClassFactory<T> extends ClassFactory<T> {
   /** . */
   final CompilerConfiguration config;
 
-  GroovyClassFactory(ClassLoader baseLoader, Class<T> baseClass, Class<? extends Script> baseScriptClass) {
+  GroovyClassFactory(
+      ClassLoader baseLoader, Class<T> baseClass, Class<? extends Script> baseScriptClass) {
     CompilerConfiguration config = new CompilerConfiguration();
     config.setRecompileGroovySource(true);
     config.setScriptBaseClass(baseScriptClass.getName());
@@ -57,19 +58,18 @@ class GroovyClassFactory<T> extends ClassFactory<T> {
       GroovyCodeSource gcs = new GroovyCodeSource(source, name, "/groovy/shell");
       GroovyClassLoader gcl = new GroovyClassLoader(baseLoader, config);
       clazz = gcl.parseClass(gcs, false);
-    }
-    catch (NoClassDefFoundError e) {
+    } catch (NoClassDefFoundError e) {
       throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
-    }
-    catch (CompilationFailedException e) {
+    } catch (CompilationFailedException e) {
       throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
     }
 
     if (baseClass.isAssignableFrom(clazz)) {
       return clazz.asSubclass(baseClass);
     } else {
-      throw new CommandException(ErrorKind.INTERNAL, "Parsed script " + clazz.getName() +
-          " does not implements " + baseClass.getName());
+      throw new CommandException(
+          ErrorKind.INTERNAL,
+          "Parsed script " + clazz.getName() + " does not implements " + baseClass.getName());
     }
   }
 }

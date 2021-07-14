@@ -18,13 +18,12 @@
  */
 package org.crsh.command.base;
 
-import org.crsh.shell.AbstractShellTestCase;
-import test.command.Commands;
-
-import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.management.ObjectName;
+import org.crsh.shell.AbstractShellTestCase;
+import test.command.Commands;
 
 /** @author Julien Viet */
 public class JMXCommandTestCase extends AbstractShellTestCase {
@@ -46,7 +45,8 @@ public class JMXCommandTestCase extends AbstractShellTestCase {
   }
 
   public void testGet() throws Exception {
-    Object version = ManagementFactory.getPlatformMBeanServer().getAttribute(OPERATING_SYSTEM, "Version");
+    Object version =
+        ManagementFactory.getPlatformMBeanServer().getAttribute(OPERATING_SYSTEM, "Version");
     lifeCycle.bindClass("consume", Commands.ConsumeObject.class);
     Commands.list.clear();
     assertOk("jmx query " + OPERATING_SYSTEM + " | jmx get -n MBean -a Version | consume");

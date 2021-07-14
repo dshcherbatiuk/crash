@@ -46,7 +46,7 @@ public class Util {
 
   static {
     String[] tmp = new String[20];
-    for (int i = 0;i < tmp.length;i++) {
+    for (int i = 0; i < tmp.length; i++) {
       tmp[i] = _tab(i);
     }
     tabIndex = tmp;
@@ -69,11 +69,13 @@ public class Util {
     return new String(tmp);
   }
 
-  public static <A extends Appendable> A indent(int tab, CharSequence s, A appendable) throws IOException {
+  public static <A extends Appendable> A indent(int tab, CharSequence s, A appendable)
+      throws IOException {
     return indent(tab(tab), s, appendable);
   }
 
-  public static <A extends Appendable> A indent(String tab, CharSequence s, A appendable) throws IOException {
+  public static <A extends Appendable> A indent(String tab, CharSequence s, A appendable)
+      throws IOException {
     Matcher matcher = INDENT_PATTERN.matcher(s);
     int prev = 0;
     while (matcher.find()) {
@@ -86,21 +88,24 @@ public class Util {
     return appendable;
   }
 
-  public static <T> Iterable<T[]> tuples(final Class<T> type, final Iterable<? extends T>... iterables) {
+  public static <T> Iterable<T[]> tuples(
+      final Class<T> type, final Iterable<? extends T>... iterables) {
     return new Iterable<T[]>() {
       public Iterator<T[]> iterator() {
         return new Iterator<T[]>() {
           private final Iterator<?>[] iterators = new Iterator<?>[iterables.length];
           private T[] next;
+
           {
-            for (int i = 0;i < iterables.length;i++) {
+            for (int i = 0; i < iterables.length; i++) {
               iterators[i] = iterables[i].iterator();
             }
           }
+
           public boolean hasNext() {
             if (next == null) {
-              T[] tuple = (T[])Array.newInstance(type, 2);
-              for (int i = 0;i < iterators.length;i++) {
+              T[] tuple = (T[]) Array.newInstance(type, 2);
+              for (int i = 0; i < iterators.length; i++) {
                 Iterator iterator = iterators[i];
                 if (iterator.hasNext()) {
                   tuple[i] = type.cast(iterator.next());
@@ -112,6 +117,7 @@ public class Util {
             }
             return true;
           }
+
           public T[] next() {
             if (!hasNext()) {
               throw new NoSuchElementException();
@@ -120,6 +126,7 @@ public class Util {
             next = null;
             return tmp;
           }
+
           public void remove() {
             throw new UnsupportedOperationException();
           }
@@ -135,6 +142,7 @@ public class Util {
           int index;
           Iterator<? extends T> current;
           T next;
+
           public boolean hasNext() {
             if (next == null) {
               while ((current == null || !current.hasNext()) && index < iterables.length) {
@@ -146,6 +154,7 @@ public class Util {
             }
             return next != null;
           }
+
           public T next() {
             if (!hasNext()) {
               throw new NoSuchElementException();
@@ -154,6 +163,7 @@ public class Util {
             next = null;
             return tmp;
           }
+
           public void remove() {
             throw new UnsupportedOperationException();
           }
@@ -175,6 +185,7 @@ public class Util {
       public <T1> T1 resolve(Class<T1> type) {
         return null;
       }
+
       @Override
       public T get() {
         return object;

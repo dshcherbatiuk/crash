@@ -19,16 +19,14 @@
 
 package org.crsh.util;
 
-import junit.framework.TestCase;
-import org.junit.Test;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import junit.framework.TestCase;
 
 public class UtilsTestCase extends TestCase {
-  
+
   public void testGlobexToRegex() throws Exception {
 
     // Plain
@@ -88,7 +86,7 @@ public class UtilsTestCase extends TestCase {
   }
 
   public void testInterpolate() {
-    Map<String,String> context = Collections.singletonMap("foo", "bar");
+    Map<String, String> context = Collections.singletonMap("foo", "bar");
     assertEquals("", Utils.interpolate("", context));
     assertEquals("$", Utils.interpolate("$", context));
     assertEquals("${foo}", Utils.interpolate("\\${foo}", context));

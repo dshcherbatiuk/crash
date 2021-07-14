@@ -18,15 +18,13 @@
  */
 package org.crsh.command.base.factory;
 
+import java.util.Iterator;
+import java.util.List;
 import javax.naming.Binding;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import java.util.Iterator;
-import java.util.List;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class Bindings implements NamingEnumeration<Binding> {
 
   Iterator<Binding> i;
@@ -34,7 +32,6 @@ public class Bindings implements NamingEnumeration<Binding> {
   Bindings(List<Binding> l) {
     i = l.iterator();
   }
-
 
   public Binding next() throws NamingException {
     return i.next();
@@ -44,8 +41,7 @@ public class Bindings implements NamingEnumeration<Binding> {
     return i.hasNext();
   }
 
-  public void close() throws NamingException {
-  }
+  public void close() throws NamingException {}
 
   public boolean hasMoreElements() {
     return i.hasNext();

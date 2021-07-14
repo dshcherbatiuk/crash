@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViDeleteTestCase extends AbstractConsoleTestCase {
 
   public void testx() throws Exception {
@@ -56,4 +54,3 @@ public class ViDeleteTestCase extends AbstractConsoleTestCase {
     assertEquals("thing delete", getCurrentLine());
   }
 }
-

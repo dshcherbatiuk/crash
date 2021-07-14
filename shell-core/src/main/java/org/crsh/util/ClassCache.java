@@ -19,28 +19,24 @@
 
 package org.crsh.util;
 
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.plugin.PluginContext;
-import org.crsh.plugin.ResourceKind;
-import org.crsh.vfs.Resource;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.crsh.plugin.PluginContext;
+import org.crsh.plugin.ResourceKind;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.vfs.Resource;
 
 public class ClassCache<T> {
 
-  /** . */
   private final ClassFactory<T> classFactory;
 
-  /** . */
-  private final Map<String, TimestampedObject<Class<? extends T>>> classes = new ConcurrentHashMap<String, TimestampedObject<Class<? extends T>>>();
+  private final Map<String, TimestampedObject<Class<? extends T>>> classes =
+      new ConcurrentHashMap<>();
 
-  /** . */
   private final PluginContext context;
 
-  /** . */
   private final ResourceKind kind;
 
   public ClassCache(PluginContext context, ClassFactory<T> classFactory, ResourceKind kind) {
@@ -61,7 +57,8 @@ public class ClassCache<T> {
     return context.loadResource(name, kind);
   }
 
-  public TimestampedObject<Class<? extends T>> getClass(String name) throws CommandException, NullPointerException {
+  public TimestampedObject<Class<? extends T>> getClass(String name)
+      throws CommandException, NullPointerException {
     if (name == null) {
       throw new NullPointerException("No null argument allowed");
     }
@@ -79,19 +76,11 @@ public class ClassCache<T> {
         }
       }
 
-      //
       if (providerRef == null) {
 
-        //
         String source;
-        try {
-          source = new String(script.getContent(), "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
-          throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
-        }
+        source = new String(script.getContent(), UTF_8);
 
-        //
         Class<? extends T> clazz = classFactory.parse(name, source);
         providerRef = new TimestampedObject<Class<? extends T>>(script.getTimestamp(), clazz);
         saveClass(name, providerRef);

@@ -18,14 +18,13 @@
  */
 package org.crsh.lang.impl.groovy.closure;
 
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.command.InvocationContext;
-import org.crsh.shell.impl.command.pipeline.PipeLine;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import org.crsh.command.InvocationContext;
+import org.crsh.shell.impl.command.pipeline.PipeLine;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
 
 /** @author Julien Viet */
 public class PipeLineInvoker {

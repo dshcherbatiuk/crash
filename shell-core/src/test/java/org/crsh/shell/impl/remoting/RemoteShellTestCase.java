@@ -19,20 +19,6 @@
 
 package org.crsh.shell.impl.remoting;
 
-import org.crsh.AbstractTestCase;
-import test.shell.base.BaseProcess;
-import test.shell.base.BaseProcessContext;
-import test.shell.base.BaseProcessFactory;
-import test.shell.base.BaseShell;
-import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.impl.Delimiter;
-import org.crsh.cli.spi.Completion;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellProcess;
-import org.crsh.shell.ShellProcessContext;
-import org.crsh.shell.ShellResponse;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -43,6 +29,19 @@ import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import org.crsh.AbstractTestCase;
+import org.crsh.cli.impl.Delimiter;
+import org.crsh.cli.impl.completion.CompletionMatch;
+import org.crsh.cli.spi.Completion;
+import org.crsh.shell.ErrorKind;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellProcess;
+import org.crsh.shell.ShellProcessContext;
+import org.crsh.shell.ShellResponse;
+import test.shell.base.BaseProcess;
+import test.shell.base.BaseProcessContext;
+import test.shell.base.BaseProcessFactory;
+import test.shell.base.BaseShell;
 
 public class RemoteShellTestCase extends AbstractTestCase {
 
@@ -108,21 +107,26 @@ public class RemoteShellTestCase extends AbstractTestCase {
 
   public void testSerialization() throws Exception {
 
-    ServerMessage message = new ServerMessage.Completion(new CompletionMatch(Delimiter.DOUBLE_QUOTE, Completion.create("pref", "ix", true)));
+    ServerMessage message =
+        new ServerMessage.Completion(
+            new CompletionMatch(Delimiter.DOUBLE_QUOTE, Completion.create("pref", "ix", true)));
     clientOOS.writeObject(message);
     clientOOS.flush();
-    ServerMessage after = (ServerMessage)serverOIS.readObject();
+    ServerMessage after = (ServerMessage) serverOIS.readObject();
     System.out.println("after = " + after);
-
   }
 
   public void testPrompt() throws Exception {
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell() {
-      @Override
-      public String getPrompt() {
-        return "foo";
-      }
-    });
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell() {
+              @Override
+              public String getPrompt() {
+                return "foo";
+              }
+            });
     t.start();
 
     //
@@ -135,12 +139,16 @@ public class RemoteShellTestCase extends AbstractTestCase {
   }
 
   public void testWelcome() throws Exception {
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell() {
-      @Override
-      public String getWelcome() {
-        return "bar";
-      }
-    });
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell() {
+              @Override
+              public String getWelcome() {
+                return "bar";
+              }
+            });
     t.start();
 
     //
@@ -153,18 +161,24 @@ public class RemoteShellTestCase extends AbstractTestCase {
   }
 
   public void testExecute() throws Exception {
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell(new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
-          @Override
-          public void process(String request, ShellProcessContext processContext) throws IOException {
-            processContext.append("juu");
-            processContext.end(ShellResponse.ok());
-          }
-        };
-      }
-    }));
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell(
+                new BaseProcessFactory() {
+                  @Override
+                  public BaseProcess create(String request) {
+                    return new BaseProcess(request) {
+                      @Override
+                      public void process(String request, ShellProcessContext processContext)
+                          throws IOException {
+                        processContext.append("juu");
+                        processContext.end(ShellResponse.ok());
+                      }
+                    };
+                  }
+                }));
     t.start();
 
     //
@@ -182,17 +196,22 @@ public class RemoteShellTestCase extends AbstractTestCase {
   }
 
   public void testClose() throws Exception {
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell(new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
-          @Override
-          protected ShellResponse execute(String request) {
-            return ShellResponse.close();
-          }
-        };
-      }
-    }));
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell(
+                new BaseProcessFactory() {
+                  @Override
+                  public BaseProcess create(String request) {
+                    return new BaseProcess(request) {
+                      @Override
+                      protected ShellResponse execute(String request) {
+                        return ShellResponse.close();
+                      }
+                    };
+                  }
+                }));
     t.start();
 
     //
@@ -209,31 +228,35 @@ public class RemoteShellTestCase extends AbstractTestCase {
   }
 
   public void testRawClose() throws Exception {
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell(new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
-          @Override
-          protected ShellResponse execute(String request) {
-            return ShellResponse.close();
-          }
-        };
-      }
-    }));
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell(
+                new BaseProcessFactory() {
+                  @Override
+                  public BaseProcess create(String request) {
+                    return new BaseProcess(request) {
+                      @Override
+                      protected ShellResponse execute(String request) {
+                        return ShellResponse.close();
+                      }
+                    };
+                  }
+                }));
     t.start();
 
     //
     serverOOS.writeObject(new ClientMessage.Execute(32, 50, ""));
     serverOOS.flush();
-    ServerMessage.End message = (ServerMessage.End)serverOIS.readObject();
+    ServerMessage.End message = (ServerMessage.End) serverOIS.readObject();
     assertInstance(ShellResponse.Close.class, message.response);
 
     // This should fail at some point
     try {
       serverOIS.readObject();
       fail();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       // OK
     }
 
@@ -246,35 +269,41 @@ public class RemoteShellTestCase extends AbstractTestCase {
     final CountDownLatch latch = new CountDownLatch(1);
     final AtomicReference<RuntimeException> ex = new AtomicReference<RuntimeException>();
 
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell(new BaseProcessFactory() {
-      int count = 0;
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
-          @Override
-          public void process(String request, final ShellProcessContext processContext) throws IOException {
-            if (count == 0) {
-              count = 1;
-              new Thread() {
-                @Override
-                public void run() {
-                  try {
-                    latch.await();
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell(
+                new BaseProcessFactory() {
+                  int count = 0;
+
+                  @Override
+                  public BaseProcess create(String request) {
+                    return new BaseProcess(request) {
+                      @Override
+                      public void process(String request, final ShellProcessContext processContext)
+                          throws IOException {
+                        if (count == 0) {
+                          count = 1;
+                          new Thread() {
+                            @Override
+                            public void run() {
+                              try {
+                                latch.await();
+                              } catch (InterruptedException e) {
+                              }
+                              processContext.end(ShellResponse.ok());
+                            }
+                          }.start();
+                          ex.set(new RuntimeException("this is a runtime exception"));
+                          throw ex.get();
+                        } else {
+                          processContext.end(ShellResponse.ok());
+                        }
+                      }
+                    };
                   }
-                  catch (InterruptedException e) {
-                  }
-                  processContext.end(ShellResponse.ok());
-                }
-              }.start();
-              ex.set(new RuntimeException("this is a runtime exception"));
-              throw ex.get();
-            } else {
-              processContext.end(ShellResponse.ok());
-            }
-          }
-        };
-      }
-    }));
+                }));
     t.start();
 
     //
@@ -282,12 +311,14 @@ public class RemoteShellTestCase extends AbstractTestCase {
     serverOOS.flush();
 
     //
-    ServerMessage.End message = (ServerMessage.End)serverOIS.readObject();
+    ServerMessage.End message = (ServerMessage.End) serverOIS.readObject();
     ShellResponse.Error error = assertInstance(ShellResponse.Error.class, message.response);
     assertEquals(ErrorKind.INTERNAL, error.getKind());
     assertInstance(Exception.class, error.getThrowable());
     assertEquals("this is a runtime exception", error.getThrowable().getMessage());
-    assertEquals(Arrays.asList(ex.get().getStackTrace()), Arrays.asList(error.getThrowable().getStackTrace()));
+    assertEquals(
+        Arrays.asList(ex.get().getStackTrace()),
+        Arrays.asList(error.getThrowable().getStackTrace()));
 
     //
     latch.countDown();
@@ -297,7 +328,7 @@ public class RemoteShellTestCase extends AbstractTestCase {
     serverOOS.flush();
 
     //
-    message = (ServerMessage.End)serverOIS.readObject();
+    message = (ServerMessage.End) serverOIS.readObject();
     assertInstance(ShellResponse.Ok.class, message.response);
 
     //
@@ -311,48 +342,53 @@ public class RemoteShellTestCase extends AbstractTestCase {
     final CountDownLatch latch = new CountDownLatch(1);
 
     //
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell(new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
-          @Override
-          public void process(String request, final ShellProcessContext processContext) throws IOException {
-            new Thread() {
-              @Override
-              public void run() {
-                synchronized (waiting) {
-                  if (waiting.get()) {
-                    waiting.notifyAll();
-                  } else {
-                    waiting.set(true);
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell(
+                new BaseProcessFactory() {
+                  @Override
+                  public BaseProcess create(String request) {
+                    return new BaseProcess(request) {
+                      @Override
+                      public void process(String request, final ShellProcessContext processContext)
+                          throws IOException {
+                        new Thread() {
+                          @Override
+                          public void run() {
+                            synchronized (waiting) {
+                              if (waiting.get()) {
+                                waiting.notifyAll();
+                              } else {
+                                waiting.set(true);
+                              }
+                              try {
+                                waiting.wait();
+                              } catch (InterruptedException e) {
+                                e.printStackTrace();
+                              }
+                            }
+                            try {
+                              processContext.append("juu");
+                              processContext.end(ShellResponse.ok());
+                            } catch (IOException e) {
+                              e.printStackTrace();
+                            }
+                            latch.countDown();
+                          }
+                        }.start();
+                      }
+
+                      @Override
+                      public void cancel() {
+                        synchronized (waiting) {
+                          waiting.notifyAll();
+                        }
+                      }
+                    };
                   }
-                  try {
-                    waiting.wait();
-                  }
-                  catch (InterruptedException e) {
-                    e.printStackTrace();
-                  }
-                }
-                try {
-                  processContext.append("juu");
-                  processContext.end(ShellResponse.ok());
-                }
-                catch (IOException e) {
-                  e.printStackTrace();
-                }
-                latch.countDown();
-              }
-            }.start();
-          }
-          @Override
-          public void cancel() {
-            synchronized (waiting) {
-              waiting.notifyAll();
-            }
-          }
-        };
-      }
-    }));
+                }));
     t.start();
 
     //
@@ -362,19 +398,21 @@ public class RemoteShellTestCase extends AbstractTestCase {
 
     //
     final AtomicReference<Throwable> error = new AtomicReference<Throwable>();
-    Thread u = new Thread() {
-      @Override
-      public void run() {
-        context.execute();
-        ShellResponse response = context.getResponse();
-        assertInstance(ShellResponse.Cancelled.class, response);
-      }
-    };
-    u.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-      public void uncaughtException(Thread t, Throwable e) {
-        error.set(e);
-      }
-    });
+    Thread u =
+        new Thread() {
+          @Override
+          public void run() {
+            context.execute();
+            ShellResponse response = context.getResponse();
+            assertInstance(ShellResponse.Cancelled.class, response);
+          }
+        };
+    u.setUncaughtExceptionHandler(
+        new Thread.UncaughtExceptionHandler() {
+          public void uncaughtException(Thread t, Throwable e) {
+            error.set(e);
+          }
+        });
     u.start();
 
     //
@@ -401,12 +439,17 @@ public class RemoteShellTestCase extends AbstractTestCase {
   }
 
   public void testComplete() {
-    ClientProcessor t = new ClientProcessor(clientOIS, clientOOS, new BaseShell() {
-      @Override
-      public CompletionMatch complete(String prefix) {
-        return new CompletionMatch(Delimiter.DOUBLE_QUOTE, Completion.create(prefix, "ix", true));
-      }
-    });
+    ClientProcessor t =
+        new ClientProcessor(
+            clientOIS,
+            clientOOS,
+            new BaseShell() {
+              @Override
+              public CompletionMatch complete(String prefix) {
+                return new CompletionMatch(
+                    Delimiter.DOUBLE_QUOTE, Completion.create(prefix, "ix", true));
+              }
+            });
     t.start();
 
     //

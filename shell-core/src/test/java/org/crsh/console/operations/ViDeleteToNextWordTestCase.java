@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViDeleteToNextWordTestCase extends AbstractConsoleTestCase {
 
   public void testWordRight7() {
@@ -39,5 +37,4 @@ public class ViDeleteToNextWordTestCase extends AbstractConsoleTestCase {
     console.on(KeyStrokes.of("green"));
     assertEquals("big green pickles", getCurrentLine());
   }
-
 }

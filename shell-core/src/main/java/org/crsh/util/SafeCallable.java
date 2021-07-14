@@ -20,9 +20,7 @@ package org.crsh.util;
 
 import java.util.concurrent.Callable;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public interface SafeCallable<V> extends Callable<V> {
 
   @Override

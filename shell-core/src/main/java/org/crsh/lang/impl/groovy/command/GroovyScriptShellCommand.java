@@ -20,6 +20,8 @@ package org.crsh.lang.impl.groovy.command;
 
 import groovy.lang.Binding;
 import groovy.lang.Closure;
+import java.io.IOException;
+import java.util.List;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.descriptor.HelpDescriptor;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
@@ -28,21 +30,17 @@ import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.spi.Completer;
 import org.crsh.command.CommandContext;
-import org.crsh.command.ShellSafety;
+import org.crsh.command.RuntimeContext;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.groovy.GroovyCommand;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.lang.impl.groovy.ast.ScriptLastStatementTransformer;
-import org.crsh.shell.impl.command.spi.CommandMatch;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.InvocationContextImpl;
-import org.crsh.command.RuntimeContext;
 import org.crsh.shell.impl.command.spi.Command;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.crsh.shell.impl.command.spi.CommandMatch;
 import org.crsh.util.Utils;
-
-import java.io.IOException;
-import java.util.List;
 
 /** @author Julien Viet */
 public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Command<Instance<T>> {
@@ -65,8 +63,7 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
     try {
       clazz.getDeclaredField(ScriptLastStatementTransformer.FIELD_NAME);
       hasExplicitReturn = true;
-    }
-    catch (NoSuchFieldException e) {
+    } catch (NoSuchFieldException e) {
       hasExplicitReturn = false;
     }
 
@@ -107,10 +104,10 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
     T command;
     try {
       command = clazz.newInstance();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       String name = clazz.getSimpleName();
-      throw new CommandException(ErrorKind.INTERNAL, "Could not create command " + name + " instance", e);
+      throw new CommandException(
+          ErrorKind.INTERNAL, "Could not create command " + name + " instance", e);
     }
     return command;
   }
@@ -135,10 +132,14 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
         return Void.class;
       }
 
-      public void open(CommandContext<? super Object> consumer) throws IOException, CommandException {
+      public void open(CommandContext<? super Object> consumer)
+          throws IOException, CommandException {
 
         // Set the context
-        context = new InvocationContextImpl<Object>((CommandContext<Object>)consumer, ShellSafetyFactory.getCurrentThreadShellSafety());
+        context =
+            new InvocationContextImpl<>(
+                consumer,
+                ShellSafetyFactory.getCurrentThreadShellSafety());
 
         // Set up current binding
         Binding binding = new Binding(consumer.getSession());
@@ -148,7 +149,6 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
 
         //
         command.setBinding(binding);
-
 
         //
         command.pushContext(context);
@@ -160,7 +160,7 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
 
           // Evaluate the closure
           if (ret instanceof Closure) {
-            Closure closure = (Closure)ret;
+            Closure closure = (Closure) ret;
             ret = closure.call(args);
           }
 
@@ -170,8 +170,7 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
               context.provide(ret);
             }
           }
-        }
-        catch (Exception t) {
+        } catch (Exception t) {
           throw new CommandException(ErrorKind.EVALUATION, GroovyCommand.unwrap(t));
         }
       }
@@ -190,6 +189,4 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
       }
     };
   }
-
-
 }

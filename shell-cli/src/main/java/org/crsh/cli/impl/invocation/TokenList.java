@@ -18,22 +18,18 @@
  */
 package org.crsh.cli.impl.invocation;
 
-import org.crsh.cli.impl.tokenizer.Token;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.crsh.cli.impl.tokenizer.Token;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 class TokenList implements Iterable<Token> {
 
   /** . */
   final ArrayList<Token> list = new ArrayList<Token>();
 
-  TokenList() {
-  }
+  TokenList() {}
 
   TokenList(Iterable<Token> tokens) {
     for (Token token : tokens) {
@@ -65,7 +61,7 @@ class TokenList implements Iterable<Token> {
       Object first = value.get(0);
       if (first instanceof Boolean) {
         for (Object o : value) {
-          if ((Boolean)o) {
+          if ((Boolean) o) {
             addOption(name);
           }
         }

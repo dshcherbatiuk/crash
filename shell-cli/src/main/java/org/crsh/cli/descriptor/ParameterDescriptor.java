@@ -38,18 +38,17 @@
 
 package org.crsh.cli.descriptor;
 
-import org.crsh.cli.impl.descriptor.IllegalParameterException;
-import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.impl.Multiplicity;
-import org.crsh.cli.impl.ParameterType;
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.completers.EmptyCompleter;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.type.ValueType;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import org.crsh.cli.completers.EmptyCompleter;
+import org.crsh.cli.impl.Multiplicity;
+import org.crsh.cli.impl.ParameterType;
+import org.crsh.cli.impl.SyntaxException;
+import org.crsh.cli.impl.descriptor.IllegalParameterException;
+import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
+import org.crsh.cli.spi.Completer;
+import org.crsh.cli.type.ValueType;
 
 public abstract class ParameterDescriptor {
 
@@ -68,7 +67,7 @@ public abstract class ParameterDescriptor {
   /** . */
   private final Class<? extends Completer> completerType;
 
-  /** The annotation when it exists.  */
+  /** The annotation when it exists. */
   private final Annotation annotation;
 
   /** . */
@@ -81,7 +80,8 @@ public abstract class ParameterDescriptor {
       boolean password,
       boolean unquote,
       Class<? extends Completer> completerType,
-      Annotation annotation) throws IllegalValueTypeException, IllegalParameterException {
+      Annotation annotation)
+      throws IllegalValueTypeException, IllegalParameterException {
 
     //
     if (completerType == EmptyCompleter.class) {

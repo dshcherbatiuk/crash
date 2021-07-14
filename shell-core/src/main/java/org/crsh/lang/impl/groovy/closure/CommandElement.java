@@ -18,15 +18,14 @@
  */
 package org.crsh.lang.impl.groovy.closure;
 
-import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.shell.impl.command.spi.CommandInvoker;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.crsh.shell.impl.command.spi.Command;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandInvoker;
 
 /** @author Julien Viet */
 class CommandElement extends PipeLineElement {
@@ -104,11 +103,18 @@ class CommandElement extends PipeLineElement {
     if (subordinate == null) {
       return new CommandElement(this.commandName, this.command, nextOptions, null, null, nextArgs);
     } else {
-      return new CommandElement(this.commandName, this.command, this.options, subordinate, nextOptions, nextArgs);
+      return new CommandElement(
+          this.commandName, this.command, this.options, subordinate, nextOptions, nextArgs);
     }
   }
 
-  private CommandElement(String commandName, Command<?> command, Map<String, Object> options, String subordinate, Map<String, Object> subordinateOptions, List<Object> args) {
+  private CommandElement(
+      String commandName,
+      Command<?> command,
+      Map<String, Object> options,
+      String subordinate,
+      Map<String, Object> subordinateOptions,
+      List<Object> args) {
     this.commandName = commandName;
     this.command = command;
     this.options = options;
@@ -139,7 +145,8 @@ class CommandElement extends PipeLineElement {
     if (hasOptions || hasArguments) {
       buffer.append(" {");
       if (hasOptions) {
-        for (Iterator<Map.Entry<String, Object>> i = subordinateOptions.entrySet().iterator();i.hasNext();) {
+        for (Iterator<Map.Entry<String, Object>> i = subordinateOptions.entrySet().iterator();
+            i.hasNext(); ) {
           Map.Entry<String, Object> option = i.next();
           buffer.append(' ').append(option.getKey()).append('=');
           format(option.getValue(), buffer);
@@ -153,7 +160,7 @@ class CommandElement extends PipeLineElement {
       }
       if (hasArguments) {
         buffer.append(" [");
-        for (Iterator<Object> i = args.iterator();i.hasNext();) {
+        for (Iterator<Object> i = args.iterator(); i.hasNext(); ) {
           Object arg = i.next();
           format(arg, buffer);
           if (i.hasNext()) {

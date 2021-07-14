@@ -62,9 +62,7 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     }
   }
 
-  /**
-   * Reset the buffer state.
-   */
+  /** Reset the buffer state. */
   void reset() {
     this.lines.clear();
     this.cursor = 0;
@@ -100,16 +98,12 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     return current.charAt(index);
   }
 
-  /**
-   * @return the current line
-   */
+  /** @return the current line */
   public String getLine() {
     return current.toString();
   }
 
-  /**
-   * @return the lines
-   */
+  /** @return the lines */
   public List<String> getLines() {
     ArrayList<String> tmp = new ArrayList<String>(lines.size() + 1);
     tmp.addAll(lines);
@@ -117,7 +111,8 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     return tmp;
   }
 
-  // Iterator<String> implementation ***********************************************************************************
+  // Iterator<String> implementation
+  // ***********************************************************************************
 
   @Override
   public boolean hasNext() {
@@ -137,7 +132,8 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     throw new UnsupportedOperationException();
   }
 
-  // Appendable implementation *****************************************************************************************
+  // Appendable implementation
+  // *****************************************************************************************
 
   public EditorBuffer append(char c) throws IOException {
     appendData(Character.toString(c), 0, 1);
@@ -153,7 +149,8 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     return this;
   }
 
-  // Protected methods *************************************************************************************************
+  // Protected methods
+  // *************************************************************************************************
 
   /**
    * Replace all the characters before the cursor by the provided char sequence.
@@ -164,8 +161,8 @@ final class EditorBuffer implements Appendable, Iterator<String> {
    */
   String replace(CharSequence s) throws IOException {
     StringBuilder builder = new StringBuilder();
-    for (int i = appendDel();i != -1;i = appendDel()) {
-      builder.append((char)i);
+    for (int i = appendDel(); i != -1; i = appendDel()) {
+      builder.append((char) i);
       needFlush = true;
     }
     appendData(s, 0, s.length());
@@ -289,9 +286,10 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     // Count the number of chars
     // at the moment we ignore \r
     // since this behavior is erratic and not well defined
-    // not sure we need to handle this here... since we kind of handle it too in the ConsoleDriver.write(int)
+    // not sure we need to handle this here... since we kind of handle it too in the
+    // ConsoleDriver.write(int)
     int len = 0;
-    for (int i = start;i < end;i++) {
+    for (int i = start; i < end; i++) {
       if (s.charAt(i) != '\r') {
         len++;
       }
@@ -303,7 +301,7 @@ final class EditorBuffer implements Appendable, Iterator<String> {
       // Now insert our data
       int count = cursor;
       int size = current.length();
-      for (int i = start;i < end;i++) {
+      for (int i = start; i < end; i++) {
         char c = s.charAt(i);
         if (c != '\r') {
           current.insert(count++, c);
@@ -312,10 +310,10 @@ final class EditorBuffer implements Appendable, Iterator<String> {
       }
 
       // Now redraw what is missing and put the cursor back at the correct place
-      for (int i = cursor;i < size;i++) {
+      for (int i = cursor; i < size; i++) {
         driver.write(current.charAt(len + i));
       }
-      for (int i = cursor;i < size;i++) {
+      for (int i = cursor; i < size; i++) {
         driver.moveLeft();
       }
 
@@ -326,7 +324,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     }
   }
 
-
   /**
    * Delete the char before the cursor.
    *
@@ -336,13 +333,14 @@ final class EditorBuffer implements Appendable, Iterator<String> {
   private int appendDel() throws IOException {
 
     // If the cursor is at the most right position (i.e no more chars after)
-    if (cursor == current.length()){
+    if (cursor == current.length()) {
       int popped = pop();
 
       //
       if (popped != -1) {
         echoDel();
-        // We do not care about the return value of echoDel, but we will return a value that indcates
+        // We do not care about the return value of echoDel, but we will return a value that
+        // indcates
         // that a flush is required although it may not
         // to properly carry out the status we should have two things to return
         // 1/ the popped char
@@ -401,7 +399,7 @@ final class EditorBuffer implements Appendable, Iterator<String> {
       char popped = current.charAt(cursor - 1);
       current.deleteCharAt(cursor - 1);
       cursor--;
-     return popped;
+      return popped;
     } else {
       return -1;
     }

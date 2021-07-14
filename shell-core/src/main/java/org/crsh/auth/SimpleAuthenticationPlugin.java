@@ -19,30 +19,21 @@
 
 package org.crsh.auth;
 
+import java.util.Arrays;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PluginContext;
 import org.crsh.plugin.PropertyDescriptor;
 
-import java.util.Arrays;
-
-public class SimpleAuthenticationPlugin extends
-  CRaSHPlugin<AuthenticationPlugin> implements
-  AuthenticationPlugin<String> {
+public class SimpleAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
+    implements AuthenticationPlugin<String> {
 
   /** The username. */
   public static final PropertyDescriptor<String> SIMPLE_USERNAME =
-    PropertyDescriptor.create(
-      "auth.simple.username",
-      "admin",
-      "The username");
+      PropertyDescriptor.create("auth.simple.username", "admin", "The username");
 
   /** The password. */
   public static final PropertyDescriptor<String> SIMPLE_PASSWORD =
-    PropertyDescriptor.create(
-      "auth.simple.password",
-      "admin",
-      "The password",
-      true);
+      PropertyDescriptor.create("auth.simple.password", "admin", "The password", true);
 
   /** . */
   private String username;
@@ -52,9 +43,7 @@ public class SimpleAuthenticationPlugin extends
 
   @Override
   protected Iterable<PropertyDescriptor<?>> createConfigurationCapabilities() {
-    return Arrays.<PropertyDescriptor<?>>asList(
-      SIMPLE_USERNAME,
-      SIMPLE_PASSWORD);
+    return Arrays.asList(SIMPLE_USERNAME, SIMPLE_PASSWORD);
   }
 
   public Class<String> getCredentialType() {
@@ -77,15 +66,14 @@ public class SimpleAuthenticationPlugin extends
     return "simple";
   }
 
-  public AuthInfo authenticate(String username, String password)
-    throws Exception {
+  public AuthInfo authenticate(String username, String password) throws Exception {
     return new AuthInfo() {
       @Override
       public boolean isSuccessful() {
-        return SimpleAuthenticationPlugin.this.username != null &&
-                SimpleAuthenticationPlugin.this.password != null &&
-                SimpleAuthenticationPlugin.this.username.equals(username) &&
-                SimpleAuthenticationPlugin.this.password.equals(password);
+        return SimpleAuthenticationPlugin.this.username != null
+            && SimpleAuthenticationPlugin.this.password != null
+            && SimpleAuthenticationPlugin.this.username.equals(username)
+            && SimpleAuthenticationPlugin.this.password.equals(password);
       }
     };
   }

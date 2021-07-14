@@ -21,32 +21,31 @@ package org.crsh.util;
 
 import java.util.concurrent.Callable;
 
-/**
- * An helper for chaining statements to execute.
- */
+/** An helper for chaining statements to execute. */
 public abstract class Statement {
 
-  /** . */
   private Statement next;
 
   protected abstract void run() throws Throwable;
 
   public Statement with(final Runnable runnable) {
-    return with(new Statement() {
-      @Override
-      protected void run() throws Throwable {
-        runnable.run();
-      }
-    });
+    return with(
+        new Statement() {
+          @Override
+          protected void run() {
+            runnable.run();
+          }
+        });
   }
 
   public Statement with(final Callable<?> callable) {
-    return with(new Statement() {
-      @Override
-      protected void run() throws Throwable {
-        callable.call();
-      }
-    });
+    return with(
+        new Statement() {
+          @Override
+          protected void run() throws Throwable {
+            callable.call();
+          }
+        });
   }
 
   public Statement with(Statement callback) {
@@ -61,8 +60,7 @@ public abstract class Statement {
   public void all() {
     try {
       run();
-    }
-    catch (Throwable ignore) {
+    } catch (Throwable ignore) {
     }
     if (next != null) {
       next.all();

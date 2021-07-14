@@ -19,14 +19,13 @@
 
 package org.crsh.cli.impl.completion;
 
-import org.crsh.cli.impl.Delimiter;
-import org.crsh.cli.completers.EmptyCompleter;
-import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import org.crsh.cli.completers.EmptyCompleter;
+import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.impl.Delimiter;
+import org.crsh.cli.spi.Completer;
 
 class ParameterCompletion extends Completion {
 
@@ -42,7 +41,8 @@ class ParameterCompletion extends Completion {
   /** . */
   private final Completer completer;
 
-  public ParameterCompletion(String prefix, Delimiter delimiter, ParameterDescriptor parameter, Completer completer) {
+  public ParameterCompletion(
+      String prefix, Delimiter delimiter, ParameterDescriptor parameter, Completer completer) {
     this.prefix = prefix;
     this.delimiter = delimiter;
     this.parameter = parameter;
@@ -65,25 +65,26 @@ class ParameterCompletion extends Completion {
         Constructor<? extends Completer> ctor;
         try {
           ctor = completerType.getDeclaredConstructor();
-        }
-        catch (NoSuchMethodException ignore) {
-          throw new CompletionException("The completer " + completerType.getName() + " does not provide a no arg constructor");
+        } catch (NoSuchMethodException ignore) {
+          throw new CompletionException(
+              "The completer "
+                  + completerType.getName()
+                  + " does not provide a no arg constructor");
         }
         if (Modifier.isPublic(ctor.getModifiers())) {
           try {
             completer = ctor.newInstance();
-          }
-          catch (InstantiationException e) {
-            throw new CompletionException("The completer " + completerType.getName() + " cannot be abstract");
-          }
-          catch (InvocationTargetException e) {
+          } catch (InstantiationException e) {
+            throw new CompletionException(
+                "The completer " + completerType.getName() + " cannot be abstract");
+          } catch (InvocationTargetException e) {
             throw new CompletionException(e.getCause());
-          }
-          catch (Exception e) {
+          } catch (Exception e) {
             throw new CompletionException(e);
           }
         } else {
-          throw new CompletionException("The completer " + completerType.getName() + " constructor must be public");
+          throw new CompletionException(
+              "The completer " + completerType.getName() + " constructor must be public");
         }
       }
     }
@@ -92,8 +93,7 @@ class ParameterCompletion extends Completion {
     if (completer != null) {
       try {
         return new CompletionMatch(delimiter, completer.complete(parameter, prefix));
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new CompletionException(e);
       }
     } else {

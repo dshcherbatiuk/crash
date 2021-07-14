@@ -18,23 +18,24 @@
  */
 package org.crsh.lang.impl.java;
 
-import javax.tools.FileObject;
-import javax.tools.ForwardingJavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Set;
+import javax.tools.FileObject;
+import javax.tools.ForwardingJavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.StandardLocation;
 
 /** @author Julien Viet */
 class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileManager> {
 
   /** . */
-  private final LinkedHashMap<String, JavaClassFileObject> classes = new LinkedHashMap<String, JavaClassFileObject>();
+  private final LinkedHashMap<String, JavaClassFileObject> classes =
+      new LinkedHashMap<>();
 
   /** . */
   private final ClasspathResolver finder;
@@ -52,34 +53,34 @@ class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileMana
 
   @Override
   public boolean hasLocation(Location location) {
-    return location == StandardLocation.CLASS_PATH || location == StandardLocation.PLATFORM_CLASS_PATH;
+    return location == StandardLocation.CLASS_PATH
+        || location == StandardLocation.PLATFORM_CLASS_PATH;
   }
 
   @Override
   public String inferBinaryName(Location location, JavaFileObject file) {
     if (file instanceof NodeJavaFileObject) {
-      return ((NodeJavaFileObject)file).binaryName;
-    }
-    else {
+      return ((NodeJavaFileObject) file).binaryName;
+    } else {
       return fileManager.inferBinaryName(location, file);
     }
   }
 
   @Override
-  public Iterable<JavaFileObject> list(Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
+  public Iterable<JavaFileObject> list(
+      Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse)
+      throws IOException {
     if (location == StandardLocation.PLATFORM_CLASS_PATH) {
       return fileManager.list(location, packageName, kinds, recurse);
-    }
-    else if (location == StandardLocation.CLASS_PATH && kinds.contains(JavaFileObject.Kind.CLASS)) {
+    } else if (location == StandardLocation.CLASS_PATH
+        && kinds.contains(JavaFileObject.Kind.CLASS)) {
       if (packageName.startsWith("java")) {
         return fileManager.list(location, packageName, kinds, recurse);
-      }
-      else {
+      } else {
         try {
           Iterable<JavaFileObject> ret = finder.resolve(packageName, recurse);
           return ret;
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
           throw new IOException(e);
         }
       }
@@ -89,7 +90,9 @@ class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileMana
   }
 
   @Override
-  public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind, FileObject sibling) throws IOException {
+  public JavaFileObject getJavaFileForOutput(
+      Location location, String className, JavaFileObject.Kind kind, FileObject sibling)
+      throws IOException {
 
     if (location != StandardLocation.CLASS_OUTPUT) {
       throw new IOException("Location " + location + " not supported");
@@ -103,8 +106,7 @@ class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileMana
     if (clazz == null) {
       try {
         classes.put(className, clazz = new JavaClassFileObject(className));
-      }
-      catch (URISyntaxException e) {
+      } catch (URISyntaxException e) {
         throw new IOException(e);
       }
     }

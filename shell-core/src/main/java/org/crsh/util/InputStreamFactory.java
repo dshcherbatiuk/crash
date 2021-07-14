@@ -32,5 +32,4 @@ public interface InputStreamFactory {
    * @throws IOException any io exception that would prevent the stream to be opened
    */
   InputStream open() throws IOException;
-
 }

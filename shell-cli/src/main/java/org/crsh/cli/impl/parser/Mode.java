@@ -39,9 +39,7 @@
 package org.crsh.cli.impl.parser;
 
 public enum Mode {
-
   INVOKE,
 
   COMPLETE
-
 }

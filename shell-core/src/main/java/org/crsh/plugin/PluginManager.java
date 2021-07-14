@@ -19,11 +19,10 @@
 
 package org.crsh.plugin;
 
-import org.crsh.util.Utils;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.crsh.util.Utils;
 
 class PluginManager {
 
@@ -83,8 +82,7 @@ class PluginManager {
               plugin.init();
               log.log(Level.INFO, "Initialized plugin " + plugin);
               status = CRaSHPlugin.INITIALIZED;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               log.log(Level.SEVERE, "Could not initialize plugin " + plugin, e);
             } finally {
               plugin.status = status;

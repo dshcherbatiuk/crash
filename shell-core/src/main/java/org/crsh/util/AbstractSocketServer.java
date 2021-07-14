@@ -93,8 +93,7 @@ public abstract class AbstractSocketServer implements Closeable {
       Utils.close(socket);
       Utils.close(in);
       Utils.close(out);
-    }
-    finally {
+    } finally {
       this.socket = null;
       this.in = null;
       this.out = null;

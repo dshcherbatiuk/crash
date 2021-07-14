@@ -18,6 +18,8 @@
  */
 package org.crsh.lang.impl.java;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.descriptor.HelpDescriptor;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
@@ -33,9 +35,6 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandMatch;
 import org.crsh.util.Utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-
 /** @author Julien Viet */
 public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T>> {
 
@@ -44,6 +43,7 @@ public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T
 
   /** . */
   private final CommandDescriptor<Instance<T>> descriptor;
+
   private final ShellSafety shellSafety;
 
   public ClassShellCommand(Class<T> clazz, ShellSafety shellSafety) throws IntrospectionException {
@@ -61,7 +61,7 @@ public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T
     final T command = createCommand();
     if (command instanceof Completer) {
       command.context = context;
-      return (Completer)command;
+      return (Completer) command;
     } else {
       return null;
     }
@@ -71,7 +71,7 @@ public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T
   protected CommandMatch<?, ?> resolve(InvocationMatch<Instance<T>> match) {
 
     // Cast to the object invoker
-    org.crsh.cli.impl.invocation.CommandInvoker<Instance<T>,?> invoker = match.getInvoker();
+    org.crsh.cli.impl.invocation.CommandInvoker<Instance<T>, ?> invoker = match.getInvoker();
 
     // Do we have a pipe command or not ?
     if (Pipe.class.isAssignableFrom(invoker.getReturnType())) {
@@ -89,13 +89,14 @@ public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T
 
       // Override produced type from InvocationContext<P> if any
       if (invoker instanceof ObjectCommandInvoker) {
-        ObjectCommandInvoker<T, ?> objectInvoker = (ObjectCommandInvoker<T, ?>)invoker;
+        ObjectCommandInvoker<T, ?> objectInvoker = (ObjectCommandInvoker<T, ?>) invoker;
         Class<?>[] parameterTypes = objectInvoker.getParameterTypes();
-        for (int i = 0;i < parameterTypes.length;i++) {
+        for (int i = 0; i < parameterTypes.length; i++) {
           Class<?> parameterType = parameterTypes[i];
           if (InvocationContext.class.isAssignableFrom(parameterType)) {
             Type contextGenericParameterType = objectInvoker.getGenericParameterTypes()[i];
-            producedType = Utils.resolveToClass(contextGenericParameterType, InvocationContext.class, 0);
+            producedType =
+                Utils.resolveToClass(contextGenericParameterType, InvocationContext.class, 0);
             break;
           }
         }
@@ -110,24 +111,26 @@ public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T
     T command;
     try {
       command = clazz.getConstructor().newInstance();
-    }
-    catch (InvocationTargetException e) {
+    } catch (InvocationTargetException e) {
       String name = clazz.getSimpleName();
-      throw new CommandException(ErrorKind.EVALUATION, "Could not create command " + name + " instance", e.getCause());
-    }
-    catch (Exception e) {
+      throw new CommandException(
+          ErrorKind.EVALUATION, "Could not create command " + name + " instance", e.getCause());
+    } catch (Exception e) {
       String name = clazz.getSimpleName();
-      throw new CommandException(ErrorKind.INTERNAL, "Could not create command " + name + " instance", e);
+      throw new CommandException(
+          ErrorKind.INTERNAL, "Could not create command " + name + " instance", e);
     }
     return command;
   }
 
-  private <C, P, PC extends Pipe<C, P>> CommandMatch<C, P> getPipeInvoker(final org.crsh.cli.impl.invocation.CommandInvoker<Instance<T>, PC> invoker) {
+  private <C, P, PC extends Pipe<C, P>> CommandMatch<C, P> getPipeInvoker(
+      final org.crsh.cli.impl.invocation.CommandInvoker<Instance<T>, PC> invoker) {
     return new PipeCommandMatch<T, C, P, PC>(this, invoker);
   }
 
-  private <P> CommandMatch<Void, P> getProducerInvoker(final org.crsh.cli.impl.invocation.CommandInvoker<Instance<T>, ?> invoker, final Class<P> producedType) {
+  private <P> CommandMatch<Void, P> getProducerInvoker(
+      final org.crsh.cli.impl.invocation.CommandInvoker<Instance<T>, ?> invoker,
+      final Class<P> producedType) {
     return new ProducerCommandMatch<T, P>(this, invoker, producedType, shellSafety);
   }
-
 }

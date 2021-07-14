@@ -19,16 +19,15 @@
 
 package test.shell.sync;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicReference;
 import org.crsh.AbstractTestCase;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
-
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SyncShell implements Shell {
 
@@ -80,15 +79,16 @@ public class SyncShell implements Shell {
             public void execute(ShellProcessContext processContext) throws IllegalStateException {
               try {
                 runnable.run(request, processContext);
-              }
-              catch (Exception e) {
+              } catch (Exception e) {
                 throw AbstractTestCase.failure(e);
               }
             }
+
             @Override
             public KeyHandler getKeyHandler() throws IllegalStateException {
               return runnable.keyHandler();
             }
+
             @Override
             public void cancel() throws IllegalStateException {
               runnable.cancel();
@@ -97,8 +97,7 @@ public class SyncShell implements Shell {
         } else {
           try {
             lock.wait();
-          }
-          catch (InterruptedException e) {
+          } catch (InterruptedException e) {
             throw AbstractTestCase.failure(e);
           }
         }
@@ -111,6 +110,5 @@ public class SyncShell implements Shell {
     return completer != null ? completer.complete(prefix) : null;
   }
 
-  public void close() throws IOException {
-  }
+  public void close() throws IOException {}
 }

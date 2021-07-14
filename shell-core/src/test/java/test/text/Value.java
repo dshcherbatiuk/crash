@@ -37,7 +37,7 @@ public class Value {
     if (obj == this) {
       return true;
     } else if (obj instanceof Value) {
-      Value that = (Value)obj;
+      Value that = (Value) obj;
       return value.equals(that.value);
     } else {
       return false;

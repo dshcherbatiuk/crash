@@ -19,24 +19,19 @@
 
 package org.crsh.text.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Style;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TableElement extends Element {
 
-  /** . */
   ArrayList<RowElement> rows = new ArrayList<RowElement>();
 
-  /** . */
   protected BorderStyle border;
 
-  /** . */
   protected BorderStyle separator;
 
-  /** . */
   private Overflow overflow;
 
   /** The column layout. */
@@ -55,7 +50,7 @@ public class TableElement extends Element {
     this(Layout.flow(), Layout.flow());
   }
 
-  public TableElement(int ... columns) {
+  public TableElement(int... columns) {
     this(Layout.flow(), Layout.weighted(columns));
   }
 
@@ -223,6 +218,6 @@ public class TableElement extends Element {
 
   @Override
   public TableElement style(Style.Composite style) {
-    return (TableElement)super.style(style);
+    return (TableElement) super.style(style);
   }
 }

@@ -19,19 +19,17 @@
 
 package org.crsh;
 
+import java.io.File;
+import java.io.IOException;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.exporter.ExplodedExporter;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 
-import java.io.File;
-import java.io.IOException;
-
 public abstract class AbstractTestCase extends TestCase {
 
-  protected AbstractTestCase() {
-  }
+  protected AbstractTestCase() {}
 
   protected AbstractTestCase(String name) {
     super(name);
@@ -65,7 +63,8 @@ public abstract class AbstractTestCase extends TestCase {
     if (expectedType.isInstance(o)) {
       return expectedType.cast(o);
     } else {
-      throw failure("Was expecting the object " + o + " to be an instance of " + expectedType.getName());
+      throw failure(
+          "Was expecting the object " + o + " to be an instance of " + expectedType.getName());
     }
   }
 
@@ -75,7 +74,8 @@ public abstract class AbstractTestCase extends TestCase {
     } else if (o.getClass().equals(expectedType)) {
       return expectedType.cast(o);
     } else {
-      throw failure("Was expecting the object " + o + " to be an instance of " + expectedType.getName());
+      throw failure(
+          "Was expecting the object " + o + " to be an instance of " + expectedType.getName());
     }
   }
 
@@ -87,8 +87,7 @@ public abstract class AbstractTestCase extends TestCase {
     long before = System.currentTimeMillis();
     try {
       thread.join(timeMillis);
-    }
-    catch (InterruptedException e) {
+    } catch (InterruptedException e) {
       throw failure(e);
     }
     long after = System.currentTimeMillis();
@@ -109,8 +108,7 @@ public abstract class AbstractTestCase extends TestCase {
     File tmp;
     try {
       tmp = File.createTempFile("crash", ext);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw failure("Could not create temporary file", e);
     }
     return tmp;

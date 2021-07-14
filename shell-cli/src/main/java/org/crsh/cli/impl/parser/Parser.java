@@ -19,12 +19,11 @@
 
 package org.crsh.cli.impl.parser;
 
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.tokenizer.Tokenizer;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.impl.tokenizer.Tokenizer;
 
 public final class Parser<T> implements Iterator<Event> {
 
@@ -75,7 +74,8 @@ public final class Parser<T> implements Iterator<Event> {
 
   private void determine() {
     while (next.isEmpty()) {
-      Status.Response<T> nextStatus = status.process(new Status.Request<T>(mode, tokenizer, command));
+      Status.Response<T> nextStatus =
+          status.process(new Status.Request<T>(mode, tokenizer, command));
       if (nextStatus.status != null) {
         this.status = nextStatus.status;
       }
@@ -83,7 +83,7 @@ public final class Parser<T> implements Iterator<Event> {
         next.addAll(nextStatus.events);
       }
       if (nextStatus.command != null) {
-        command = (CommandDescriptor<T>)nextStatus.command;
+        command = nextStatus.command;
       }
     }
   }

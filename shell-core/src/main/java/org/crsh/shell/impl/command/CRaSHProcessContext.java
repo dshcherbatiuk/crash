@@ -19,34 +19,27 @@
 
 package org.crsh.shell.impl.command;
 
-import org.crsh.command.CommandContext;
-import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.text.Screenable;
-import org.crsh.text.ScreenContext;
-import org.crsh.shell.ShellProcessContext;
-import org.crsh.text.ScreenBuffer;
-import org.crsh.text.ScreenContextConsumer;
-import org.crsh.text.Style;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
+import org.crsh.command.CommandContext;
+import org.crsh.shell.ShellProcessContext;
+import org.crsh.text.ScreenBuffer;
+import org.crsh.text.ScreenContext;
+import org.crsh.text.ScreenContextConsumer;
+import org.crsh.text.Screenable;
+import org.crsh.text.Style;
 
 class CRaSHProcessContext implements CommandContext<Object>, Closeable {
 
-  /** . */
   private final CRaSHSession session;
 
-  /** . */
   private final ShellProcessContext processContext;
 
-  /** . */
   private final ScreenContextConsumer adapter;
 
-  /** . */
   private final ScreenBuffer buffer;
 
-  /** . */
   private boolean useAlternateBuffer;
 
   CRaSHProcessContext(CRaSHSession session, final ShellProcessContext processContext) {
@@ -57,51 +50,52 @@ class CRaSHProcessContext implements CommandContext<Object>, Closeable {
     final ScreenBuffer buffer = new ScreenBuffer(processContext);
 
     //
-    final ScreenContextConsumer adapter = new ScreenContextConsumer(new ScreenContext() {
-      public int getWidth() {
-        return processContext.getWidth();
-      }
+    final ScreenContextConsumer adapter =
+        new ScreenContextConsumer(
+            new ScreenContext() {
+              public int getWidth() {
+                return processContext.getWidth();
+              }
 
-      public int getHeight() {
-        return processContext.getHeight();
-      }
+              public int getHeight() {
+                return processContext.getHeight();
+              }
 
-      @Override
-      public Screenable append(CharSequence s) throws IOException {
-        buffer.append(s);
-        return this;
-      }
+              @Override
+              public Screenable append(CharSequence s) {
+                buffer.append(s);
+                return this;
+              }
 
-      @Override
-      public Appendable append(char c) throws IOException {
-        buffer.append(c);
-        return this;
-      }
+              @Override
+              public Appendable append(char c) throws IOException {
+                buffer.append(c);
+                return this;
+              }
 
-      @Override
-      public Screenable append(CharSequence csq, int start, int end) throws IOException {
-        buffer.append(csq, start, end);
-        return this;
-      }
+              @Override
+              public Screenable append(CharSequence csq, int start, int end) {
+                buffer.append(csq, start, end);
+                return this;
+              }
 
-      @Override
-      public Screenable append(Style style) throws IOException {
-        buffer.append(style);
-        return this;
-      }
+              @Override
+              public Screenable append(Style style) {
+                buffer.append(style);
+                return this;
+              }
 
-      @Override
-      public Screenable cls() throws IOException {
-        buffer.cls();
-        return this;
-      }
+              @Override
+              public Screenable cls() {
+                buffer.cls();
+                return this;
+              }
 
-      public void flush() throws IOException {
-        buffer.flush();
-      }
-    });
+              public void flush() throws IOException {
+                buffer.flush();
+              }
+            });
 
-    //
     this.session = session;
     this.processContext = processContext;
     this.adapter = adapter;

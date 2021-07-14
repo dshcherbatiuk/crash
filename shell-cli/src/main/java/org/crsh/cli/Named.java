@@ -24,8 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to name a program element, useful for overriding the name
- * of a command.
+ * This annotation can be used to name a program element, useful for overriding the name of a
+ * command.
  *
  * @author Julien Viet
  */
@@ -33,9 +33,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Named {
 
-  /**
-   * @return the name value
-   */
+  /** @return the name value */
   String value();
-
 }

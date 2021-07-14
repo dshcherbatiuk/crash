@@ -48,5 +48,4 @@ public interface Producer<P, C extends Consumer<? super P>> {
    * @throws Exception any exception
    */
   void close() throws Exception;
-
 }

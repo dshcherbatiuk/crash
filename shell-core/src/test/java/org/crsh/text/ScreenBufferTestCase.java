@@ -19,11 +19,10 @@
 
 package org.crsh.text;
 
-import org.crsh.AbstractTestCase;
-import org.crsh.util.Utils;
-
 import java.io.IOException;
 import java.util.List;
+import org.crsh.AbstractTestCase;
+import org.crsh.util.Utils;
 
 public class ScreenBufferTestCase extends AbstractTestCase {
 
@@ -70,13 +69,17 @@ public class ScreenBufferTestCase extends AbstractTestCase {
   }
 
   public void testBlend() throws IOException {
-    assertReader(new ScreenBuffer().append(Color.red.fg(),"foo", Color.red.fg(), "bar"), Color.red.fg(), "foo", "bar");
+    assertReader(
+        new ScreenBuffer().append(Color.red.fg(), "foo", Color.red.fg(), "bar"),
+        Color.red.fg(),
+        "foo",
+        "bar");
   }
 
   private void assertReader(ScreenBuffer reader, Object... expected) {
     List<Object> res = Utils.list(reader);
     assertEquals(expected.length, res.size());
-    for (int i = 0;i < expected.length;i++) {
+    for (int i = 0; i < expected.length; i++) {
       assertEquals(expected[i], res.get(i));
     }
   }

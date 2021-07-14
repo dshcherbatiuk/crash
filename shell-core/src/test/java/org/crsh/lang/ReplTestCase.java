@@ -18,6 +18,9 @@
  */
 package org.crsh.lang;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
 import org.crsh.command.BaseCommand;
@@ -25,10 +28,6 @@ import org.crsh.lang.impl.groovy.GroovyLanguageProxy;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.shell.AbstractShellTestCase;
 import test.command.Commands;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /** @author Julien Viet */
 public class ReplTestCase extends AbstractShellTestCase {
@@ -132,12 +131,14 @@ public class ReplTestCase extends AbstractShellTestCase {
 
   public void testSubCommandInClosure() {
     lifeCycle.bindClass("produce", Commands.ProduceInteger.class);
-    lifeCycle.bindGroovy("toto", "public class toto {\n" +
-        "@Command\n" +
-        "public void sub(InvocationContext<String> c) {\n" +
-        "c.provide('foo');\n" +
-        "}\n" +
-        "}");
+    lifeCycle.bindGroovy(
+        "toto",
+        "public class toto {\n"
+            + "@Command\n"
+            + "public void sub(InvocationContext<String> c) {\n"
+            + "c.provide('foo');\n"
+            + "}\n"
+            + "}");
     lifeCycle.bindClass("consume", Commands.ConsumeString.class);
     assertOk("repl groovy");
     Commands.list.clear();
@@ -150,6 +151,7 @@ public class ReplTestCase extends AbstractShellTestCase {
     public String sub() {
       return "invoked";
     }
+
     @Command
     public String find() {
       return "find_invoked";
@@ -244,8 +246,8 @@ public class ReplTestCase extends AbstractShellTestCase {
     lifeCycle.bindClass("cmd", ClassOptionBindingSubordinate.class);
     assertOk("repl groovy");
     assertOk("a = cmd { o = 'foo_opt'; }");
-    //assertOk("a.sub()");
-    //assertEquals("foo_opt", Commands.Parameterized.opt);
+    // assertOk("a.sub()");
+    // assertEquals("foo_opt", Commands.Parameterized.opt);
   }
 
   public static class ClassOptionBinding extends BaseCommand {
@@ -271,7 +273,7 @@ public class ReplTestCase extends AbstractShellTestCase {
     assertOk("repl groovy");
     assertOk("a = cmd { o = 'foo_opt'; }");
     assertOk("a()");
-    //assertNotEquals("foo_opt", Commands.Parameterized.opt);
+    // assertNotEquals("foo_opt", Commands.Parameterized.opt);
   }
 
   public void testInClosure() {

@@ -19,10 +19,6 @@
 
 package org.crsh.vfs.spi.servlet;
 
-import org.crsh.util.Utils;
-import org.crsh.vfs.spi.AbstractFSDriver;
-
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +29,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.ServletContext;
+import org.crsh.util.Utils;
+import org.crsh.vfs.spi.AbstractFSDriver;
 
 public class ServletContextDriver extends AbstractFSDriver<String> {
 
@@ -75,13 +74,14 @@ public class ServletContextDriver extends AbstractFSDriver<String> {
 
   public Iterable<String> children(String parent) throws IOException {
     @SuppressWarnings("unchecked")
-    Set<String> resourcePaths = (Set<String>)ctx.getResourcePaths(parent);
-    return resourcePaths != null ? resourcePaths : Collections.<String>emptyList();
+    Set<String> resourcePaths = ctx.getResourcePaths(parent);
+    return resourcePaths != null ? resourcePaths : Collections.emptyList();
   }
 
   /**
-   * The implementation attempts to get an URL that will be valid for the file system first (when the
-   * war is usually exploded) and if it is not able, it will delegate to {@link ServletContext#getResource(String)}.
+   * The implementation attempts to get an URL that will be valid for the file system first (when
+   * the war is usually exploded) and if it is not able, it will delegate to {@link
+   * ServletContext#getResource(String)}.
    *
    * @param file the file path
    * @return the URL

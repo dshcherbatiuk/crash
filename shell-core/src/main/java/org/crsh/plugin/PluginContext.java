@@ -18,10 +18,6 @@
  */
 package org.crsh.plugin;
 
-import org.crsh.util.Utils;
-import org.crsh.vfs.FS;
-import org.crsh.vfs.Resource;
-
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +28,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.crsh.util.Utils;
+import org.crsh.vfs.FS;
+import org.crsh.vfs.Resource;
 
 public final class PluginContext {
 
@@ -69,9 +68,8 @@ public final class PluginContext {
   private final PropertyManager propertyManager;
 
   /**
-   * Create a new plugin context with preconfigured executor and scanner, this is equivalent to invoking:
-   *
-   * <code><pre>new PluginContext(
+   * Create a new plugin context with preconfigured executor and scanner, this is equivalent to
+   * invoking: <code><pre>new PluginContext(
    *    Executors.newFixedThreadPool(20),
    *    new ScheduledThreadPoolExecutor(1),
    *    discovery,
@@ -92,7 +90,8 @@ public final class PluginContext {
       Map<String, Object> attributes,
       FS cmdFS,
       FS confFS,
-      ClassLoader loader) throws NullPointerException {
+      ClassLoader loader)
+      throws NullPointerException {
     this(
         Executors.newFixedThreadPool(20),
         new ScheduledThreadPoolExecutor(1),
@@ -116,13 +115,14 @@ public final class PluginContext {
    * @throws NullPointerException if any parameter argument is null
    */
   public PluginContext(
-    ExecutorService executor,
-    ScheduledExecutorService scanner,
-    PluginDiscovery discovery,
-    Map<String, Object> attributes,
-    FS cmdFS,
-    FS confFS,
-    ClassLoader loader) throws NullPointerException {
+      ExecutorService executor,
+      ScheduledExecutorService scanner,
+      PluginDiscovery discovery,
+      Map<String, Object> attributes,
+      FS cmdFS,
+      FS confFS,
+      ClassLoader loader)
+      throws NullPointerException {
     if (executor == null) {
       throw new NullPointerException("No null executor accepted");
     }
@@ -149,7 +149,10 @@ public final class PluginContext {
     String version = null;
     try {
       Properties props = new Properties();
-      InputStream in = getClass().getClassLoader().getResourceAsStream("META-INF/maven/org.crashub/crash.shell/pom.properties");
+      InputStream in =
+          getClass()
+              .getClassLoader()
+              .getResourceAsStream("META-INF/maven/org.crashub/crash.shell/pom.properties");
       if (in != null) {
         props.load(in);
         version = props.getProperty("version");
@@ -188,9 +191,7 @@ public final class PluginContext {
     return executor;
   }
 
-  /**
-   * @return the property manager
-   */
+  /** @return the property manager */
   public PropertyManager getPropertyManager() {
     return propertyManager;
   }
@@ -208,7 +209,8 @@ public final class PluginContext {
   }
 
   /**
-   * Set a context property to a new value. If the provided value is null, then the property is removed.
+   * Set a context property to a new value. If the provided value is null, then the property is
+   * removed.
    *
    * @param desc the property descriptor
    * @param value the property value
@@ -220,7 +222,8 @@ public final class PluginContext {
   }
 
   /**
-   * Set a context property to a new value. If the provided value is null, then the property is removed.
+   * Set a context property to a new value. If the provided value is null, then the property is
+   * removed.
    *
    * @param desc the property descriptor
    * @param value the property value
@@ -228,7 +231,8 @@ public final class PluginContext {
    * @throws NullPointerException if the descriptor argument is null
    * @throws IllegalArgumentException if the string value cannot be converted to the property type
    */
-  public <T> void setProperty(PropertyDescriptor<T> desc, String value) throws NullPointerException, IllegalArgumentException {
+  public <T> void setProperty(PropertyDescriptor<T> desc, String value)
+      throws NullPointerException, IllegalArgumentException {
     propertyManager.parseProperty(desc, value);
   }
 
@@ -301,8 +305,8 @@ public final class PluginContext {
   }
 
   /**
-   * Refresh the fs system view. This is normally triggered by the periodic job but it can be manually
-   * invoked to trigger explicit refreshes.
+   * Refresh the fs system view. This is normally triggered by the periodic job but it can be
+   * manually invoked to trigger explicit refreshes.
    */
   public void refresh() {
     resourceManager.refresh();
@@ -316,11 +320,12 @@ public final class PluginContext {
       TimeUnit timeUnit = getProperty(PropertyDescriptor.VFS_REFRESH_UNIT);
       if (refreshRate != null && refreshRate > 0) {
         TimeUnit tu = timeUnit != null ? timeUnit : TimeUnit.SECONDS;
-        scannerFuture = scanner.scheduleWithFixedDelay(new Runnable() {
-          public void run() {
-            refresh();
-          }
-        }, 0, refreshRate, tu);
+        scannerFuture =
+            scanner.scheduleWithFixedDelay(
+                () -> refresh(),
+                0,
+                refreshRate,
+                tu);
       }
 
       // Init plugins

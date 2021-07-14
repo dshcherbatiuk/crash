@@ -19,25 +19,23 @@
 
 package org.crsh.text.renderers;
 
-import org.crsh.text.Color;
-import org.crsh.text.Decoration;
-import org.crsh.text.LineRenderer;
-import org.crsh.text.Renderer;
-import org.crsh.text.ui.LabelElement;
-import org.crsh.text.ui.RowElement;
-import org.crsh.text.ui.TableElement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import org.crsh.text.Color;
+import org.crsh.text.Decoration;
+import org.crsh.text.LineRenderer;
+import org.crsh.text.Renderer;
+import org.crsh.text.ui.RowElement;
+import org.crsh.text.ui.TableElement;
 
 public class MapRenderer extends Renderer<Map<?, ?>> {
 
   @Override
   public Class<Map<?, ?>> getType() {
     Object mapClass = Map.class;
-    return (Class<Map<?,?>>)mapClass;
+    return (Class<Map<?, ?>>) mapClass;
   }
 
   @Override
@@ -53,7 +51,7 @@ public class MapRenderer extends Renderer<Map<?, ?>> {
 
       Map<?, ?> row = stream.next();
 
-      if (row.size() >  0) {
+      if (row.size() > 0) {
 
         bilto.clear();
         for (Map.Entry<?, ?> entry : row.entrySet()) {

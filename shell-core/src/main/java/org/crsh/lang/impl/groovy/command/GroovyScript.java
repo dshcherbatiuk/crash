@@ -25,8 +25,7 @@ import groovy.lang.Script;
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public abstract class GroovyScript extends Script {
 
-  protected GroovyScript() {
-  }
+  protected GroovyScript() {}
 
   protected GroovyScript(Binding binding) {
     super(binding);
@@ -36,8 +35,7 @@ public abstract class GroovyScript extends Script {
   public Object getProperty(String property) {
     try {
       return super.getProperty(property);
-    }
-    catch (MissingPropertyException e) {
+    } catch (MissingPropertyException e) {
       return null;
     }
   }

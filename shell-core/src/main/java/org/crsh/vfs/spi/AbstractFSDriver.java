@@ -24,9 +24,9 @@ import java.io.IOException;
 public abstract class AbstractFSDriver<H> implements FSDriver<H> {
 
   /**
-   * A simple implementation that iterates over the children to return the one specified
-   * by the <code>name</code> argument. Subclasses can override this method to provide
-   * a more efficient implementation.
+   * A simple implementation that iterates over the children to return the one specified by the
+   * <code>name</code> argument. Subclasses can override this method to provide a more efficient
+   * implementation.
    *
    * @param handle the directory handle
    * @param name the child name

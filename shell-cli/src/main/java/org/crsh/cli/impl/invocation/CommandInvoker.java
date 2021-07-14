@@ -19,9 +19,8 @@
 
 package org.crsh.cli.impl.invocation;
 
-import org.crsh.cli.impl.SyntaxException;
-
 import java.lang.reflect.Type;
+import org.crsh.cli.impl.SyntaxException;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public abstract class CommandInvoker<C, V> {
@@ -42,5 +41,4 @@ public abstract class CommandInvoker<C, V> {
   }
 
   public abstract V invoke(C command) throws InvocationException, SyntaxException;
-
 }

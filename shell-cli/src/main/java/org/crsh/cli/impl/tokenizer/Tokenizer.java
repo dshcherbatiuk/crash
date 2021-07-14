@@ -96,5 +96,4 @@ public abstract class Tokenizer implements Iterator<Token> {
   public final int getIndex() {
     return index;
   }
-
 }

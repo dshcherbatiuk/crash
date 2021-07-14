@@ -19,17 +19,16 @@
 
 package org.crsh.cli.impl.invocation;
 
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.descriptor.OptionDescriptor;
-import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.impl.SyntaxException;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.impl.SyntaxException;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public final class InvocationMatch<T> {
@@ -80,11 +79,11 @@ public final class InvocationMatch<T> {
 
   public final <D extends ParameterDescriptor> ParameterMatch<D> getParameter(D parameter) {
     if (parameter instanceof OptionDescriptor) {
-      return (ParameterMatch<D>)options.get(parameter);
+      return (ParameterMatch<D>) options.get(parameter);
     } else {
       for (ArgumentMatch argumentMatch : arguments) {
-        if (argumentMatch.getParameter()  == parameter) {
-          return (ParameterMatch<D>)argumentMatch;
+        if (argumentMatch.getParameter() == parameter) {
+          return (ParameterMatch<D>) argumentMatch;
         }
       }
       return null;

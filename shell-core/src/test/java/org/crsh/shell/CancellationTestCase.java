@@ -19,11 +19,10 @@
 
 package org.crsh.shell;
 
-import org.crsh.AbstractTestCase;
-import test.shell.base.BaseProcessContext;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
+import org.crsh.AbstractTestCase;
+import test.shell.base.BaseProcessContext;
 
 public class CancellationTestCase extends AbstractShellTestCase {
 
@@ -42,8 +41,7 @@ public class CancellationTestCase extends AbstractShellTestCase {
       interrupLock.notifyAll();
       try {
         interrupLock.wait(10 * 1000);
-      }
-      catch (InterruptedException e) {
+      } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         interruptInterrupted = true;
       }
@@ -64,17 +62,17 @@ public class CancellationTestCase extends AbstractShellTestCase {
     //
     final BaseProcessContext ctx = create(command);
     final AtomicReference<Boolean> interrupted = new AtomicReference<Boolean>();
-    Thread t = new Thread() {
-      @Override
-      public void run() {
-        try {
-          ctx.execute();
-        }
-        finally {
-          interrupted.set(isInterrupted());
-        }
-      }
-    };
+    Thread t =
+        new Thread() {
+          @Override
+          public void run() {
+            try {
+              ctx.execute();
+            } finally {
+              interrupted.set(isInterrupted());
+            }
+          }
+        };
     t.start();
 
     //
@@ -82,8 +80,7 @@ public class CancellationTestCase extends AbstractShellTestCase {
       if (!interruptDoCancel) {
         try {
           interrupLock.wait(10 * 1000);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
           throw AbstractTestCase.failure(e);
         }
       }
@@ -107,13 +104,15 @@ public class CancellationTestCase extends AbstractShellTestCase {
   }
 
   public void testLoop() throws Exception {
-    final BaseProcessContext ctx = create("invoke " + CancellationTestCase.class.getName() + " loopCallback");
-    Thread t = new Thread() {
-      @Override
-      public void run() {
-        ctx.execute();
-      }
-    };
+    final BaseProcessContext ctx =
+        create("invoke " + CancellationTestCase.class.getName() + " loopCallback");
+    Thread t =
+        new Thread() {
+          @Override
+          public void run() {
+            ctx.execute();
+          }
+        };
 
     //
     loopLatch1 = new CountDownLatch(1);

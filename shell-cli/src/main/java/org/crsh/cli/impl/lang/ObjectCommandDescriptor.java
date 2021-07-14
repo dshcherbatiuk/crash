@@ -22,12 +22,11 @@ import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public abstract class ObjectCommandDescriptor<T> extends CommandDescriptor<Instance<T>> {
 
-  public ObjectCommandDescriptor(String name, Description description) throws IntrospectionException {
+  public ObjectCommandDescriptor(String name, Description description)
+      throws IntrospectionException {
     super(name, description);
   }
 }

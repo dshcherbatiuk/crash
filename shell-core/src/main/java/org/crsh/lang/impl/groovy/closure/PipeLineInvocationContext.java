@@ -19,18 +19,17 @@
 
 package org.crsh.lang.impl.groovy.closure;
 
+import java.io.IOException;
+import java.util.Map;
+import org.crsh.command.InvocationContext;
 import org.crsh.command.ShellSafety;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.shell.impl.command.AbstractInvocationContext;
 import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.text.Screenable;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.command.InvocationContext;
 import org.crsh.text.RenderPrintWriter;
+import org.crsh.text.Screenable;
 import org.crsh.text.Style;
-
-import java.io.IOException;
-import java.util.Map;
 
 class PipeLineInvocationContext extends AbstractInvocationContext<Object> {
 
@@ -106,7 +105,7 @@ class PipeLineInvocationContext extends AbstractInvocationContext<Object> {
 
   public Screenable cls() throws IOException {
     outter.cls();
-    return  this;
+    return this;
   }
 
   public void provide(Object element) throws Exception {

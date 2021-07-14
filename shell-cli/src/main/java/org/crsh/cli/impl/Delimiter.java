@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
 
 public enum Delimiter {
-
   EMPTY(' ') {
     @Override
-    public void escape(CharSequence s, int start, int end, Appendable appendable) throws IOException {
+    public void escape(CharSequence s, int start, int end, Appendable appendable)
+        throws IOException {
       while (start < end) {
         char c = s.charAt(start++);
         switch (c) {
@@ -43,7 +43,8 @@ public enum Delimiter {
 
   SINGLE_QUOTE('\'') {
     @Override
-    public void escape(CharSequence s, int start, int end, Appendable appendable) throws IOException {
+    public void escape(CharSequence s, int start, int end, Appendable appendable)
+        throws IOException {
       while (start < end) {
         while (start < end) {
           char c = s.charAt(start++);
@@ -60,7 +61,8 @@ public enum Delimiter {
 
   DOUBLE_QUOTE('"') {
     @Override
-    public void escape(CharSequence s, int start, int end, Appendable appendable) throws IOException {
+    public void escape(CharSequence s, int start, int end, Appendable appendable)
+        throws IOException {
       while (start < end) {
         while (start < end) {
           char c = s.charAt(start++);
@@ -91,8 +93,7 @@ public enum Delimiter {
       StringBuilder buffer = new StringBuilder();
       escape(s, buffer);
       return buffer.toString();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new UndeclaredThrowableException(e);
     }
   }
@@ -101,5 +102,6 @@ public enum Delimiter {
     escape(s, 0, s.length(), appendable);
   }
 
-  public abstract void escape(CharSequence s, int start, int end, Appendable appendable) throws IOException;
+  public abstract void escape(CharSequence s, int start, int end, Appendable appendable)
+      throws IOException;
 }

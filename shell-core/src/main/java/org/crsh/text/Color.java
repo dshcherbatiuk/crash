@@ -20,39 +20,29 @@
 package org.crsh.text;
 
 /**
- * A color representing the available ansi colors as well as an additional color {@link #def} that symbolize the
- * default color.
+ * A color representing the available ansi colors as well as an additional color {@link #def} that
+ * symbolize the default color.
  */
 public enum Color {
 
-  /** . */
   black(0),
 
-  /** . */
   red(1),
 
-  /** . */
   green(2),
 
-  /** . */
   yellow(3),
 
-  /** . */
   blue(4),
 
-  /** . */
   magenta(5),
 
-  /** . */
   cyan(6),
 
-  /** . */
   white(7),
 
-  /** . */
   def(9);
 
-  /** . */
   public final int code;
 
   public final char c;

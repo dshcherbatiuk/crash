@@ -19,19 +19,18 @@
 
 package org.crsh.plugin;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import org.crsh.util.ServletContextMap;
 import org.crsh.util.Utils;
 import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.file.FileMountFactory;
 import org.crsh.vfs.spi.servlet.WarMountFactory;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
 
 public class WebPluginLifeCycle extends Embedded implements ServletContextListener {
 
@@ -51,7 +50,8 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
   private ServletContext context;
 
   /**
-   * Returns a plugin context associated with the servlet context or null if such context does not exist.
+   * Returns a plugin context associated with the servlet context or null if such context does not
+   * exist.
    *
    * @param contextPath the context path
    * @return the associated plugin context
@@ -65,10 +65,11 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
 
   /**
    * This implementation register three file system drivers:
+   *
    * <ul>
-   *   <li><code>file</code> : the current file system</li>
-   *   <li><code>classpath</code> : the classpath</li>
-   *   <li><code>war</code> : the war content</li>
+   *   <li><code>file</code> : the current file system
+   *   <li><code>classpath</code> : the classpath
+   *   <li><code>war</code> : the war content
    * </ul>
    *
    * @return the drivers
@@ -79,8 +80,8 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
   }
 
   /**
-   * Create the service loader discovery, this can be subclassed to provide an implementation, the current
-   * implementation returns a {@link ServiceLoaderDiscovery} instance.
+   * Create the service loader discovery, this can be subclassed to provide an implementation, the
+   * current implementation returns a {@link ServiceLoaderDiscovery} instance.
    *
    * @param context the servlet context
    * @param classLoader the class loader
@@ -101,8 +102,7 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
       mountContexts.put("classpath", new ClassPathMountFactory(context.getClassLoader()));
       mountContexts.put("file", new FileMountFactory(Utils.getCurrentDirectory()));
       mountContexts.put("war", new WarMountFactory(context));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       log.log(Level.SEVERE, "Coult not initialize classpath driver", e);
       return;
     }
@@ -113,7 +113,8 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
       if (!contextMap.containsKey(contextPath)) {
         ClassLoader webAppLoader = Thread.currentThread().getContextClassLoader();
         PluginDiscovery discovery = createDiscovery(context, webAppLoader);
-        PluginContext pluginContext = start(new ServletContextMap(context), discovery, context.getClassLoader());
+        PluginContext pluginContext =
+            start(new ServletContextMap(context), discovery, context.getClassLoader());
         contextMap.put(contextPath, pluginContext);
         registered = true;
       }
@@ -121,10 +122,10 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
   }
 
   /**
-   * The path property is resolved from the servlet context parameters. When the parameter does not exist,
-   * the <code>defaultValue</code> argument is used instead, so it should not be null.
-   * After the path is resolved, it is interpolated using the JVM system properties and the syntax
-   * defined by the {@link org.crsh.util.Utils#interpolate(String, java.util.Map)} function.
+   * The path property is resolved from the servlet context parameters. When the parameter does not
+   * exist, the <code>defaultValue</code> argument is used instead, so it should not be null. After
+   * the path is resolved, it is interpolated using the JVM system properties and the syntax defined
+   * by the {@link org.crsh.util.Utils#interpolate(String, java.util.Map)} function.
    *
    * @param propertyName the property name to resolve
    * @param defaultValue the default property value
@@ -139,8 +140,9 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
   }
 
   /**
-   * @return the value returned by {@link #resolvePathProperty(String, String)} with the <code>crash.mountpointconfig.conf</code> name
-   *         and the {@link #getDefaultConfMountPointConfig()} default value
+   * @return the value returned by {@link #resolvePathProperty(String, String)} with the <code>
+   *     crash.mountpointconfig.conf</code> name and the {@link #getDefaultConfMountPointConfig()}
+   *     default value
    */
   @Override
   protected String resolveConfMountPointConfig() {
@@ -148,24 +150,21 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
   }
 
   /**
-   * @return the value returned by {@link #resolvePathProperty(String, String)} with the <code>crash.mountpointconfig.cmd</code> name
-   *         and the {@link #getDefaultCmdMountPointConfig()} default value
+   * @return the value returned by {@link #resolvePathProperty(String, String)} with the <code>
+   *     crash.mountpointconfig.cmd</code> name and the {@link #getDefaultCmdMountPointConfig()}
+   *     default value
    */
   @Override
   protected String resolveCmdMountPointConfig() {
     return resolvePathProperty("crash.mountpointconfig.cmd", getDefaultCmdMountPointConfig());
   }
 
-  /**
-   * @return <code>war:/WEB-INF/crash/commands/</code>
-   */
+  /** @return <code>war:/WEB-INF/crash/commands/</code> */
   protected String getDefaultCmdMountPointConfig() {
     return "war:/WEB-INF/crash/commands/";
   }
 
-  /**
-   * @return <code>war:/WEB-INF/crash/</code>
-   */
+  /** @return <code>war:/WEB-INF/crash/</code> */
   protected String getDefaultConfMountPointConfig() {
     return "war:/WEB-INF/crash";
   }

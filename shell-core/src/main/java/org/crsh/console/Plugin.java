@@ -23,7 +23,4 @@ package org.crsh.console;
  *
  * @author Julien Viet
  */
-class Plugin {
-
-
-}
+class Plugin {}

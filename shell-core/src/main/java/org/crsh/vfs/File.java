@@ -19,8 +19,6 @@
 
 package org.crsh.vfs;
 
-import org.crsh.vfs.spi.FSDriver;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,19 +26,16 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import org.crsh.vfs.spi.FSDriver;
 
 public final class File {
 
-  /** . */
   private final FS fs;
 
-  /** . */
   private final Path path;
 
-  /** . */
   private LinkedList<Handle<?>> handles;
 
-  /** . */
   private LinkedHashMap<String, File> children;
 
   public File(FS fs, Path path) {
@@ -121,8 +116,7 @@ public final class File {
         Handle<?> handle = null;
         try {
           handle = getHandle(driver, path);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           e.printStackTrace();
         }
         if (handle != null) {

@@ -24,8 +24,10 @@ import org.crsh.cli.descriptor.ParameterDescriptor;
 public interface Completer {
 
   /**
-   * <p>Query the completer for a set of completions for the given prefix. The returned {@link Completion} object
-   * provides the possible completion matching the prefix argument.<p>
+   * Query the completer for a set of completions for the given prefix. The returned {@link
+   * Completion} object provides the possible completion matching the prefix argument.
+   *
+   * <p>
    *
    * @param parameter the completed parameter
    * @param prefix the prefix to complete
@@ -33,5 +35,4 @@ public interface Completer {
    * @throws Exception any exception that would prevent completion to perform correctly
    */
   Completion complete(ParameterDescriptor parameter, String prefix) throws Exception;
-
 }

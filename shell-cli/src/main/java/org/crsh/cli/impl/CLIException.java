@@ -21,8 +21,7 @@ package org.crsh.cli.impl;
 
 public class CLIException extends Exception {
 
-  public CLIException() {
-  }
+  public CLIException() {}
 
   public CLIException(String message) {
     super(message);

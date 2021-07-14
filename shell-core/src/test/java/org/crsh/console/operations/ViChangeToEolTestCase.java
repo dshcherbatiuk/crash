@@ -23,9 +23,7 @@ import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViChangeToEolTestCase extends AbstractConsoleTestCase {
 
   // C is a vim extension for change-to-end-of-line

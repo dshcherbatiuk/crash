@@ -21,9 +21,7 @@ package org.crsh.console.operations;
 import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class DeleteCharTestCase extends AbstractConsoleTestCase {
 
   public void testEmacs() {

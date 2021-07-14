@@ -24,5 +24,4 @@ import org.crsh.shell.impl.command.spi.CommandException;
 public abstract class ClassFactory<T> {
 
   public abstract Class<? extends T> parse(String name, String source) throws CommandException;
-
 }

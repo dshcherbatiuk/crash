@@ -19,12 +19,11 @@
 package org.crsh.lang.impl.groovy.closure;
 
 import groovy.lang.Closure;
+import java.io.IOException;
 import org.crsh.command.CommandContext;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-
-import java.io.IOException;
 
 /** @author Julien Viet */
 public class ClosureInvoker extends CommandInvoker<Object, Object> {
@@ -68,8 +67,7 @@ public class ClosureInvoker extends CommandInvoker<Object, Object> {
       if (ret != null) {
         try {
           consumer.provide(ret);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           throw new CommandException(ErrorKind.EVALUATION, e);
         }
       }

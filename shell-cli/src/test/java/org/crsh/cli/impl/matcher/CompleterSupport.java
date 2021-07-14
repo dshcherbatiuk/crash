@@ -29,17 +29,18 @@ import org.crsh.cli.spi.Completion;
  */
 public class CompleterSupport {
 
-  public static abstract class Abstract implements Completer {
-  }
+  public abstract static class Abstract implements Completer {}
 
   public static class RuntimeException implements Completer {
-    public Completion complete(ParameterDescriptor parameter, String prefix) throws java.lang.Exception {
+    public Completion complete(ParameterDescriptor parameter, String prefix)
+        throws java.lang.Exception {
       throw new java.lang.RuntimeException();
     }
   }
 
   public static class Exception implements Completer {
-    public Completion complete(ParameterDescriptor parameter, String prefix) throws java.lang.Exception {
+    public Completion complete(ParameterDescriptor parameter, String prefix)
+        throws java.lang.Exception {
       throw new java.lang.Exception();
     }
   }
@@ -62,7 +63,7 @@ public class CompleterSupport {
     }
   }
 
-  public static abstract class Constant implements Completer {
+  public abstract static class Constant implements Completer {
 
     /** . */
     private final String value;

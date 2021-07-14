@@ -19,11 +19,10 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.LineRenderer;
-import org.crsh.text.Renderer;
-
 import java.util.Iterator;
 import java.util.LinkedList;
+import org.crsh.text.LineRenderer;
+import org.crsh.text.Renderer;
 
 public class ElementRenderer extends Renderer<Element> {
 

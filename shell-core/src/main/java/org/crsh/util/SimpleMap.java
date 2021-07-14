@@ -41,47 +41,48 @@ public abstract class SimpleMap<K, V> extends AbstractMap<K, V> {
     return entries;
   }
 
-  private AbstractSet<Entry<K, V>> entries = new AbstractSet<Entry<K, V>>() {
+  private AbstractSet<Entry<K, V>> entries =
+      new AbstractSet<Entry<K, V>>() {
 
-    @Override
-    public Iterator<Entry<K, V>> iterator() {
-      final Iterator<K> names = keys();
-      return new Iterator<Entry<K, V>>() {
-        public boolean hasNext() {
-          return names.hasNext();
-        }
-
-        public Entry<K, V> next() {
-          final K name = names.next();
-          return new Entry<K, V>() {
-            public K getKey() {
-              return name;
+        @Override
+        public Iterator<Entry<K, V>> iterator() {
+          final Iterator<K> names = keys();
+          return new Iterator<Entry<K, V>>() {
+            public boolean hasNext() {
+              return names.hasNext();
             }
 
-            public V getValue() {
-              return get(name);
+            public Entry<K, V> next() {
+              final K name = names.next();
+              return new Entry<K, V>() {
+                public K getKey() {
+                  return name;
+                }
+
+                public V getValue() {
+                  return get(name);
+                }
+
+                public V setValue(V value) {
+                  throw new UnsupportedOperationException();
+                }
+              };
             }
 
-            public V setValue(V value) {
+            public void remove() {
               throw new UnsupportedOperationException();
             }
           };
         }
 
-        public void remove() {
-          throw new UnsupportedOperationException();
+        @Override
+        public int size() {
+          int size = 0;
+          for (Iterator<K> names = keys(); names.hasNext(); ) {
+            size++;
+            names.next();
+          }
+          return size;
         }
       };
-    }
-
-    @Override
-    public int size() {
-      int size = 0;
-      for (Iterator<K> names = keys();names.hasNext();) {
-        size++;
-        names.next();
-      }
-      return size;
-    }
-  };
 }

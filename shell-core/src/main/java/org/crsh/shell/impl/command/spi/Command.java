@@ -19,6 +19,10 @@
 
 package org.crsh.shell.impl.command.spi;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Format;
 import org.crsh.cli.impl.Delimiter;
@@ -33,14 +37,7 @@ import org.crsh.cli.spi.Completion;
 import org.crsh.command.RuntimeContext;
 import org.crsh.shell.ErrorKind;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-/**
- * A command as seen by the shell.
- */
+/** A command as seen by the shell. */
 public abstract class Command<T> {
 
   /**
@@ -74,31 +71,36 @@ public abstract class Command<T> {
 
     //
     if (format instanceof Format.Man) {
-      final Format.Man man = (Format.Man)format;
-      format = new Format.Man() {
-        @Override
-        public void printSynopsisSection(CommandDescriptor<?> descriptor, Appendable stream) throws IOException {
-          man.printSynopsisSection(descriptor, stream);
+      final Format.Man man = (Format.Man) format;
+      format =
+          new Format.Man() {
+            @Override
+            public void printSynopsisSection(CommandDescriptor<?> descriptor, Appendable stream)
+                throws IOException {
+              man.printSynopsisSection(descriptor, stream);
 
-          // Extra stream section
-          if (match.getDescriptor().getSubordinates().isEmpty()) {
-            stream.append("STREAM\n");
-            stream.append(Util.MAN_TAB);
-            printFQN(descriptor, stream);
-            stream.append(" <").append(commandMatch.getConsumedType().getName()).append(", ").append(commandMatch.getProducedType().getName()).append('>');
-            stream.append("\n\n");
-          }
-        }
-      };
+              // Extra stream section
+              if (match.getDescriptor().getSubordinates().isEmpty()) {
+                stream.append("STREAM\n");
+                stream.append(Util.MAN_TAB);
+                printFQN(descriptor, stream);
+                stream
+                    .append(" <")
+                    .append(commandMatch.getConsumedType().getName())
+                    .append(", ")
+                    .append(commandMatch.getProducedType().getName())
+                    .append('>');
+                stream.append("\n\n");
+              }
+            }
+          };
     }
 
-    //
     try {
       StringBuffer buffer = new StringBuffer();
       match.getDescriptor().print(format, buffer);
       return buffer.toString();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new AssertionError(e);
     }
   }
@@ -110,13 +112,13 @@ public abstract class Command<T> {
    * @param line the original command line arguments
    * @return the completions
    */
-  public final CompletionMatch complete(RuntimeContext context, String line) throws CommandException {
+  public final CompletionMatch complete(RuntimeContext context, String line)
+      throws CommandException {
     CompletionMatcher matcher = getDescriptor().completer();
     Completer completer = getCompleter(context);
     try {
       return matcher.match(completer, line);
-    }
-    catch (CompletionException e) {
+    } catch (CompletionException e) {
       // command.log.log(Level.SEVERE, "Error during completion of line " + line, e);
       return new CompletionMatch(Delimiter.EMPTY, Completion.create());
     }
@@ -135,9 +137,9 @@ public abstract class Command<T> {
     InvocationMatch<T> match;
     try {
       match = analyzer.parse(line);
-    }
-    catch (org.crsh.cli.impl.SyntaxException e) {
-      throw new CommandException(ErrorKind.SYNTAX, "Syntax exception when evaluating " + descriptor.getName(), e);
+    } catch (org.crsh.cli.impl.SyntaxException e) {
+      throw new CommandException(
+          ErrorKind.SYNTAX, "Syntax exception when evaluating " + descriptor.getName(), e);
     }
     return describe(match, format);
   }
@@ -158,9 +160,9 @@ public abstract class Command<T> {
     InvocationMatch<T> match;
     try {
       match = analyzer.parse(line);
-    }
-    catch (org.crsh.cli.impl.SyntaxException e) {
-      throw new CommandException(ErrorKind.SYNTAX, "Syntax exception when evaluating "+ getDescriptor().getName(), e);
+    } catch (org.crsh.cli.impl.SyntaxException e) {
+      throw new CommandException(
+          ErrorKind.SYNTAX, "Syntax exception when evaluating " + getDescriptor().getName(), e);
     }
     return resolve(match);
   }
@@ -174,10 +176,14 @@ public abstract class Command<T> {
    * @param arguments arguments
    * @return the command
    */
-  public final CommandMatch<?, ?> resolveCommand(Map<String, ?> options, String subordinate, Map<String, ?> subordinateOptions, List<?> arguments) throws CommandException {
+  public final CommandMatch<?, ?> resolveCommand(
+      Map<String, ?> options,
+      String subordinate,
+      Map<String, ?> subordinateOptions,
+      List<?> arguments)
+      throws CommandException {
     InvocationMatcher<T> matcher = getDescriptor().matcher();
 
-    //
     InvocationMatch<T> match;
     try {
       if (options != null && options.size() > 0) {
@@ -198,14 +204,12 @@ public abstract class Command<T> {
         }
       }
 
-      //
       match = matcher.arguments(arguments != null ? arguments : Collections.emptyList());
-    }
-    catch (org.crsh.cli.impl.SyntaxException e) {
-      throw new CommandException(ErrorKind.EVALUATION, "Could not resolve command " + getDescriptor().getName(), e);
+    } catch (org.crsh.cli.impl.SyntaxException e) {
+      throw new CommandException(
+          ErrorKind.EVALUATION, "Could not resolve command " + getDescriptor().getName(), e);
     }
 
-    //
     return resolve(match);
   }
 }

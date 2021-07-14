@@ -19,19 +19,18 @@
 
 package org.crsh.cli.impl.completion;
 
+import java.util.List;
+import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.descriptor.ArgumentDescriptor;
 import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.descriptor.OptionDescriptor;
-import org.crsh.cli.completers.EmptyCompleter;
-import org.crsh.cli.impl.tokenizer.Token;
-import org.crsh.cli.impl.tokenizer.TokenizerImpl;
+import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.parser.Event;
 import org.crsh.cli.impl.parser.Mode;
 import org.crsh.cli.impl.parser.Parser;
+import org.crsh.cli.impl.tokenizer.Token;
+import org.crsh.cli.impl.tokenizer.TokenizerImpl;
 import org.crsh.cli.spi.Completer;
-
-import java.util.List;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public final class CompletionMatcher<T> {
@@ -51,7 +50,8 @@ public final class CompletionMatcher<T> {
     return getCompletion(completer, s).complete();
   }
 
-  private Completion argument(CommandDescriptor<?> method, Completer completer, Delimiter delimiter) {
+  private Completion argument(
+      CommandDescriptor<?> method, Completer completer, Delimiter delimiter) {
     List<? extends ArgumentDescriptor> arguments = method.getArguments();
     if (arguments.isEmpty()) {
       return new EmptyCompletion();
@@ -79,16 +79,16 @@ public final class CompletionMatcher<T> {
     while (true) {
       Event event = parser.next();
       if (event instanceof Event.Separator) {
-        separator = (Event.Separator)event;
+        separator = (Event.Separator) event;
       } else if (event instanceof Event.Stop) {
-        stop = (Event.Stop)event;
+        stop = (Event.Stop) event;
         break;
       } else if (event instanceof Event.Option) {
         last = event;
         separator = null;
       } else if (event instanceof Event.Subordinate) {
         // ABUSE!!! fixme
-        foo = (CommandDescriptor<T>)((Event.Subordinate)event).getDescriptor();
+        foo = (CommandDescriptor<T>) ((Event.Subordinate) event).getDescriptor();
         last = event;
         separator = null;
       } else if (event instanceof Event.Argument) {
@@ -99,11 +99,11 @@ public final class CompletionMatcher<T> {
 
     //
     if (stop instanceof Event.Stop.Unresolved.NoSuchOption) {
-      Event.Stop.Unresolved.NoSuchOption nso = (Event.Stop.Unresolved.NoSuchOption)stop;
+      Event.Stop.Unresolved.NoSuchOption nso = (Event.Stop.Unresolved.NoSuchOption) stop;
       return new OptionCompletion<T>(foo, nso.getToken());
     } else if (stop instanceof Event.Stop.Unresolved) {
       if (stop instanceof Event.Stop.Unresolved.TooManyArguments) {
-        Event.Stop.Unresolved.TooManyArguments tma = (Event.Stop.Unresolved.TooManyArguments)stop;
+        Event.Stop.Unresolved.TooManyArguments tma = (Event.Stop.Unresolved.TooManyArguments) stop;
         return new CommandCompletion<T>(foo, s.substring(stop.getIndex()), delimiter);
       } else {
         return new EmptyCompletion();
@@ -124,7 +124,7 @@ public final class CompletionMatcher<T> {
         }
       }
     } else if (last instanceof Event.Option) {
-      Event.Option optionEvent = (Event.Option)last;
+      Event.Option optionEvent = (Event.Option) last;
       List<Token.Literal.Word> values = optionEvent.getValues();
       OptionDescriptor option = optionEvent.getParameter();
       if (separator == null) {
@@ -144,12 +144,13 @@ public final class CompletionMatcher<T> {
         }
       }
     } else if (last instanceof Event.Argument) {
-      Event.Argument eventArgument = (Event.Argument)last;
+      Event.Argument eventArgument = (Event.Argument) last;
       ArgumentDescriptor argument = eventArgument.getParameter();
       if (separator != null) {
         switch (argument.getMultiplicity()) {
           case SINGLE:
-            List<? extends ArgumentDescriptor> arguments = eventArgument.getCommand().getArguments();
+            List<? extends ArgumentDescriptor> arguments =
+                eventArgument.getCommand().getArguments();
             int index = arguments.indexOf(argument) + 1;
             if (index < arguments.size()) {
               ArgumentDescriptor nextArg = arguments.get(index);

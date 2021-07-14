@@ -19,12 +19,11 @@
 
 package org.crsh.plugin;
 
-import org.crsh.util.Utils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+import org.crsh.util.Utils;
 
 public abstract class CRaSHPlugin<P> {
 
@@ -56,7 +55,7 @@ public abstract class CRaSHPlugin<P> {
   private List<PropertyDescriptor<?>> configurationCapabilities;
 
   protected CRaSHPlugin() {
-    this.type = (Class<P>)Utils.resolveToClass(getClass(), CRaSHPlugin.class, 0);
+    this.type = (Class<P>) Utils.resolveToClass(getClass(), CRaSHPlugin.class, 0);
     this.status = CONSTRUCTED;
     this.context = null;
   }
@@ -102,11 +101,14 @@ public abstract class CRaSHPlugin<P> {
       List<PropertyDescriptor<?>> configurationCapabilities = Collections.emptyList();
       for (PropertyDescriptor<?> pd : createConfigurationCapabilities()) {
         if (configurationCapabilities.isEmpty()) {
-          configurationCapabilities = new ArrayList<PropertyDescriptor<?>>();
+          configurationCapabilities = new ArrayList<>();
         }
         configurationCapabilities.add(pd);
       }
-      this.configurationCapabilities = configurationCapabilities.isEmpty() ? configurationCapabilities : Collections.unmodifiableList(configurationCapabilities);
+      this.configurationCapabilities =
+          configurationCapabilities.isEmpty()
+              ? configurationCapabilities
+              : Collections.unmodifiableList(configurationCapabilities);
     }
     return configurationCapabilities;
   }
@@ -118,17 +120,11 @@ public abstract class CRaSHPlugin<P> {
    */
   public abstract P getImplementation();
 
-  /**
-   * Implement this method to know about init life cycle callback.
-   */
-  public void init() throws Exception {
-  }
+  /** Implement this method to know about init life cycle callback. */
+  public void init() throws Exception {}
 
-  /**
-   * Implement this method to know about destroy life cycle callback.
-   */
-  public void destroy() {
-  }
+  /** Implement this method to know about destroy life cycle callback. */
+  public void destroy() {}
 
   @Override
   public String toString() {

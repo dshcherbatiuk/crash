@@ -23,5 +23,4 @@ package org.crsh.cli.impl.bootstrap;
 public interface CommandProvider {
 
   Class<?> getCommandClass();
-
 }

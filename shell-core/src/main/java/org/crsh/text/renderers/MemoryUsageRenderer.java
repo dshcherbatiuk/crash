@@ -19,12 +19,11 @@
 
 package org.crsh.text.renderers;
 
-import org.crsh.text.LineRenderer;
-import org.crsh.text.Renderer;
-
 import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.crsh.text.LineRenderer;
+import org.crsh.text.Renderer;
 
 public class MemoryUsageRenderer extends Renderer<MemoryUsage> {
 

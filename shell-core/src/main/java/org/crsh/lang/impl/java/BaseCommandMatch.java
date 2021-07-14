@@ -22,12 +22,10 @@ import org.crsh.cli.impl.lang.Instance;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
 import org.crsh.shell.impl.command.spi.CommandException;
-import org.crsh.shell.impl.command.spi.CommandMatch;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.crsh.shell.impl.command.spi.CommandMatch;
 
-/**
-* @author Julien Viet
-*/
+/** @author Julien Viet */
 abstract class BaseCommandMatch<T extends BaseCommand, C, P> extends CommandMatch<C, P> {
 
   /** . */

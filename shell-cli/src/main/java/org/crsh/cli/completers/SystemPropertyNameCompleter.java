@@ -18,11 +18,10 @@
  */
 package org.crsh.cli.completers;
 
+import java.util.Enumeration;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.spi.Completer;
 import org.crsh.cli.spi.Completion;
-
-import java.util.Enumeration;
 
 /**
  * A completer for system property names.
@@ -33,10 +32,10 @@ public class SystemPropertyNameCompleter implements Completer {
 
   public Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
     Completion.Builder b = new Completion.Builder(prefix);
-    for (Enumeration<Object> e = System.getProperties().keys();e.hasMoreElements();) {
+    for (Enumeration<Object> e = System.getProperties().keys(); e.hasMoreElements(); ) {
       Object key = e.nextElement();
       if (key instanceof String) {
-        String s = (String)key;
+        String s = (String) key;
         if (s.startsWith(prefix)) {
           b.add(s.substring(prefix.length()), true);
         }

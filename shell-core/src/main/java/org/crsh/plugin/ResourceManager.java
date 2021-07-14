@@ -19,11 +19,6 @@
 
 package org.crsh.plugin;
 
-import org.crsh.vfs.FS;
-import org.crsh.vfs.File;
-import org.crsh.vfs.Path;
-import org.crsh.vfs.Resource;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +31,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.crsh.vfs.FS;
+import org.crsh.vfs.File;
+import org.crsh.vfs.Path;
+import org.crsh.vfs.Resource;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class ResourceManager {
@@ -85,7 +84,8 @@ public class ResourceManager {
                 }
               }
             }
-            return Collections.singleton(new Resource(resourceId + ".groovy", buffer.toByteArray(), timestamp));
+            return Collections.singleton(
+                new Resource(resourceId + ".groovy", buffer.toByteArray(), timestamp));
           }
           break;
         case COMMAND:
@@ -133,8 +133,7 @@ public class ResourceManager {
               }
             }
           }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           e.printStackTrace();
         }
         return all;
@@ -144,8 +143,8 @@ public class ResourceManager {
   }
 
   /**
-   * Refresh the fs system view. This is normally triggered by the periodic job but it can be manually
-   * invoked to trigger explicit refreshes.
+   * Refresh the fs system view. This is normally triggered by the periodic job but it can be
+   * manually invoked to trigger explicit refreshes.
    */
   void refresh() {
     try {
@@ -158,8 +157,7 @@ public class ResourceManager {
         }
       }
       dirs = newDirs;
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

@@ -19,9 +19,8 @@
 
 package org.crsh.cli.impl.lang;
 
-import org.crsh.cli.impl.invocation.InvocationException;
-
 import java.lang.reflect.Field;
+import org.crsh.cli.impl.invocation.InvocationException;
 
 public class ClassFieldBinding implements Binding {
 
@@ -41,8 +40,7 @@ public class ClassFieldBinding implements Binding {
     try {
       field.setAccessible(true);
       field.set(target, value);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new InvocationException(e.getMessage(), e);
     }
   }

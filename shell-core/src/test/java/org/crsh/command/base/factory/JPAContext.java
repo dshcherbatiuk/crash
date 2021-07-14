@@ -21,9 +21,7 @@ package org.crsh.command.base.factory;
 import javax.naming.NamingException;
 import javax.persistence.Persistence;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class JPAContext extends EmptyContext {
   @Override
   public Object lookup(String name) throws NamingException {

@@ -19,9 +19,8 @@
 
 package org.crsh.command;
 
-import org.crsh.text.RenderPrintWriter;
-
 import java.util.LinkedList;
+import org.crsh.text.RenderPrintWriter;
 
 public abstract class AbstractCommand {
 
@@ -50,7 +49,7 @@ public abstract class AbstractCommand {
     }
 
     // Save current context (is null the first time)
-    stack.addLast((InvocationContext<?>)this.context);
+    stack.addLast((InvocationContext<?>) this.context);
 
     // Set new context
     this.context = context;
@@ -59,9 +58,9 @@ public abstract class AbstractCommand {
 
   public final InvocationContext<?> popContext() {
     if (stack != null && stack.size() > 0) {
-      InvocationContext context = (InvocationContext)this.context;
+      InvocationContext context = (InvocationContext) this.context;
       this.context = stack.removeLast();
-      this.out = this.context != null ? ((InvocationContext)this.context).getWriter() : null;
+      this.out = this.context != null ? ((InvocationContext) this.context).getWriter() : null;
       return context;
     } else {
       return null;
@@ -69,6 +68,6 @@ public abstract class AbstractCommand {
   }
 
   public final InvocationContext<?> peekContext() {
-    return (InvocationContext<?>)context;
+    return (InvocationContext<?>) context;
   }
 }

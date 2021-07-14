@@ -25,12 +25,17 @@ package org.crsh.cli.impl.line;
  */
 public final class LineParser {
 
-  public static abstract class Visitor {
-    public void onChar(int index, Quoting quoting, boolean backslash, char c) { }
+  public abstract static class Visitor {
+    public void onChar(int index, Quoting quoting, boolean backslash, char c) {}
+
     public void openStrongQuote(int index) {}
+
     public void closeStrongQuote(int index) {}
+
     public void openWeakQuote(int index) {}
+
     public void closeWeakQuote(int index) {}
+
     public void reset() {}
   }
 
@@ -75,7 +80,7 @@ public final class LineParser {
 
   public LineParser append(CharSequence s) {
     int len = s.length();
-    for (int index = 0;index < len;index++) {
+    for (int index = 0; index < len; index++) {
       append(s.charAt(index));
     }
     return this;

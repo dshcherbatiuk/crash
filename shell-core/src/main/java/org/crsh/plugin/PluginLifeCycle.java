@@ -19,18 +19,15 @@
 
 package org.crsh.plugin;
 
-import org.crsh.vfs.Resource;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.crsh.vfs.Resource;
 
-/**
- * The base class for managing the CRaSH life cycle.
- */
+/** The base class for managing the CRaSH life cycle. */
 public abstract class PluginLifeCycle {
 
   /** . */
@@ -58,7 +55,7 @@ public abstract class PluginLifeCycle {
     if (this.context != null) {
       throw new IllegalStateException("Already started");
     }
-    
+
     // Get properties from system properties
     Properties config = new Properties();
 
@@ -116,17 +113,18 @@ public abstract class PluginLifeCycle {
     context.stop();
   }
 
-  private void configureProperty(PluginContext context, Properties props, PropertyDescriptor<?> desc) {
+  private void configureProperty(
+      PluginContext context, Properties props, PropertyDescriptor<?> desc) {
     String key = "crash." + desc.name;
     String value = props.getProperty(key);
     if (value != null) {
       try {
         if (context.getProperty(desc) == null) {
-          log.log(Level.INFO, "Configuring property " + desc.name + "=" + value + " from properties");
+          log.log(
+              Level.INFO, "Configuring property " + desc.name + "=" + value + " from properties");
           context.setProperty(desc, value);
         }
-      }
-      catch (IllegalArgumentException e) {
+      } catch (IllegalArgumentException e) {
         log.log(Level.SEVERE, "Could not configure property", e);
       }
     }

@@ -19,16 +19,14 @@
 
 package org.crsh.vfs.spi.ram;
 
-import org.crsh.vfs.Path;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import org.crsh.vfs.Path;
 
 public class RAMURLStreamHandler extends URLStreamHandler {
 
-  /** . */
   private final RAMDriver driver;
 
   public RAMURLStreamHandler(RAMDriver driver) {

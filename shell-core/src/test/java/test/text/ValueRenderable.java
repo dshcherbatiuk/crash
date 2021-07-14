@@ -19,12 +19,11 @@
 
 package test.text;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 import org.crsh.text.ui.LabelElement;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ValueRenderable extends Renderer<Value> {
 

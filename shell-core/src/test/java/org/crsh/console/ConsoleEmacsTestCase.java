@@ -18,9 +18,7 @@
  */
 package org.crsh.console;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ConsoleEmacsTestCase extends AbstractConsoleTestCase {
 
   public void testInterrupt() {

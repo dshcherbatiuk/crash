@@ -38,20 +38,19 @@
 
 package org.crsh.cli.descriptor;
 
-import org.crsh.cli.impl.descriptor.IllegalParameterException;
-import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.impl.Multiplicity;
-import org.crsh.cli.impl.ParameterType;
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.type.ValueType;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
+import org.crsh.cli.impl.Multiplicity;
+import org.crsh.cli.impl.ParameterType;
+import org.crsh.cli.impl.SyntaxException;
+import org.crsh.cli.impl.descriptor.IllegalParameterException;
+import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
+import org.crsh.cli.spi.Completer;
+import org.crsh.cli.type.ValueType;
 
 public class OptionDescriptor extends ParameterDescriptor {
 
@@ -62,7 +61,7 @@ public class OptionDescriptor extends ParameterDescriptor {
   private static final BitSet B = new BitSet(256);
 
   static {
-    for (char c = 'a';c <= 'z';c++) {
+    for (char c = 'a'; c <= 'z'; c++) {
       A.set(c);
       A.set(c + 'A' - 'a');
     }
@@ -70,9 +69,11 @@ public class OptionDescriptor extends ParameterDescriptor {
     B.set('-');
   }
 
-  private static void checkChar(String s, int index, BitSet authorized) throws IllegalParameterException {
+  private static void checkChar(String s, int index, BitSet authorized)
+      throws IllegalParameterException {
     if (!authorized.get(s.charAt(index))) {
-      throw new IllegalParameterException("Option name " + s + " cannot contain "  + s.charAt(index) + " at position " + index);
+      throw new IllegalParameterException(
+          "Option name " + s + " cannot contain " + s.charAt(index) + " at position " + index);
     }
   }
 
@@ -90,15 +91,9 @@ public class OptionDescriptor extends ParameterDescriptor {
       boolean password,
       boolean unquote,
       Class<? extends Completer> completerType,
-      Annotation annotation) throws IllegalValueTypeException, IllegalParameterException {
-    super(
-        type,
-      info,
-      required,
-      password,
-      unquote,
-      completerType,
-      annotation);
+      Annotation annotation)
+      throws IllegalValueTypeException, IllegalParameterException {
+    super(type, info, required, password, unquote, completerType, annotation);
 
     //
     if (getMultiplicity() == Multiplicity.MULTI && getType() == ValueType.BOOLEAN) {
@@ -116,11 +111,12 @@ public class OptionDescriptor extends ParameterDescriptor {
         throw new IllegalParameterException("Option name cannot be empty");
       }
       if (!A.get(name.charAt(0))) {
-        throw new IllegalParameterException("Option name " + name + " cannot start with " + name.charAt(0));
+        throw new IllegalParameterException(
+            "Option name " + name + " cannot start with " + name.charAt(0));
       }
       checkChar(name, 0, A);
       checkChar(name, length - 1, A);
-      for (int i = 1;i < length - 1;i++) {
+      for (int i = 1; i < length - 1; i++) {
         checkChar(name, i, B);
       }
     }
@@ -164,7 +160,8 @@ public class OptionDescriptor extends ParameterDescriptor {
         try {
           return parse(value);
         } catch (Exception e) {
-          throw new SyntaxException("Could not parse value <" + value + "> for option " + names.get(0));
+          throw new SyntaxException(
+              "Could not parse value <" + value + "> for option " + names.get(0));
         }
       } else {
         List<Object> v = new ArrayList<Object>(values.size());
@@ -172,7 +169,8 @@ public class OptionDescriptor extends ParameterDescriptor {
           try {
             v.add(parse(value));
           } catch (Exception e) {
-            throw new SyntaxException("Could not parse value <" + value + "> for option " + names.get(0));
+            throw new SyntaxException(
+                "Could not parse value <" + value + "> for option " + names.get(0));
           }
         }
         return v;
@@ -181,8 +179,8 @@ public class OptionDescriptor extends ParameterDescriptor {
   }
 
   /**
-   * Prints the option names as an alternative of switches surrounded by a square brace,
-   * for instance:  "[-f --foo]"
+   * Prints the option names as an alternative of switches surrounded by a square brace, for
+   * instance: "[-f --foo]"
    *
    * @param writer the writer to print to
    * @throws IOException any io exception

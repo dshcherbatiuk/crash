@@ -21,9 +21,7 @@ package org.crsh.lang.impl.script;
 import org.crsh.lang.spi.Language;
 import org.crsh.plugin.CRaSHPlugin;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ScriptLanguage extends CRaSHPlugin<Language> {
 
   @Override

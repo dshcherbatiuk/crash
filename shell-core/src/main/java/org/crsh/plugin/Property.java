@@ -52,8 +52,8 @@ public class Property<T> {
   }
 
   /**
-   * @return the value formatted as a String, if the property descriptor is secret, the effective value will not
-   *         be releaved
+   * @return the value formatted as a String, if the property descriptor is secret, the effective
+   *     value will not be releaved
    */
   public String getDisplayValue() {
     return desc.secret ? "*****" : String.valueOf(value);

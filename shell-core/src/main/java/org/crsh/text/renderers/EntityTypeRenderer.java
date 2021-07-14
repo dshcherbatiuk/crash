@@ -19,15 +19,12 @@
 
 package org.crsh.text.renderers;
 
+import java.util.*;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 import org.crsh.text.ui.*;
 
-import java.util.*;
-
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class EntityTypeRenderer extends Renderer<EntityTypeRenderer.EntityTypeData> {
 
   @Override
@@ -79,21 +76,23 @@ public class EntityTypeRenderer extends Renderer<EntityTypeRenderer.EntityTypeDa
 
           for (AttributeData attributes : entityTypeData.attributes) {
             RowElement row = new RowElement();
-            row.add(attributes.name, attributes.type, "" + attributes.association, "" + attributes.collection, attributes.mapping);
+            row.add(
+                attributes.name,
+                attributes.type,
+                "" + attributes.association,
+                "" + attributes.collection,
+                attributes.mapping);
             attributeTable.add(row);
           }
 
           RowElement attributesRow = new RowElement();
           attributesRow.add(attributeTable);
           table.add(attributesRow);
-
         }
       }
-
     }
 
     return table.renderer();
-  
   }
 
   public static class EntityTypeData {
@@ -119,7 +118,6 @@ public class EntityTypeRenderer extends Renderer<EntityTypeRenderer.EntityTypeDa
     public void add(AttributeData d) {
       attributes.add(d);
     }
-    
   }
 
   public static class AttributeData {
@@ -129,13 +127,13 @@ public class EntityTypeRenderer extends Renderer<EntityTypeRenderer.EntityTypeDa
     public final Boolean collection;
     public final String mapping;
 
-    public AttributeData(String name, String type, Boolean association, Boolean collection, String mapping) {
+    public AttributeData(
+        String name, String type, Boolean association, Boolean collection, String mapping) {
       this.name = name;
       this.type = type;
       this.association = (association != null ? association : false);
       this.collection = (collection != null ? collection : false);
       this.mapping = mapping;
     }
-    
   }
 }

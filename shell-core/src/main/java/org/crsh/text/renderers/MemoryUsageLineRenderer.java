@@ -19,16 +19,14 @@
 
 package org.crsh.text.renderers;
 
+import java.lang.management.MemoryUsage;
 import org.crsh.text.Color;
 import org.crsh.text.LineReader;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.RenderAppendable;
 
-import java.lang.management.MemoryUsage;
-
 class MemoryUsageLineRenderer extends LineRenderer {
 
-  /** . */
   private final MemoryUsage usage;
 
   MemoryUsageLineRenderer(MemoryUsage usage) {
@@ -70,6 +68,7 @@ class MemoryUsageLineRenderer extends LineRenderer {
       public boolean hasLine() {
         return index < height;
       }
+
       public void renderLine(RenderAppendable to) throws IllegalStateException {
         if (!hasLine()) {
           throw new IllegalStateException();
@@ -80,7 +79,7 @@ class MemoryUsageLineRenderer extends LineRenderer {
         if (usage.getMax() > 0) {
           long a = (width * usage.getUsed()) / (usage.getMax());
           long b = (width * usage.getCommitted()) / (usage.getMax());
-          for (int i = 0;i < width;i++) {
+          for (int i = 0; i < width; i++) {
             Color current;
             if (i >= b) {
               // MAX
@@ -105,7 +104,7 @@ class MemoryUsageLineRenderer extends LineRenderer {
             to.leaveStyle();
           }
         } else {
-          for (int i = 0;i < width;i++) {
+          for (int i = 0; i < width; i++) {
             to.append(' ');
           }
         }

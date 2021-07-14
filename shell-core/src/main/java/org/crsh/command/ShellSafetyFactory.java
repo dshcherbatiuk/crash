@@ -1,28 +1,28 @@
 package org.crsh.command;
 
-
 import java.util.HashMap;
 
 public class ShellSafetyFactory {
-    static private HashMap<Long, ShellSafety> safetyByThread = new HashMap<Long, ShellSafety>();
-    static public ShellSafety getCurrentThreadShellSafety() {
-        long threadId = Thread.currentThread().getId();
-        synchronized (safetyByThread) {
-            if (safetyByThread.containsKey(threadId)) {
-                return safetyByThread.get(threadId);
-            }
-        }
+  private static HashMap<Long, ShellSafety> safetyByThread = new HashMap<Long, ShellSafety>();
 
-        ShellSafety ret = new ShellSafety();
-        ret.setSafeShell(false);
-        ret.setDefault(true);
-        return ret;
+  public static ShellSafety getCurrentThreadShellSafety() {
+    long threadId = Thread.currentThread().getId();
+    synchronized (safetyByThread) {
+      if (safetyByThread.containsKey(threadId)) {
+        return safetyByThread.get(threadId);
+      }
     }
 
-    static public void registerShellSafetyForThread(ShellSafety shellSafety) {
-        long threadId = Thread.currentThread().getId();
-        synchronized (safetyByThread) {
-            safetyByThread.put(threadId, shellSafety);
-        }
+    ShellSafety ret = new ShellSafety();
+    ret.setSafeShell(false);
+    ret.setDefault(true);
+    return ret;
+  }
+
+  public static void registerShellSafetyForThread(ShellSafety shellSafety) {
+    long threadId = Thread.currentThread().getId();
+    synchronized (safetyByThread) {
+      safetyByThread.put(threadId, shellSafety);
     }
+  }
 }

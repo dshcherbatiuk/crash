@@ -18,12 +18,10 @@
  */
 package org.crsh.command.base.factory;
 
-import javax.naming.*;
 import java.util.Hashtable;
+import javax.naming.*;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class EmptyContext implements Context {
 
   public Object lookup(Name name) throws NamingException {
@@ -34,29 +32,21 @@ public class EmptyContext implements Context {
     return null;
   }
 
-  public void bind(Name name, Object obj) throws NamingException {
-  }
+  public void bind(Name name, Object obj) throws NamingException {}
 
-  public void bind(String name, Object obj) throws NamingException {
-  }
+  public void bind(String name, Object obj) throws NamingException {}
 
-  public void rebind(Name name, Object obj) throws NamingException {
-  }
+  public void rebind(Name name, Object obj) throws NamingException {}
 
-  public void rebind(String name, Object obj) throws NamingException {
-  }
+  public void rebind(String name, Object obj) throws NamingException {}
 
-  public void unbind(Name name) throws NamingException {
-  }
+  public void unbind(Name name) throws NamingException {}
 
-  public void unbind(String name) throws NamingException {
-  }
+  public void unbind(String name) throws NamingException {}
 
-  public void rename(Name oldName, Name newName) throws NamingException {
-  }
+  public void rename(Name oldName, Name newName) throws NamingException {}
 
-  public void rename(String oldName, String newName) throws NamingException {
-  }
+  public void rename(String oldName, String newName) throws NamingException {}
 
   public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
     return null;
@@ -74,11 +64,9 @@ public class EmptyContext implements Context {
     return null;
   }
 
-  public void destroySubcontext(Name name) throws NamingException {
-  }
+  public void destroySubcontext(Name name) throws NamingException {}
 
-  public void destroySubcontext(String name) throws NamingException {
-  }
+  public void destroySubcontext(String name) throws NamingException {}
 
   public Context createSubcontext(Name name) throws NamingException {
     return null;
@@ -124,8 +112,7 @@ public class EmptyContext implements Context {
     return null;
   }
 
-  public void close() throws NamingException {
-  }
+  public void close() throws NamingException {}
 
   public String getNameInNamespace() throws NamingException {
     return null;

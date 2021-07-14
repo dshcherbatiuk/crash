@@ -21,16 +21,13 @@ package org.crsh.util;
 
 import java.io.Serializable;
 
-/**
- * An immutable sequence of white spaces.
- */
+/** An immutable sequence of white spaces. */
 public class BlankSequence implements CharSequence, Serializable {
 
-  /** . */
   private static final BlankSequence[] CACHE = new BlankSequence[64];
 
   static {
-    for (int i = 0;i < CACHE.length;i++) {
+    for (int i = 0; i < CACHE.length; i++) {
       CACHE[i] = new BlankSequence(i);
     }
   }
@@ -93,7 +90,7 @@ public class BlankSequence implements CharSequence, Serializable {
         value = "";
       } else {
         char[] chars = new char[length];
-        for (int i = 0;i < length;i++) {
+        for (int i = 0; i < length; i++) {
           chars[i] = ' ';
         }
         value = new String(chars, 0, chars.length);
@@ -107,7 +104,8 @@ public class BlankSequence implements CharSequence, Serializable {
       throw new IndexOutOfBoundsException("No negative " + name + " value " + index);
     }
     if (index > length) {
-      throw new IndexOutOfBoundsException("The " + name + " value " + index + " cannot greater than length " + length);
+      throw new IndexOutOfBoundsException(
+          "The " + name + " value " + index + " cannot greater than length " + length);
     }
   }
 }

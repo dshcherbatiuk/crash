@@ -89,11 +89,9 @@ public class RenderWriter extends Writer implements Screenable {
     }
     try {
       out.flush();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw e;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       // e.printStackTrace();
       // just swallow ?
     }

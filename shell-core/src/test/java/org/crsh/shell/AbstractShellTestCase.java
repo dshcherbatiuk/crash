@@ -20,20 +20,19 @@
 package org.crsh.shell;
 
 import groovy.lang.GroovyShell;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 import junit.framework.AssertionFailedError;
 import org.crsh.AbstractTestCase;
-import test.shell.base.BaseProcessContext;
-import test.plugin.TestPluginLifeCycle;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.lang.impl.groovy.GroovyCompiler;
 import org.crsh.lang.impl.groovy.GroovyLanguageProxy;
 import org.crsh.lang.impl.java.JavaLanguage;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.shell.impl.command.ShellSession;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import test.plugin.TestPluginLifeCycle;
+import test.shell.base.BaseProcessContext;
 
 public abstract class AbstractShellTestCase extends AbstractTestCase {
 
@@ -52,8 +51,7 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
   /** . */
   protected TestPluginLifeCycle lifeCycle;
 
-  protected AbstractShellTestCase() {
-  }
+  protected AbstractShellTestCase() {}
 
   protected AbstractShellTestCase(String name) {
     super(name);
@@ -72,15 +70,16 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
 
     //
     List<CRaSHPlugin<?>> plugins = getPlugins();
-    TestPluginLifeCycle lifeCycle = new TestPluginLifeCycle(plugins.toArray(new CRaSHPlugin[plugins.size()]));
+    TestPluginLifeCycle lifeCycle =
+        new TestPluginLifeCycle(plugins.toArray(new CRaSHPlugin[plugins.size()]));
 
     //
     lifeCycle.start();
 
     //
     this.shell = lifeCycle.createShell();
-    this.session = (ShellSession)shell; // A bit nasty but will do for tests :-)
-    this.groovyShell = GroovyCompiler.getGroovyShell((ShellSession)shell);
+    this.session = (ShellSession) shell; // A bit nasty but will do for tests :-)
+    this.groovyShell = GroovyCompiler.getGroovyShell((ShellSession) shell);
     this.lifeCycle = lifeCycle;
   }
 
@@ -107,8 +106,10 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
 
   protected final void assertUnknownCommand(String s) {
     ShellResponse resp = evaluate(s);
-    assertTrue("Was expecting an ok response instead of " + resp, resp instanceof ShellResponse.UnknownCommand);
-    assertEquals(s, ((ShellResponse.UnknownCommand)resp).getName());
+    assertTrue(
+        "Was expecting an ok response instead of " + resp,
+        resp instanceof ShellResponse.UnknownCommand);
+    assertEquals(s, ((ShellResponse.UnknownCommand) resp).getName());
   }
 
   protected final void assertEvalError(String s, Class<? extends Throwable> expectedThrowableType) {
@@ -120,7 +121,8 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
     return assertError(s, ErrorKind.EVALUATION);
   }
 
-  protected final void assertInternalError(String s, Class<? extends Throwable> expectedThrowableType) {
+  protected final void assertInternalError(
+      String s, Class<? extends Throwable> expectedThrowableType) {
     Throwable error = assertInternalError(s);
     assertType(expectedThrowableType, error);
   }
@@ -129,7 +131,8 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
     return assertError(s, ErrorKind.INTERNAL);
   }
 
-  protected final void assertError(String s, ErrorKind expectedErrorType, Class<? extends Throwable> expectedThrowableType) {
+  protected final void assertError(
+      String s, ErrorKind expectedErrorType, Class<? extends Throwable> expectedThrowableType) {
     Throwable error = assertError(s, expectedErrorType);
     assertInstance(expectedThrowableType, error);
   }
@@ -154,14 +157,12 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
     ShellResponse resp = ctx.getResponse();
     if (resp instanceof ShellResponse.Ok) {
       return ctx.getOutput();
-    }
-    else if (resp instanceof ShellResponse.Error) {
-      ShellResponse.Error err = (ShellResponse.Error)resp;
+    } else if (resp instanceof ShellResponse.Error) {
+      ShellResponse.Error err = (ShellResponse.Error) resp;
       AssertionFailedError afe = new AssertionFailedError();
       afe.initCause(err.getThrowable());
       throw afe;
-    }
-    else {
+    } else {
       throw new AssertionFailedError("Was expecting an ok response instead of " + resp);
     }
   }
@@ -171,15 +172,14 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
     ShellResponse resp = ctx.getResponse();
     if (expectedResponse.isInstance(resp)) {
       return expectedResponse.cast(resp);
-    }
-    else if (resp instanceof ShellResponse.Error) {
-      ShellResponse.Error err = (ShellResponse.Error)resp;
+    } else if (resp instanceof ShellResponse.Error) {
+      ShellResponse.Error err = (ShellResponse.Error) resp;
       AssertionFailedError afe = new AssertionFailedError();
       afe.initCause(err.getThrowable());
       throw afe;
-    }
-    else {
-      throw new AssertionFailedError("Was expecting an " + expectedResponse.getSimpleName() + " response instead of " + resp);
+    } else {
+      throw new AssertionFailedError(
+          "Was expecting an " + expectedResponse.getSimpleName() + " response instead of " + resp);
     }
   }
 }

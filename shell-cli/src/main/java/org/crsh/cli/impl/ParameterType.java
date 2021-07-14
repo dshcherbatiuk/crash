@@ -19,31 +19,31 @@
 
 package org.crsh.cli.impl;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
 import org.crsh.cli.type.ValueType;
 import org.crsh.cli.type.ValueTypeFactory;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
-
 public final class ParameterType<V> {
 
-  public static ParameterType create(ValueTypeFactory factory, Type type) throws IllegalValueTypeException {
+  public static ParameterType create(ValueTypeFactory factory, Type type)
+      throws IllegalValueTypeException {
     Class<?> declaredType;
     Multiplicity multiplicity;
     if (type instanceof Class<?>) {
-      declaredType = (Class<Object>)type;
+      declaredType = (Class<Object>) type;
       multiplicity = Multiplicity.SINGLE;
     } else if (type instanceof ParameterizedType) {
-      ParameterizedType parameterizedType = (ParameterizedType)type;
+      ParameterizedType parameterizedType = (ParameterizedType) type;
       Type rawType = parameterizedType.getRawType();
       if (rawType instanceof Class<?>) {
-        Class<?> classRawType = (Class<Object>)rawType;
+        Class<?> classRawType = (Class<Object>) rawType;
         if (List.class.equals(classRawType)) {
           Type elementType = parameterizedType.getActualTypeArguments()[0];
           if (elementType instanceof Class<?>) {
-            declaredType = (Class<Object>)elementType;
+            declaredType = (Class<Object>) elementType;
             multiplicity = Multiplicity.MULTI;
           } else {
             throw new IllegalValueTypeException();
@@ -77,7 +77,8 @@ public final class ParameterType<V> {
       effectiveType = declaredType;
       valueType = factory.get(declaredType);
       if (valueType == null) {
-        throw new IllegalValueTypeException("Type " + declaredType.getName() + " is not handled at the moment");
+        throw new IllegalValueTypeException(
+            "Type " + declaredType.getName() + " is not handled at the moment");
       }
     }
 
@@ -97,7 +98,11 @@ public final class ParameterType<V> {
   /** . */
   private final ValueType<V> valueType;
 
-  ParameterType(Multiplicity multiplicity, Class<?> declaredType, Class<V> effectiveType, ValueType<V> valueType) {
+  ParameterType(
+      Multiplicity multiplicity,
+      Class<?> declaredType,
+      Class<V> effectiveType,
+      ValueType<V> valueType) {
     this.multiplicity = multiplicity;
     this.declaredType = declaredType;
     this.effectiveType = effectiveType;

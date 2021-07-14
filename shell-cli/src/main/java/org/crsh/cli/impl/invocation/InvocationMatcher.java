@@ -19,22 +19,21 @@
 
 package org.crsh.cli.impl.invocation;
 
-import org.crsh.cli.descriptor.CommandDescriptor;
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.impl.LiteralValue;
-import org.crsh.cli.descriptor.OptionDescriptor;
-import org.crsh.cli.impl.tokenizer.Token;
-import org.crsh.cli.impl.tokenizer.Tokenizer;
-import org.crsh.cli.impl.tokenizer.TokenizerImpl;
-import org.crsh.cli.impl.parser.Event;
-import org.crsh.cli.impl.parser.Mode;
-import org.crsh.cli.impl.parser.Parser;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.crsh.cli.descriptor.CommandDescriptor;
+import org.crsh.cli.descriptor.OptionDescriptor;
+import org.crsh.cli.impl.LiteralValue;
+import org.crsh.cli.impl.SyntaxException;
+import org.crsh.cli.impl.parser.Event;
+import org.crsh.cli.impl.parser.Mode;
+import org.crsh.cli.impl.parser.Parser;
+import org.crsh.cli.impl.tokenizer.Token;
+import org.crsh.cli.impl.tokenizer.Tokenizer;
+import org.crsh.cli.impl.tokenizer.TokenizerImpl;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class InvocationMatcher<T> {
@@ -62,7 +61,8 @@ public class InvocationMatcher<T> {
     return new InvocationMatcher<T>(descriptor, tokens);
   }
 
-  public InvocationMatcher<T> option(String optionName, List<?> optionValue) throws SyntaxException {
+  public InvocationMatcher<T> option(String optionName, List<?> optionValue)
+      throws SyntaxException {
     return options(Collections.<String, List<?>>singletonMap(optionName, optionValue));
   }
 
@@ -87,23 +87,24 @@ public class InvocationMatcher<T> {
     for (Token token : this.tokens) {
       tokens.add(token);
     }
-    for (Iterator<Token> i = new TokenizerImpl(s);i.hasNext();) {
+    for (Iterator<Token> i = new TokenizerImpl(s); i.hasNext(); ) {
       tokens.add(i.next());
     }
     return match(tokens);
   }
 
   private InvocationMatch<T> match(final Iterable<Token> tokens) throws SyntaxException {
-    Tokenizer tokenizer = new Tokenizer() {
+    Tokenizer tokenizer =
+        new Tokenizer() {
 
-      /** . */
-      Iterator<Token> i = tokens.iterator();
+          /** . */
+          Iterator<Token> i = tokens.iterator();
 
-      @Override
-      protected Token parse() {
-        return i.hasNext() ? i.next() : null;
-      }
-    };
+          @Override
+          protected Token parse() {
+            return i.hasNext() ? i.next() : null;
+          }
+        };
     return match(tokenizer);
   }
 
@@ -121,7 +122,7 @@ public class InvocationMatcher<T> {
       } else if (event instanceof Event.Stop) {
         break;
       } else if (event instanceof Event.Option) {
-        Event.Option optionEvent = (Event.Option)event;
+        Event.Option optionEvent = (Event.Option) event;
         OptionDescriptor desc = optionEvent.getParameter();
         Iterable<OptionMatch> options = current.options();
         OptionMatch option = null;
@@ -136,22 +137,24 @@ public class InvocationMatcher<T> {
           }
         }
         if (option == null) {
-          option = new OptionMatch(desc, optionEvent.getToken().getName(), bilto(optionEvent.getValues()));
+          option =
+              new OptionMatch(
+                  desc, optionEvent.getToken().getName(), bilto(optionEvent.getValues()));
         }
         current.option(option);
       } else if (event instanceof Event.Subordinate) {
-        current = current.subordinate(((Event.Subordinate)event).getDescriptor().getName());
+        current = current.subordinate(((Event.Subordinate) event).getDescriptor().getName());
       } else if (event instanceof Event.Argument) {
-        Event.Argument argumentEvent = (Event.Argument)event;
+        Event.Argument argumentEvent = (Event.Argument) event;
         List<Token.Literal> values = argumentEvent.getValues();
         ArgumentMatch match;
         if (values.size() > 0) {
-          match = new ArgumentMatch(
-              argumentEvent.getParameter(),
-              argumentEvent.getFrom(),
-              argumentEvent.getTo(),
-              bilto(argumentEvent.getValues())
-          );
+          match =
+              new ArgumentMatch(
+                  argumentEvent.getParameter(),
+                  argumentEvent.getFrom(),
+                  argumentEvent.getTo(),
+                  bilto(argumentEvent.getValues()));
           if (argumentEvent.getCommand() == current.getDescriptor()) {
             current.argument(match);
           } else {

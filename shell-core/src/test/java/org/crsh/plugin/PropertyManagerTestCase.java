@@ -24,13 +24,15 @@ import org.crsh.auth.SimpleAuthenticationPlugin;
 public class PropertyManagerTestCase extends AbstractTestCase {
 
   class Foo {}
+
   Foo foo = new Foo();
-  PropertyDescriptor<Foo> FOO = new PropertyDescriptor<Foo>(Foo.class, "foo", foo, "the foo") {
-    @Override
-    protected Foo doParse(String s) throws Exception {
-      throw new UnsupportedOperationException();
-    }
-  };
+  PropertyDescriptor<Foo> FOO =
+      new PropertyDescriptor<Foo>(Foo.class, "foo", foo, "the foo") {
+        @Override
+        protected Foo doParse(String s) throws Exception {
+          throw new UnsupportedOperationException();
+        }
+      };
 
   public void testGetProperty() {
     PropertyManager mgr = new PropertyManager();

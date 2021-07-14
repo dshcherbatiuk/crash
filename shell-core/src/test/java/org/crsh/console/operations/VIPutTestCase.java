@@ -20,9 +20,7 @@ package org.crsh.console.operations;
 
 import jline.console.Operation;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class VIPutTestCase extends AbstractPasteTestCase {
 
   public void testVI() {
@@ -30,5 +28,4 @@ public class VIPutTestCase extends AbstractPasteTestCase {
     console.toMove();
     doTest(Operation.VI_PUT);
   }
-
 }

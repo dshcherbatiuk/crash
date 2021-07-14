@@ -18,18 +18,18 @@
  */
 package org.crsh.text;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import org.crsh.util.Pair;
 import org.crsh.util.Utils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 /**
- * A virtual screen that can be scrolled. This class is thread safe, as it can be used concurrently by two
- * threads, for example one thread can provide new elements while another thread is repainting the buffer
- * to the screen, both threads can either modify the underlying data structure. Paint could also be called concurrently
- * by two threads, one that just provided a new element and wants to repaint the structure and another that changes
- * the current cursor and asks for a repaint too.
+ * A virtual screen that can be scrolled. This class is thread safe, as it can be used concurrently
+ * by two threads, for example one thread can provide new elements while another thread is
+ * repainting the buffer to the screen, both threads can either modify the underlying data
+ * structure. Paint could also be called concurrently by two threads, one that just provided a new
+ * element and wants to repaint the structure and another that changes the current cursor and asks
+ * for a repaint too.
  *
  * @author Julien Viet
  */
@@ -72,14 +72,14 @@ public class VirtualScreen implements ScreenContext {
   /** Do we need to clear screen. */
   private int status;
 
-  private static final int
-      REFRESH = 0,  // Need a full refresh
+  private static final int REFRESH = 0, // Need a full refresh
       PAINTING = 1, // Screen is partially painted
-      PAINTED = 3;  // Screen is fully painted
+      PAINTED = 3; // Screen is fully painted
 
   private static class Foo {
     final CharSequence text;
     final Style style;
+
     private Foo(CharSequence text, Style style) {
       this.text = text;
       this.style = style;
@@ -161,7 +161,8 @@ public class VirtualScreen implements ScreenContext {
       status = PAINTING;
     }
     if (buffer.size() > 0) {
-      // We ensure there is a least one chunk in the buffer, otherwise it will throw a NullPointerException
+      // We ensure there is a least one chunk in the buffer, otherwise it will throw a
+      // NullPointerException
       int prev = cursorIndex;
       while (cursorX < width && cursorY < height) {
         if (cursorIndex >= buffer.get(cursorOffset).text.length()) {
@@ -239,23 +240,17 @@ public class VirtualScreen implements ScreenContext {
     }
   }
 
-  /**
-   * @return true if the buffer is painted
-   */
+  /** @return true if the buffer is painted */
   public synchronized boolean isPainted() {
     return status == PAINTED;
   }
 
-  /**
-   * @return true if the buffer is stale and needs a full repaint
-   */
+  /** @return true if the buffer is stale and needs a full repaint */
   public synchronized boolean isRefresh() {
     return status == REFRESH;
   }
 
-  /**
-   * @return true if the buffer is waiting for input to become painted
-   */
+  /** @return true if the buffer is waiting for input to become painted */
   public synchronized boolean isPainting() {
     return status == PAINTING;
   }
@@ -297,7 +292,7 @@ public class VirtualScreen implements ScreenContext {
         if (count > 0) {
           _offset = offset;
           _index = index;
-          for (int i = 0;i < count;i++) {
+          for (int i = 0; i < count; i++) {
             Pair<Integer, Integer> next = nextRow(_offset, _index, width);
             _offset = next.getFirst();
             _index = next.getSecond();
@@ -361,7 +356,8 @@ public class VirtualScreen implements ScreenContext {
 
   @Override
   public synchronized void flush() throws IOException {
-    // I think flush should not always be propagated, specially when we consider that the screen context
+    // I think flush should not always be propagated, specially when we consider that the screen
+    // context
     // is already filled
     out.flush();
   }

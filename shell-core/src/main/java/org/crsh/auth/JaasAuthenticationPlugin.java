@@ -19,24 +19,26 @@
 
 package org.crsh.auth;
 
-import org.crsh.plugin.CRaSHPlugin;
-import org.crsh.plugin.PropertyDescriptor;
-
+import java.util.Collections;
+import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.logging.Level;
+import org.crsh.plugin.CRaSHPlugin;
+import org.crsh.plugin.PropertyDescriptor;
 
-public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin> implements AuthenticationPlugin<String> {
+public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
+    implements AuthenticationPlugin<String> {
 
-  /** . */
-  static final PropertyDescriptor<String> JAAS_DOMAIN = PropertyDescriptor.create("auth.jaas.domain", (String)null, "The JAAS domain name used for authentication");
+  /**
+   * .
+   */
+  static final PropertyDescriptor<String> JAAS_DOMAIN =
+      PropertyDescriptor.create(
+          "auth.jaas.domain", (String) null, "The JAAS domain name used for authentication");
 
   public String getName() {
     return "jaas";
@@ -54,38 +56,42 @@ public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin> 
   public AuthInfo authenticate(final String username, final String password) throws Exception {
     String domain = getContext().getProperty(JAAS_DOMAIN);
     if (domain != null) {
-      log.log(Level.FINE, "Will use the JAAS domain '" + domain + "' for authenticating user " + username);
-      LoginContext loginContext = new LoginContext(domain, new Subject(), new CallbackHandler() {
-        public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-          for (Callback c : callbacks) {
-            if (c instanceof NameCallback) {
-              ((NameCallback)c).setName(username);
-            }
-            else if (c instanceof PasswordCallback) {
-              ((PasswordCallback)c).setPassword(password.toCharArray());
-            }
-            else {
-              throw new UnsupportedCallbackException(c);
-            }
-          }
-        }
-      });
+      log.log(
+          Level.FINE,
+          "Will use the JAAS domain '" + domain + "' for authenticating user " + username);
+      LoginContext loginContext =
+          new LoginContext(
+              domain,
+              new Subject(),
+              callbacks -> {
+                for (Callback c : callbacks) {
+                  if (c instanceof NameCallback) {
+                    ((NameCallback) c).setName(username);
+                  } else if (c instanceof PasswordCallback) {
+                    ((PasswordCallback) c).setPassword(password.toCharArray());
+                  } else {
+                    throw new UnsupportedCallbackException(c);
+                  }
+                }
+              });
 
-      //
       try {
         loginContext.login();
         loginContext.logout();
-        log.log(Level.FINE, "Authenticated user " + username + " against the JAAS domain '" + domain + "'");
+        log.log(
+            Level.FINE,
+            "Authenticated user " + username + " against the JAAS domain '" + domain + "'");
         return AuthInfo.SUCCESSFUL;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         if (log.isLoggable(Level.FINE)) {
-          log.log(Level.SEVERE, "Exception when authenticating user " + username + " to JAAS domain '" + domain + "'", e);
+          log.log(
+              Level.SEVERE,
+              "Exception when authenticating user " + username + " to JAAS domain '" + domain + "'",
+              e);
         }
         return AuthInfo.UNSUCCESSFUL;
       }
-    }
-    else {
+    } else {
       log.log(Level.WARNING, "The JAAS domain property '" + JAAS_DOMAIN.name + "' was not found");
       return AuthInfo.UNSUCCESSFUL;
     }

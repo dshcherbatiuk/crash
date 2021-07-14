@@ -19,28 +19,18 @@
 
 package org.crsh.cli.impl.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.crsh.cli.descriptor.ArgumentDescriptor;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.OptionDescriptor;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.tokenizer.Token;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class Event {
 
-//  public static final class DoubleDash extends Event {
-//
-//    /** . */
-//    protected final Token.Literal.Option.Long token;
-//
-//    public DoubleDash(Token.Literal.Option.Long token) {
-//      this.token = token;
-//    }
-//  }
-
-  public abstract static class Parameter<T extends Token.Literal, D extends ParameterDescriptor> extends Event {
+  public abstract static class Parameter<T extends Token.Literal, D extends ParameterDescriptor>
+      extends Event {
 
     /** . */
     protected final CommandDescriptor<?> command;
@@ -92,7 +82,7 @@ public abstract class Event {
 
     @Override
     public String toString() {
-      return getClass().getSimpleName() + "[descriptor=" + parameter + ",values=" + values +  "]";
+      return getClass().getSimpleName() + "[descriptor=" + parameter + ",values=" + values + "]";
     }
   }
 
@@ -101,7 +91,11 @@ public abstract class Event {
     /** . */
     private final Token.Literal.Option token;
 
-    Option(CommandDescriptor<?> command, OptionDescriptor descriptor, Token.Literal.Option token, List<Token.Literal.Word> values) {
+    Option(
+        CommandDescriptor<?> command,
+        OptionDescriptor descriptor,
+        Token.Literal.Option token,
+        List<Token.Literal.Word> values) {
       super(command, descriptor, values);
 
       this.token = token;
@@ -124,7 +118,9 @@ public abstract class Event {
 
   public static final class Argument extends Parameter<Token.Literal, ArgumentDescriptor> {
 
-    Argument(CommandDescriptor<?> command, ArgumentDescriptor descriptor, List<Token.Literal> values) throws IllegalArgumentException {
+    Argument(
+        CommandDescriptor<?> command, ArgumentDescriptor descriptor, List<Token.Literal> values)
+        throws IllegalArgumentException {
       super(command, descriptor, values);
 
       //
@@ -202,7 +198,7 @@ public abstract class Event {
     }
   }
 
-  public static abstract class Stop extends Event {
+  public abstract static class Stop extends Event {
 
     public abstract int getIndex();
 
@@ -221,7 +217,7 @@ public abstract class Event {
       }
     }
 
-    public static abstract class Unresolved<T extends Token> extends Stop {
+    public abstract static class Unresolved<T extends Token> extends Stop {
 
       /** . */
       private final T token;

@@ -18,31 +18,24 @@
  */
 package org.crsh.text.renderers;
 
+import java.lang.management.ManagementFactory;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import javax.management.JMException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
-import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.Overflow;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 import org.crsh.util.Utils;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
-import javax.management.JMException;
-import javax.management.MBeanInfo;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
-import java.lang.management.ManagementFactory;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ObjectNameRenderer extends Renderer<ObjectName> {
 
   @Override
@@ -63,12 +56,10 @@ public class ObjectNameRenderer extends Renderer<ObjectName> {
 
     // Header
     table.add(
-      new RowElement().
-        style(Decoration.bold.fg(Color.black).bg(Color.white)).
-        add("NAME", "CLASSNAME", "MXBEAN", "DESCRIPTION")
-    );
+        new RowElement()
+            .style(Decoration.bold.fg(Color.black).bg(Color.white))
+            .add("NAME", "CLASSNAME", "MXBEAN", "DESCRIPTION"));
 
-    //
     for (ObjectName name : names) {
 
       String className;
@@ -80,8 +71,7 @@ public class ObjectNameRenderer extends Renderer<ObjectName> {
         description = info.getDescription();
         Object mxbeanValue = info.getDescriptor().getFieldValue("mxbean");
         mxbean = mxbeanValue != null ? mxbeanValue.toString() : "false";
-      }
-      catch (JMException ignore) {
+      } catch (JMException ignore) {
         className = "";
         description = "";
         mxbean = "";

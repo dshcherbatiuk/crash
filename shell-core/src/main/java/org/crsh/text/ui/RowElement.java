@@ -19,11 +19,10 @@
 
 package org.crsh.text.ui;
 
-import org.crsh.text.Style;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.crsh.text.Style;
 
 public class RowElement extends Element {
 
@@ -64,7 +63,7 @@ public class RowElement extends Element {
 
   @Override
   public RowElement style(Style.Composite style) {
-    return (RowElement)super.style(style);
+    return (RowElement) super.style(style);
   }
 
   @Override

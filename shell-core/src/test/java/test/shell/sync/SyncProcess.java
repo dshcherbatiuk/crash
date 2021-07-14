@@ -27,8 +27,7 @@ public class SyncProcess {
   /** . */
   private KeyHandler keyHandler;
 
-  public void run(String request, ShellProcessContext context) throws Exception {
-  }
+  public void run(String request, ShellProcessContext context) throws Exception {}
 
   protected KeyHandler createKeyHandler() {
     return null;
@@ -41,6 +40,5 @@ public class SyncProcess {
     return keyHandler;
   }
 
-  public void cancel() {
-  }
+  public void cancel() {}
 }

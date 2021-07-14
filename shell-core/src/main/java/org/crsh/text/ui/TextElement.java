@@ -19,21 +19,17 @@
 
 package org.crsh.text.ui;
 
+import java.util.Iterator;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Style;
 import org.crsh.util.Utils;
 
-import java.util.Iterator;
-
 public class TextElement extends Element {
 
-  /** . */
   final Iterable<Object> stream;
 
-  /** . */
   final int minWidth;
 
-  /** . */
   final int width;
 
   private static int width(int width, Iterator<Object> stream, CharSequence current, Integer from) {
@@ -41,7 +37,7 @@ public class TextElement extends Element {
       if (stream.hasNext()) {
         Object next = stream.next();
         if (next instanceof CharSequence) {
-          current = (CharSequence)next;
+          current = (CharSequence) next;
           from = 0;
         }
       } else {
@@ -90,6 +86,6 @@ public class TextElement extends Element {
 
   @Override
   public TextElement style(Style.Composite style) {
-    return (TextElement)super.style(style);
+    return (TextElement) super.style(style);
   }
 }

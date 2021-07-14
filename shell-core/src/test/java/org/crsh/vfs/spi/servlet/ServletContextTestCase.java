@@ -19,9 +19,8 @@
 
 package org.crsh.vfs.spi.servlet;
 
-import junit.framework.TestCase;
-
 import java.util.regex.Matcher;
+import junit.framework.TestCase;
 
 public class ServletContextTestCase extends TestCase {
 

@@ -19,17 +19,16 @@
 
 package org.crsh.lang.impl.java;
 
-import org.crsh.util.InputStreamFactory;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.NestingKind;
-import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
+import javax.tools.JavaFileObject;
+import org.crsh.util.InputStreamFactory;
 
 /** @author Julien Viet */
 class NodeJavaFileObject implements JavaFileObject {
@@ -49,7 +48,8 @@ class NodeJavaFileObject implements JavaFileObject {
   /** . */
   private final InputStreamFactory stream;
 
-  public NodeJavaFileObject(String binaryName, URI uri, InputStreamFactory stream, long lastModified) {
+  public NodeJavaFileObject(
+      String binaryName, URI uri, InputStreamFactory stream, long lastModified) {
     this.uri = uri;
     this.binaryName = binaryName;
     this.name = uri.getPath() == null ? uri.getSchemeSpecificPart() : uri.getPath();
@@ -100,8 +100,7 @@ class NodeJavaFileObject implements JavaFileObject {
   public boolean isNameCompatible(String simpleName, Kind kind) {
     String baseName = simpleName + kind.extension;
     return kind.equals(getKind())
-        && (baseName.equals(getName())
-        || getName().endsWith("/" + baseName));
+        && (baseName.equals(getName()) || getName().endsWith("/" + baseName));
   }
 
   public NestingKind getNestingKind() {

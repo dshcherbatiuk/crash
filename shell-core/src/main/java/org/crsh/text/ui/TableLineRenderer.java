@@ -19,32 +19,25 @@
 
 package org.crsh.text.ui;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.crsh.text.LineReader;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.RenderAppendable;
 import org.crsh.text.Style;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-
 class TableLineRenderer extends LineRenderer {
 
-  /** . */
   final Layout columnLayout;
 
-  /** . */
   final Layout rowLayout;
 
-  /** . */
   final BorderStyle border;
 
-  /** . */
   final BorderStyle separator;
 
-  /** . */
   final Overflow overflow;
 
-  /** . */
   final Style.Composite style;
 
   /** Cell padding left. */
@@ -81,7 +74,7 @@ class TableLineRenderer extends LineRenderer {
 
   private int getMaxColSize() {
     int n = 0;
-    for (TableRowLineRenderer row = head;row != null;row = row.next()) {
+    for (TableRowLineRenderer row = head; row != null; row = row.next()) {
       n = Math.max(n, row.getColsSize());
     }
     return n;
@@ -90,7 +83,7 @@ class TableLineRenderer extends LineRenderer {
   @Override
   public int getMinWidth() {
     int minWidth = 0;
-    for (TableRowLineRenderer row = head;row != null;row = row.next()) {
+    for (TableRowLineRenderer row = head; row != null; row = row.next()) {
       minWidth = Math.max(minWidth, row.getMinWidth());
     }
     return minWidth + (border != null ? 2 : 0);
@@ -99,7 +92,7 @@ class TableLineRenderer extends LineRenderer {
   @Override
   public int getActualWidth() {
     int actualWidth = 0;
-    for (TableRowLineRenderer row = head;row != null;row = row.next()) {
+    for (TableRowLineRenderer row = head; row != null; row = row.next()) {
       actualWidth = Math.max(actualWidth, row.getActualWidth());
     }
     return actualWidth + (border != null ? 2 : 0);
@@ -111,7 +104,7 @@ class TableLineRenderer extends LineRenderer {
       width -= 2;
     }
     int actualHeight = 0;
-    for (TableRowLineRenderer row = head;row != null;row = row.next()) {
+    for (TableRowLineRenderer row = head; row != null; row = row.next()) {
       actualHeight += row.getActualHeight(width);
     }
     if (border != null) {
@@ -138,25 +131,32 @@ class TableLineRenderer extends LineRenderer {
     int[] eltMinWidths = new int[len];
 
     // Compute each column as is
-    for (TableRowLineRenderer row = head;row != null;row = row.next()) {
-      for (int i = 0;i < row.getCols().size();i++) {
+    for (TableRowLineRenderer row = head; row != null; row = row.next()) {
+      for (int i = 0; i < row.getCols().size(); i++) {
         LineRenderer renderable = row.getCols().get(i);
-        eltWidths[i] = Math.max(eltWidths[i], renderable.getActualWidth() + row.row.leftCellPadding + row.row.rightCellPadding);
-        eltMinWidths[i] = Math.max(eltMinWidths[i], renderable.getMinWidth() + row.row.leftCellPadding + row.row.rightCellPadding);
+        eltWidths[i] =
+            Math.max(
+                eltWidths[i],
+                renderable.getActualWidth() + row.row.leftCellPadding + row.row.rightCellPadding);
+        eltMinWidths[i] =
+            Math.max(
+                eltMinWidths[i],
+                renderable.getMinWidth() + row.row.leftCellPadding + row.row.rightCellPadding);
       }
     }
 
     // Note that we may have a different widths != eltWidths according to the layout algorithm
-    final int[] widths = columnLayout.compute(separator != null, width - (border != null ? 2 : 0), eltWidths, eltMinWidths);
+    final int[] widths =
+        columnLayout.compute(
+            separator != null, width - (border != null ? 2 : 0), eltWidths, eltMinWidths);
 
-    //
     if (widths != null) {
       // Compute new widths array
       final AtomicInteger effectiveWidth = new AtomicInteger();
       if (border != null) {
         effectiveWidth.addAndGet(2);
       }
-      for (int i = 0;i < widths.length;i++) {
+      for (int i = 0; i < widths.length; i++) {
         effectiveWidth.addAndGet(widths[i]);
         if (separator != null) {
           if (i > 0) {
@@ -172,11 +172,12 @@ class TableLineRenderer extends LineRenderer {
         int size = tail.getSize();
         int[] actualHeights = new int[size];
         int[] minHeights = new int[size];
-        for (TableRowLineRenderer row = head;row != null;row = row.next()) {
+        for (TableRowLineRenderer row = head; row != null; row = row.next()) {
           actualHeights[row.getIndex()] = row.getActualHeight(widths);
           minHeights[row.getIndex()] = row.getMinHeight(widths);
         }
-        heights = rowLayout.compute(false, height - (border != null ? 2 : 0), actualHeights, minHeights);
+        heights =
+            rowLayout.compute(false, height - (border != null ? 2 : 0), actualHeights, minHeights);
         if (heights == null) {
           return null;
         }
@@ -185,29 +186,20 @@ class TableLineRenderer extends LineRenderer {
         Arrays.fill(heights, -1);
       }
 
-      //
       return new LineReader() {
 
-        /** . */
         TableRowReader rHead = null;
 
-        /** . */
         TableRowReader rTail = null;
 
-        /** . */
         int index = 0;
 
-        /**
-         * 0 -> render top
-         * 1 -> render rows
-         * 2 -> render bottom
-         * 3 -> done
-         */
+        /** 0 -> render top 1 -> render rows 2 -> render bottom 3 -> done */
         int status = border != null ? 0 : 1;
 
         {
           // Add all rows
-          for (TableRowLineRenderer row = head;row != null;row = row.next()) {
+          for (TableRowLineRenderer row = head; row != null; row = row.next()) {
             if (row.getIndex() < heights.length) {
               int[] what;
               if (row.getColsSize() == widths.length) {
@@ -220,7 +212,7 @@ class TableLineRenderer extends LineRenderer {
 
                 // Redistribute space among columns
                 what = new int[row.getColsSize()];
-                for (int j = 0;j < widths.length;j++) {
+                for (int j = 0; j < widths.length; j++) {
                   what[j % what.length] += widths[j];
                 }
 
@@ -293,76 +285,72 @@ class TableLineRenderer extends LineRenderer {
           }
           switch (status) {
             case 0:
-            case 2: {
-              to.styleOff();
-              to.append(border.corner);
-              for (int i = 0;i < widths.length;i++) {
-                if (widths[i] > 0) {
-                  if (separator != null && i > 0) {
-                    to.append(border.horizontal);
-                  }
-                  for (int j = 0;j < widths[i];j++) {
-                    to.append(border.horizontal);
+            case 2:
+              {
+                to.styleOff();
+                to.append(border.corner);
+                for (int i = 0; i < widths.length; i++) {
+                  if (widths[i] > 0) {
+                    if (separator != null && i > 0) {
+                      to.append(border.horizontal);
+                    }
+                    for (int j = 0; j < widths[i]; j++) {
+                      to.append(border.horizontal);
+                    }
                   }
                 }
-              }
-              to.append(border.corner);
-              to.styleOn();
-              for (int i = width - effectiveWidth.get();i > 0;i--) {
-                to.append(' ');
-              }
-              status++;
-              break;
-            }
-            case 1: {
-
-              //
-              boolean sep = rHead != null && rHead.isSeparator();
-              if (border != null) {
-                to.styleOff();
-                to.append(sep ? border.corner : border.vertical);
+                to.append(border.corner);
                 to.styleOn();
+                for (int i = width - effectiveWidth.get(); i > 0; i--) {
+                  to.append(' ');
+                }
+                status++;
+                break;
               }
+            case 1:
+              {
+                boolean sep = rHead != null && rHead.isSeparator();
+                if (border != null) {
+                  to.styleOff();
+                  to.append(sep ? border.corner : border.vertical);
+                  to.styleOn();
+                }
 
-              //
-              if (style != null) {
-                to.enterStyle(style);
-              }
+                if (style != null) {
+                  to.enterStyle(style);
+                }
 
-              //
-              if (rHead != null) {
-                // Render row
-                rHead.renderLine(to);
-              } else {
-                // Vertical padding
-                for (int i = 0;i < widths.length;i++) {
-                  if (separator != null && i > 0) {
-                    to.append(separator.vertical);
-                  }
-                  for (int j = 0;j < widths[i];j++) {
-                    to.append(' ');
+                if (rHead != null) {
+                  // Render row
+                  rHead.renderLine(to);
+                } else {
+                  // Vertical padding
+                  for (int i = 0; i < widths.length; i++) {
+                    if (separator != null && i > 0) {
+                      to.append(separator.vertical);
+                    }
+                    for (int j = 0; j < widths[i]; j++) {
+                      to.append(' ');
+                    }
                   }
                 }
-              }
 
-              //
-              if (style != null) {
-                to.leaveStyle();
-              }
+                if (style != null) {
+                  to.leaveStyle();
+                }
 
-              //
-              if (border != null) {
-                to.styleOff();
-                to.append(sep ? border.corner : border.vertical);
-                to.styleOn();
-              }
+                if (border != null) {
+                  to.styleOff();
+                  to.append(sep ? border.corner : border.vertical);
+                  to.styleOn();
+                }
 
-              // Padding
-              for (int i = width - effectiveWidth.get();i > 0;i--) {
-                to.append(' ');
+                // Padding
+                for (int i = width - effectiveWidth.get(); i > 0; i--) {
+                  to.append(' ');
+                }
+                break;
               }
-              break;
-            }
             default:
               throw new AssertionError();
           }

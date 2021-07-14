@@ -38,6 +38,7 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
+import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
@@ -50,9 +51,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.crsh.cli.Command;
 import org.crsh.groovy.GroovyCommand;
 
-import java.util.logging.Logger;
-
-@GroovyASTTransformation(phase= CompilePhase.SEMANTIC_ANALYSIS)
+@GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 public class CommandTransformer implements ASTTransformation {
 
   /** . */

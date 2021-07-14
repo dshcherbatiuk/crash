@@ -28,14 +28,10 @@ import org.crsh.shell.impl.command.ShellSession;
  */
 public interface Repl {
 
-  /**
-   * @return the language this repl belongs to
-   */
+  /** @return the language this repl belongs to */
   Language getLanguage();
 
-  /**
-   * @return a descripton of the Repl
-   */
+  /** @return a descripton of the Repl */
   String getDescription();
 
   /**
@@ -55,5 +51,4 @@ public interface Repl {
    * @return the completion match
    */
   CompletionMatch complete(ShellSession session, String prefix);
-
 }

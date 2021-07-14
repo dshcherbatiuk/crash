@@ -18,22 +18,17 @@
  */
 package org.crsh.vfs.spi.file;
 
+import java.io.File;
+import java.io.IOException;
 import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.Mount;
 
-import java.io.File;
-import java.io.IOException;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class FileMountFactory implements FSMountFactory<File> {
 
-  /** . */
   private final File root;
 
-  /** . */
   private final File absoluteRoot;
 
   public FileMountFactory(File root) throws IOException {
@@ -63,7 +58,7 @@ public class FileMountFactory implements FSMountFactory<File> {
 
     for (int i = 0; i < path.getSize(); i++) {
       String name = path.nameAt(i);
-      if(i == 0 && isWindow() && name.length() == 2 && name.charAt(1) == ':') {
+      if (i == 0 && isWindow() && name.length() == 2 && name.charAt(1) == ':') {
         file = new File(name + File.separatorChar);
       } else {
         file = new File(file, name);
@@ -74,7 +69,8 @@ public class FileMountFactory implements FSMountFactory<File> {
     return new Mount<File>(new FileDriver(file), "file:" + file.getAbsolutePath());
   }
 
-  private static String OS = System.getProperty("os.name").toLowerCase();
+  private static final String OS = System.getProperty("os.name").toLowerCase();
+
   private static boolean isWindow() {
     return (OS.indexOf("win") >= 0);
   }

@@ -25,8 +25,8 @@ import java.util.Properties;
 import java.util.logging.LogManager;
 
 /**
- * An internal class that configures java util logging with <code>ALL</code> level with the
- * <code>FileHandler</code> in the <code>java.util.logging.FileHandler.pattern</code> system property.
+ * An internal class that configures java util logging with <code>ALL</code> level with the <code>
+ * FileHandler</code> in the <code>java.util.logging.FileHandler.pattern</code> system property.
  *
  * @author Julien Viet
  */

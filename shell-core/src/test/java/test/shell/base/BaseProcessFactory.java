@@ -18,37 +18,38 @@
  */
 package test.shell.base;
 
+import java.io.IOException;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
 
-import java.io.IOException;
-
 public abstract class BaseProcessFactory {
 
-  public static BaseProcessFactory NOOP = new BaseProcessFactory() {
-    @Override
-    public BaseProcess create(String request) {
-      return new BaseProcess(request);
-    }
-  };
-
-  public static BaseProcessFactory ECHO = new BaseProcessFactory() {
-    @Override
-    public BaseProcess create(String request) {
-      return new BaseProcess(request) {
+  public static BaseProcessFactory NOOP =
+      new BaseProcessFactory() {
         @Override
-        public void process(String request, ShellProcessContext processContext) throws IOException {
-          if ("bye".equals(request)) {
-            processContext.end(ShellResponse.close());
-          } else {
-            processContext.append(request);
-            processContext.end(ShellResponse.ok());
-          }
+        public BaseProcess create(String request) {
+          return new BaseProcess(request);
         }
       };
-    }
-  };
+
+  public static BaseProcessFactory ECHO =
+      new BaseProcessFactory() {
+        @Override
+        public BaseProcess create(String request) {
+          return new BaseProcess(request) {
+            @Override
+            public void process(String request, ShellProcessContext processContext)
+                throws IOException {
+              if ("bye".equals(request)) {
+                processContext.end(ShellResponse.close());
+              } else {
+                processContext.append(request);
+                processContext.end(ShellResponse.ok());
+              }
+            }
+          };
+        }
+      };
 
   public abstract BaseProcess create(String request);
-
 }

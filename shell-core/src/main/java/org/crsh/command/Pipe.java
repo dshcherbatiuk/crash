@@ -19,10 +19,9 @@
 
 package org.crsh.command;
 
+import java.io.IOException;
 import org.crsh.stream.Filter;
 import org.crsh.util.Utils;
-
-import java.io.IOException;
 
 /**
  * A command pipe.
@@ -36,11 +35,11 @@ public abstract class Pipe<C, P> implements Filter<C, P, InvocationContext<P>> {
   protected InvocationContext<P> context;
 
   public final Class<P> getProducedType() {
-    return (Class<P>)Utils.resolveToClass(getClass(), Pipe.class, 1);
+    return (Class<P>) Utils.resolveToClass(getClass(), Pipe.class, 1);
   }
 
   public final Class<C> getConsumedType() {
-    return (Class<C>)Utils.resolveToClass(getClass(), Pipe.class, 0);
+    return (Class<C>) Utils.resolveToClass(getClass(), Pipe.class, 0);
   }
 
   public void open(InvocationContext<P> consumer) throws Exception {
@@ -50,14 +49,10 @@ public abstract class Pipe<C, P> implements Filter<C, P, InvocationContext<P>> {
     open();
   }
 
-  /**
-   * Open pipe.
-   */
-  public void open() throws Exception {
-  }
+  /** Open pipe. */
+  public void open() throws Exception {}
 
-  public void provide(C element) throws Exception {
-  }
+  public void provide(C element) throws Exception {}
 
   /**
    * Flush pipe.

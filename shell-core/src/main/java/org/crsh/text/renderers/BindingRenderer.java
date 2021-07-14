@@ -18,19 +18,16 @@
  */
 package org.crsh.text.renderers;
 
+import java.util.Iterator;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 
-import java.util.Iterator;
-
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 public class BindingRenderer extends Renderer<BindingRenderer.BindingData> {
-  
+
   @Override
   public Class<BindingData> getType() {
     return BindingData.class;
@@ -50,7 +47,7 @@ public class BindingRenderer extends Renderer<BindingRenderer.BindingData> {
 
       RowElement row = new RowElement();
 
-       row.add(binding.name);
+      row.add(binding.name);
 
       if (binding.verbose) {
         row.add(new LabelElement(binding.type));
@@ -58,9 +55,8 @@ public class BindingRenderer extends Renderer<BindingRenderer.BindingData> {
           header.add("CLASS");
         }
       }
-      
-      table.add(row);
 
+      table.add(row);
     }
 
     return table.renderer();
@@ -80,5 +76,4 @@ public class BindingRenderer extends Renderer<BindingRenderer.BindingData> {
       this.verbose = (verbose != null ? verbose : false);
     }
   }
-
 }

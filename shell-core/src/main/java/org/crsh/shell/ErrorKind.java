@@ -21,19 +21,12 @@ package org.crsh.shell;
 
 public enum ErrorKind {
 
-  /**
-   * Denotes a wrong syntax of the command usage.
-   */
+  /** Denotes a wrong syntax of the command usage. */
   SYNTAX,
 
-  /**
-   * An error during the evaluation of the command, for instance a programmation error.
-   */
+  /** An error during the evaluation of the command, for instance a programmation error. */
   EVALUATION,
 
-  /**
-   * An error related to the implementation of the command.
-   */
+  /** An error related to the implementation of the command. */
   INTERNAL
-
 }

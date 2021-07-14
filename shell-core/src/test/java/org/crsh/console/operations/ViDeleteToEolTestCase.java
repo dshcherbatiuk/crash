@@ -23,9 +23,7 @@ import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 import org.crsh.console.Mode;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViDeleteToEolTestCase extends AbstractConsoleTestCase {
 
   // D is a vim extension for delete-to-end-of-line

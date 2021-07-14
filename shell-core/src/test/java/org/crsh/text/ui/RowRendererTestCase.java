@@ -21,7 +21,6 @@ package org.crsh.text.ui;
 
 public class RowRendererTestCase extends AbstractRendererTestCase {
 
-
   public void testRender() throws Exception {
     RowElement row = new RowElement().add(new LabelElement("foo"), new LabelElement("bar"));
 
@@ -38,9 +37,11 @@ public class RowRendererTestCase extends AbstractRendererTestCase {
   }
 
   public void testCosmetic() throws Exception {
-    RowElement row = new RowElement().add(new LabelElement("foo", 5), new LabelElement("This text is larger to be displayed in a cell of 32", 5));
-    assertRender(row, 32,
-        "fooThis text is larger to be dis",
-        "   played in a cell of 32       ");
+    RowElement row =
+        new RowElement()
+            .add(
+                new LabelElement("foo", 5),
+                new LabelElement("This text is larger to be displayed in a cell of 32", 5));
+    assertRender(row, 32, "fooThis text is larger to be dis", "   played in a cell of 32       ");
   }
 }

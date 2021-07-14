@@ -47,7 +47,7 @@ class CommandCompletion<T> extends Completion {
   private final CommandDescriptor<T> descriptor;
 
   /** . */
-  private final  String prefix;
+  private final String prefix;
 
   /** . */
   private final Delimiter delimiter;

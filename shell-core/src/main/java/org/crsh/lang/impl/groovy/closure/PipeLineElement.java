@@ -27,5 +27,4 @@ abstract class PipeLineElement {
   abstract CommandInvoker create() throws CommandException;
 
   abstract void toString(StringBuilder buffer);
-
 }

@@ -19,9 +19,6 @@
 
 package org.crsh.vfs.spi.file;
 
-import org.crsh.util.Utils;
-import org.crsh.vfs.spi.AbstractFSDriver;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,6 +26,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import org.crsh.util.Utils;
+import org.crsh.vfs.spi.AbstractFSDriver;
 
 public class FileDriver extends AbstractFSDriver<File> {
 

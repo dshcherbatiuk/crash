@@ -19,21 +19,17 @@
 
 package org.crsh.vfs;
 
-import org.crsh.util.BaseIterator;
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.crsh.util.BaseIterator;
 
 public abstract class Path implements Iterable<String> {
 
-  /** . */
   private static final String[] EMPTY_STRING = new String[0];
 
-  /** . */
   public static final Absolute ROOT = new Absolute(true, EMPTY_STRING);
 
-  /** . */
   public static final Relative EMPTY = new Relative(true, EMPTY_STRING);
 
   private static String[] path(java.io.File file, int size) {
@@ -133,9 +129,11 @@ public abstract class Path implements Iterable<String> {
   public Iterator<String> iterator() {
     return new BaseIterator<String>() {
       int index = 0;
+
       public boolean hasNext() {
         return index < names.length;
       }
+
       public String next() {
         if (index < names.length) {
           return names[index++];
@@ -174,7 +172,8 @@ public abstract class Path implements Iterable<String> {
 
   public String nameAt(int index) throws IndexOutOfBoundsException {
     if (index < 0 || index >= names.length) {
-      throw new IndexOutOfBoundsException("Index out of bounds [0" + (names.length - 1) + "]" + index);
+      throw new IndexOutOfBoundsException(
+          "Index out of bounds [0" + (names.length - 1) + "]" + index);
     } else {
       return names[index];
     }
@@ -184,7 +183,7 @@ public abstract class Path implements Iterable<String> {
     if (parent.dir) {
       int length = parent.names.length;
       if (names.length == length + 1) {
-        for (int i = 0;i < length;i++) {
+        for (int i = 0; i < length; i++) {
           if (names[i].equals(parent.names[i])) {
             return false;
           }
@@ -201,10 +200,10 @@ public abstract class Path implements Iterable<String> {
       return true;
     }
     if (o instanceof Path) {
-      Path that = (Path)o;
+      Path that = (Path) o;
       int length = that.names.length;
       if (names.length == length) {
-        for (int i = 0;i < length;i++) {
+        for (int i = 0; i < length; i++) {
           if (!names[i].equals(that.names[i])) {
             return false;
           }
@@ -218,7 +217,7 @@ public abstract class Path implements Iterable<String> {
   @Override
   public int hashCode() {
     int hashCode = dir ? 1 : 0;
-    for (int i = names.length - 1;i >= 0;i--) {
+    for (int i = names.length - 1; i >= 0; i--) {
       hashCode = hashCode * 41 + names[i].hashCode();
     }
     return hashCode;
@@ -242,7 +241,7 @@ public abstract class Path implements Iterable<String> {
         if (isAbsolute()) {
           sb.append('/');
         }
-        for (int i = 0;i < names.length;i++) {
+        for (int i = 0; i < names.length; i++) {
           if (i > 0) {
             sb.append('/');
           }
@@ -269,7 +268,7 @@ public abstract class Path implements Iterable<String> {
 
     @Override
     public Absolute append(String name, boolean dir) {
-      return (Absolute)super.append(name, dir);
+      return (Absolute) super.append(name, dir);
     }
 
     @Override
@@ -296,7 +295,7 @@ public abstract class Path implements Iterable<String> {
 
     @Override
     public Relative append(String name, boolean dir) {
-      return (Relative)super.append(name, dir);
+      return (Relative) super.append(name, dir);
     }
 
     @Override

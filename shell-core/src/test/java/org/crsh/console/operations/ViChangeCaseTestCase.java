@@ -22,9 +22,7 @@ import jline.console.Operation;
 import org.crsh.console.AbstractConsoleTestCase;
 import org.crsh.console.KeyStrokes;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class ViChangeCaseTestCase extends AbstractConsoleTestCase {
 
   public void testChangeCase1() throws Exception {
@@ -33,7 +31,7 @@ public class ViChangeCaseTestCase extends AbstractConsoleTestCase {
     console.on(KeyStrokes.of("big.LITTLE"));
     console.on(Operation.VI_MOVEMENT_MODE);
     console.on(Operation.VI_BEGINNING_OF_LINE_OR_ARG_DIGIT);
-    for (int i = 0;i < 10;i++) {
+    for (int i = 0; i < 10; i++) {
       console.on(Operation.VI_CHANGE_CASE);
     }
     assertEquals("BIG.little", getCurrentLine());

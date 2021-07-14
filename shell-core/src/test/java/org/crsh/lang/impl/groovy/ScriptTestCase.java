@@ -28,13 +28,13 @@ public class ScriptTestCase extends AbstractShellTestCase {
 
   public void testCommandExecutionFailureThrowsException() throws Exception {
     String script =
-        "try {\n" +
-        "thrower();\n" +
-        "}\n" +
-        "catch(javax.naming.NamingException e) {\n" +
-        "e.printStackTrace();\n" +
-        "org.crsh.lang.impl.groovy.ScriptTestCase.failed = true\n" +
-        "}";
+        "try {\n"
+            + "thrower();\n"
+            + "}\n"
+            + "catch(javax.naming.NamingException e) {\n"
+            + "e.printStackTrace();\n"
+            + "org.crsh.lang.impl.groovy.ScriptTestCase.failed = true\n"
+            + "}";
     lifeCycle.bindClass("thrower", Commands.ThrowCheckedException.class);
     lifeCycle.bindGroovy("script", script);
     failed = false;

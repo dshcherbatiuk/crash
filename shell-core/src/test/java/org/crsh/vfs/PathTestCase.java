@@ -21,8 +21,6 @@ package org.crsh.vfs;
 
 import junit.framework.TestCase;
 
-import java.util.Iterator;
-
 public class PathTestCase extends TestCase {
 
   public void testPath() throws Exception {
@@ -54,7 +52,7 @@ public class PathTestCase extends TestCase {
     assertEquals(dir, path.isDir());
     assertEquals(absolute, path.isAbsolute());
     assertEquals(path.getSize(), expectedNames.length);
-    for (int index = 0;index < expectedNames.length;index++) {
+    for (int index = 0; index < expectedNames.length; index++) {
       assertEquals(expectedNames[index], path.nameAt(index));
     }
   }

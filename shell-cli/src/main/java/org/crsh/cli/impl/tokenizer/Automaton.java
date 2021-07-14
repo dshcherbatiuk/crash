@@ -18,14 +18,11 @@
  */
 package org.crsh.cli.impl.tokenizer;
 
+import java.util.LinkedList;
 import org.crsh.cli.impl.line.LineParser;
 import org.crsh.cli.impl.line.Quoting;
 
-import java.util.LinkedList;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 class Automaton extends LineParser.Visitor {
 
   /** . */
@@ -67,13 +64,19 @@ class Automaton extends LineParser.Visitor {
         token = new Token.Whitespace(from, s.subSequence(from, current).toString());
         break;
       case WORD:
-        token = new Token.Literal.Word(from, s.subSequence(from, current).toString(), buffer.toString());
+        token =
+            new Token.Literal.Word(
+                from, s.subSequence(from, current).toString(), buffer.toString());
         break;
       case SHORT_OPTION:
-        token = new Token.Literal.Option.Short(from, s.subSequence(from, current).toString(), buffer.toString());
+        token =
+            new Token.Literal.Option.Short(
+                from, s.subSequence(from, current).toString(), buffer.toString());
         break;
       case LONG_OPTION:
-        token = new Token.Literal.Option.Long(from, s.subSequence(from, current).toString(), buffer.toString());
+        token =
+            new Token.Literal.Option.Long(
+                from, s.subSequence(from, current).toString(), buffer.toString());
         break;
       default:
         throw new AssertionError();
@@ -137,6 +140,10 @@ class Automaton extends LineParser.Visitor {
     }
   }
 
-  enum Status { WHITESPACE, WORD, SHORT_OPTION, LONG_OPTION }
-
+  enum Status {
+    WHITESPACE,
+    WORD,
+    SHORT_OPTION,
+    LONG_OPTION
+  }
 }

@@ -18,14 +18,11 @@
  */
 package org.crsh.cli.impl.lang;
 
+import java.lang.reflect.Type;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 
-import java.lang.reflect.Type;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public abstract class ObjectCommandInvoker<T, V> extends CommandInvoker<Instance<T>, V> {
 
   protected ObjectCommandInvoker(InvocationMatch<Instance<T>> match) {
@@ -35,6 +32,4 @@ public abstract class ObjectCommandInvoker<T, V> extends CommandInvoker<Instance
   public abstract Class<?>[] getParameterTypes();
 
   public abstract Type[] getGenericParameterTypes();
-
-
 }

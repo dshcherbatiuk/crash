@@ -18,68 +18,73 @@
  */
 package org.crsh.command.base;
 
-import org.crsh.shell.AbstractShellTestCase;
-import org.crsh.shell.ErrorKind;
-import org.crsh.command.base.entities.Bar;
-import org.crsh.command.base.entities.Foo;
-import org.crsh.command.base.entities.Foo2;
-import org.crsh.text.renderers.EntityTypeRenderer;
-import org.junit.Ignore;
-
+import java.util.*;
 import javax.naming.Context;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.*;
+import org.crsh.command.base.entities.Bar;
+import org.crsh.command.base.entities.Foo;
+import org.crsh.command.base.entities.Foo2;
+import org.crsh.shell.AbstractShellTestCase;
+import org.crsh.shell.ErrorKind;
+import org.crsh.text.renderers.EntityTypeRenderer;
+import org.junit.Ignore;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 @Ignore
 public class JPACommandTestCase extends AbstractShellTestCase {
 
   private String defaultFactory;
-  public static List<EntityTypeRenderer.EntityTypeData> output_entity = new ArrayList<EntityTypeRenderer.EntityTypeData>();
+  public static List<EntityTypeRenderer.EntityTypeData> output_entity =
+      new ArrayList<EntityTypeRenderer.EntityTypeData>();
   public static List<Map> output_value = new ArrayList<>();
 
-  private final String consume_command_entity = "class consume_command_entity {\n" +
-      "@Command\n" +
-      "public org.crsh.command.Pipe<org.crsh.text.renderers.EntityTypeRenderer.EntityTypeData, Object> main() {\n" +
-      "return new org.crsh.command.Pipe<org.crsh.text.renderers.EntityTypeRenderer.EntityTypeData, Object>() {\n" +
-      "public void provide(org.crsh.text.renderers.EntityTypeRenderer.EntityTypeData element) {\n" +
-      "org.crsh.command.base.JPACommandTestCase.output_entity.add(element)\n" +
-      "}\n" +
-      "}\n" +
-      "}\n" +
-      "}";
+  private final String consume_command_entity =
+      "class consume_command_entity {\n"
+          + "@Command\n"
+          + "public org.crsh.command.Pipe<org.crsh.text.renderers.EntityTypeRenderer.EntityTypeData, Object> main() {\n"
+          + "return new org.crsh.command.Pipe<org.crsh.text.renderers.EntityTypeRenderer.EntityTypeData, Object>() {\n"
+          + "public void provide(org.crsh.text.renderers.EntityTypeRenderer.EntityTypeData element) {\n"
+          + "org.crsh.command.base.JPACommandTestCase.output_entity.add(element)\n"
+          + "}\n"
+          + "}\n"
+          + "}\n"
+          + "}";
 
-  private final String consume_command_value = "class consume_command_value {\n" +
-      "@Command\n" +
-      "public org.crsh.command.Pipe<Map, Object> main() {\n" +
-      "return new org.crsh.command.Pipe<Map, Object>() {\n" +
-      "public void provide(Map element) {\n" +
-      "org.crsh.command.base.JPACommandTestCase.output_value.add(element)\n" +
-      "}\n" +
-      "}\n" +
-      "}\n" +
-      "}";
+  private final String consume_command_value =
+      "class consume_command_value {\n"
+          + "@Command\n"
+          + "public org.crsh.command.Pipe<Map, Object> main() {\n"
+          + "return new org.crsh.command.Pipe<Map, Object>() {\n"
+          + "public void provide(Map element) {\n"
+          + "org.crsh.command.base.JPACommandTestCase.output_value.add(element)\n"
+          + "}\n"
+          + "}\n"
+          + "}\n"
+          + "}";
 
-  private final Comparator entityComparator = new Comparator<EntityTypeRenderer.EntityTypeData>() {
-    public int compare(EntityTypeRenderer.EntityTypeData o1, EntityTypeRenderer.EntityTypeData o2) {
-      return o1.name.compareTo(o2.name);
-    }
-  };
-  private final Comparator attributeComparator = new Comparator<EntityTypeRenderer.AttributeData>() {
-    public int compare(EntityTypeRenderer.AttributeData o1, EntityTypeRenderer.AttributeData o2) {
-      return o1.name.compareTo(o2.name);
-    }
-  };
+  private final Comparator entityComparator =
+      new Comparator<EntityTypeRenderer.EntityTypeData>() {
+        public int compare(
+            EntityTypeRenderer.EntityTypeData o1, EntityTypeRenderer.EntityTypeData o2) {
+          return o1.name.compareTo(o2.name);
+        }
+      };
+  private final Comparator attributeComparator =
+      new Comparator<EntityTypeRenderer.AttributeData>() {
+        public int compare(
+            EntityTypeRenderer.AttributeData o1, EntityTypeRenderer.AttributeData o2) {
+          return o1.name.compareTo(o2.name);
+        }
+      };
 
   @Override
   public void setUp() throws Exception {
     super.setUp();
     defaultFactory = System.getProperty(Context.INITIAL_CONTEXT_FACTORY);
-    System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.crsh.command.base.factory.JPAInitialContextFactory");
+    System.setProperty(
+        Context.INITIAL_CONTEXT_FACTORY, "org.crsh.command.base.factory.JPAInitialContextFactory");
   }
 
   @Override
@@ -93,10 +98,10 @@ public class JPACommandTestCase extends AbstractShellTestCase {
   }
 
   public void testOpenClose() throws Exception {
-    
+
     //
     assertError("jpa close", ErrorKind.EVALUATION);
-    
+
     //
     assertError("jpa open none", ErrorKind.EVALUATION);
     assertOk("jpa open testEmf");
@@ -105,7 +110,6 @@ public class JPACommandTestCase extends AbstractShellTestCase {
     //
     assertOk("jpa close");
     assertError("jpa close", ErrorKind.EVALUATION);
-    
   }
 
   public void testEntities() throws Exception {
@@ -197,12 +201,12 @@ public class JPACommandTestCase extends AbstractShellTestCase {
     assertOk("jpa select f FROM Foo2 f order by f.id | consume_command_value");
     assertEquals(2, output_value.size());
     assertEquals("1", output_value.get(0).get("*id".toString()));
-    assertEquals("{" + Bar.class.getName() + "[id=1]," + Bar.class.getName() + "[id=2]}", output_value.get(0).get("bars"));
+    assertEquals(
+        "{" + Bar.class.getName() + "[id=1]," + Bar.class.getName() + "[id=2]}",
+        output_value.get(0).get("bars"));
     assertEquals("2", output_value.get(1).get("*id".toString()));
     assertEquals("{}", output_value.get(1).get("bars"));
 
-
     assertOk("jpa close");
   }
-  
 }

@@ -19,41 +19,39 @@
 
 package org.crsh.shell.impl.async;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 import org.crsh.AbstractTestCase;
+import org.crsh.shell.Shell;
+import org.crsh.shell.ShellResponse;
+import test.CommandQueue;
 import test.shell.base.BaseProcess;
 import test.shell.base.BaseProcessContext;
 import test.shell.base.BaseProcessFactory;
 import test.shell.base.BaseShell;
-import test.CommandQueue;
-import org.crsh.shell.Shell;
-import org.crsh.shell.ShellResponse;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ShutdownTestCase extends AbstractTestCase {
 
   public void testCreate() throws Exception {
     Shell shell = new BaseShell();
     CommandQueue commands = new CommandQueue();
-    AsyncShell  asyncShell = new AsyncShell(commands, shell);
+    AsyncShell asyncShell = new AsyncShell(commands, shell);
     asyncShell.close();
     try {
       asyncShell.createProcess("foo");
-    }
-    catch (IllegalStateException e) {
+    } catch (IllegalStateException e) {
     }
   }
 
   public void testExecute() throws Exception {
     Shell shell = new BaseShell();
     CommandQueue commands = new CommandQueue();
-    AsyncShell  asyncShell = new AsyncShell(commands, shell);
+    AsyncShell asyncShell = new AsyncShell(commands, shell);
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "foo");
     asyncShell.close();
     ctx.execute();
-    assertEquals(Status.TERMINATED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.TERMINATED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(ShellResponse.Cancelled.class, ctx.getResponse().getClass());
     assertEquals(0, commands.getSize());
   }
@@ -64,42 +62,44 @@ public class ShutdownTestCase extends AbstractTestCase {
     final CountDownLatch latch2 = new CountDownLatch(1);
 
     //
-    BaseProcessFactory factory = new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
+    BaseProcessFactory factory =
+        new BaseProcessFactory() {
           @Override
-          protected ShellResponse execute(String request) {
-            latch1.countDown();
-            try {
-              latch2.await();
-            } catch (InterruptedException e) {
-              failure.set(e);
-            }
-            return ShellResponse.ok();
-          }
-          @Override
-          public void cancel() {
-            latch2.countDown();
+          public BaseProcess create(String request) {
+            return new BaseProcess(request) {
+              @Override
+              protected ShellResponse execute(String request) {
+                latch1.countDown();
+                try {
+                  latch2.await();
+                } catch (InterruptedException e) {
+                  failure.set(e);
+                }
+                return ShellResponse.ok();
+              }
+
+              @Override
+              public void cancel() {
+                latch2.countDown();
+              }
+            };
           }
         };
-      }
-    };
 
     //
     Shell shell = new BaseShell(factory);
     CommandQueue commands = new CommandQueue();
-    AsyncShell  asyncShell = new AsyncShell(commands, shell);
+    AsyncShell asyncShell = new AsyncShell(commands, shell);
 
     //
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "foo").execute();
     Future<?> future = commands.executeAsync();
     latch1.await();
-    assertEquals(Status.EVALUATING, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.EVALUATING, ((AsyncProcess) ctx.getProcess()).getStatus());
 
     //
     asyncShell.close();
-    assertEquals(Status.CANCELED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.CANCELED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertEquals(ShellResponse.Cancelled.class, ctx.getResponse().getClass());
   }
 }

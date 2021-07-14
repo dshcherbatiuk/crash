@@ -19,18 +19,18 @@
 
 package org.crsh.cli.impl.type;
 
-import org.crsh.cli.type.ValueType;
-import org.crsh.cli.type.ValueTypeFactory;
-import junit.framework.TestCase;
-
-import javax.management.ObjectName;
 import java.io.File;
 import java.util.Properties;
+import javax.management.ObjectName;
+import junit.framework.TestCase;
+import org.crsh.cli.type.ValueType;
+import org.crsh.cli.type.ValueTypeFactory;
 
 public class SimpleValueTypeTestCase extends TestCase {
 
   /** . */
-  private ValueTypeFactory factory = new ValueTypeFactory(SimpleValueTypeTestCase.class.getClassLoader());
+  private ValueTypeFactory factory =
+      new ValueTypeFactory(SimpleValueTypeTestCase.class.getClassLoader());
 
   public void testString() throws Exception {
     ValueType<String> stringVT = factory.get(String.class);
@@ -53,8 +53,9 @@ public class SimpleValueTypeTestCase extends TestCase {
     assertEquals(false, b);
   }
 
-  private static enum Color  {
-    RED, BLUE
+  private static enum Color {
+    RED,
+    BLUE
   }
 
   public void testEnum() throws Exception {
@@ -66,13 +67,17 @@ public class SimpleValueTypeTestCase extends TestCase {
 
   public void testProperties() throws Exception {
     ValueType<Properties> propertiesVT = factory.get(Properties.class);
-    Properties props = propertiesVT.parse("org.apache.jackrabbit.repository.conf=repository" +
-        "-in-memory.xml;org.apache.jackrabbit.repository.home=/home/ehugonnet/tmp/crash/jcr/target" +
-        "/test-classes/conf/transient");
+    Properties props =
+        propertiesVT.parse(
+            "org.apache.jackrabbit.repository.conf=repository"
+                + "-in-memory.xml;org.apache.jackrabbit.repository.home=/home/ehugonnet/tmp/crash/jcr/target"
+                + "/test-classes/conf/transient");
     assertNotNull(props);
     assertEquals(2, props.size());
     assertEquals("repository-in-memory.xml", props.get("org.apache.jackrabbit.repository.conf"));
-    assertEquals("/home/ehugonnet/tmp/crash/jcr/target/test-classes/conf/transient", props.get("org.apache.jackrabbit.repository.home"));
+    assertEquals(
+        "/home/ehugonnet/tmp/crash/jcr/target/test-classes/conf/transient",
+        props.get("org.apache.jackrabbit.repository.home"));
   }
 
   public void testFile() throws Exception {

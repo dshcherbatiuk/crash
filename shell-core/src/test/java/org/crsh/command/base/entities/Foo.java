@@ -19,13 +19,11 @@
 
 package org.crsh.command.base.entities;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.*;
 
-/**
- * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
- */
+/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
 @Entity
 public class Foo implements Serializable {
 
@@ -64,8 +62,7 @@ public class Foo implements Serializable {
     this.created = created;
   }
 
-  public Foo() {
-  }
+  public Foo() {}
 
   public Foo(String name, Calendar created) {
     this.name = name;

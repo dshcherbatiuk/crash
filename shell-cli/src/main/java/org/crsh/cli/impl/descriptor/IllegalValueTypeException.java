@@ -39,8 +39,7 @@
 package org.crsh.cli.impl.descriptor;
 
 public class IllegalValueTypeException extends IntrospectionException {
-  public IllegalValueTypeException() {
-  }
+  public IllegalValueTypeException() {}
 
   public IllegalValueTypeException(String message) {
     super(message);

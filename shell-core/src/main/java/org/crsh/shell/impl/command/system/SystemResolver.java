@@ -18,51 +18,54 @@
  */
 package org.crsh.shell.impl.command.system;
 
-import org.crsh.cli.Usage;
+import java.util.HashMap;
+import java.util.Map;
 import org.crsh.cli.descriptor.Format;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.command.BaseCommand;
-import org.crsh.command.InvocationContext;
 import org.crsh.command.ShellSafety;
-import org.crsh.shell.ErrorKind;
-import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.lang.impl.java.ClassShellCommand;
-import org.crsh.shell.impl.command.spi.CommandResolver;
 import org.crsh.lang.spi.CommandResolution;
+import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.text.Color;
-import org.crsh.text.Decoration;
-import org.crsh.text.Style;
-import org.crsh.text.ui.LabelElement;
+import org.crsh.shell.impl.command.spi.CommandException;
+import org.crsh.shell.impl.command.spi.CommandResolver;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class SystemResolver implements CommandResolver {
 
   /** . */
   public static final SystemResolver UNSAFE_INSTANCE = new SystemResolver(false, true, true);
+
   public static final SystemResolver SAFE_INSTANCE = new SystemResolver(true, false, true);
-  public static final SystemResolver SAFE_INSTANCE_WITHOUT_MAN = new SystemResolver(true, false, false);
+  public static final SystemResolver SAFE_INSTANCE_WITHOUT_MAN =
+      new SystemResolver(true, false, false);
   public static final SystemResolver SEMI_SAFE_INSTANCE = new SystemResolver(true, true, true);
-  public static final SystemResolver SEMI_SAFE_INSTANCE_WITHOUT_MAN = new SystemResolver(true, true, false);
+  public static final SystemResolver SEMI_SAFE_INSTANCE_WITHOUT_MAN =
+      new SystemResolver(true, true, false);
 
   /** . */
-  private static final HashMap<String, Class<? extends BaseCommand>> unsafeCommands = new HashMap<String, Class<? extends BaseCommand>>();
-  private static final HashMap<String, Class<? extends BaseCommand>> safeCommands = new HashMap<String, Class<? extends BaseCommand>>();
-  private static final HashMap<String, Class<? extends BaseCommand>> safeCommandsWithoutMan = new HashMap<String, Class<? extends BaseCommand>>();
-  private static final HashMap<String, Class<? extends BaseCommand>> semiSafeCommands = new HashMap<String, Class<? extends BaseCommand>>();
-  private static final HashMap<String, Class<? extends BaseCommand>> semiSafeCommandsWithoutMan = new HashMap<String, Class<? extends BaseCommand>>();
+  private static final HashMap<String, Class<? extends BaseCommand>> unsafeCommands =
+      new HashMap<>();
+
+  private static final HashMap<String, Class<? extends BaseCommand>> safeCommands =
+      new HashMap<>();
+  private static final HashMap<String, Class<? extends BaseCommand>> safeCommandsWithoutMan =
+      new HashMap<>();
+  private static final HashMap<String, Class<? extends BaseCommand>> semiSafeCommands =
+      new HashMap<>();
+  private static final HashMap<String, Class<? extends BaseCommand>> semiSafeCommandsWithoutMan =
+      new HashMap<>();
 
   /** . */
-  private static final HashMap<String, String> unsafeDescriptions = new HashMap<String, String>();
-  private static final HashMap<String, String> safeDescriptions = new HashMap<String, String>();
-  private static final HashMap<String, String> safeDescriptionsWithoutMan = new HashMap<String, String>();
-  private static final HashMap<String, String> semiSafeDescriptions = new HashMap<String, String>();
-  private static final HashMap<String, String> semiSafeDescriptionsWithoutMan = new HashMap<String, String>();
+  private static final HashMap<String, String> unsafeDescriptions = new HashMap<>();
+
+  private static final HashMap<String, String> safeDescriptions = new HashMap<>();
+  private static final HashMap<String, String> safeDescriptionsWithoutMan =
+      new HashMap<>();
+  private static final HashMap<String, String> semiSafeDescriptions = new HashMap<>();
+  private static final HashMap<String, String> semiSafeDescriptionsWithoutMan =
+      new HashMap<>();
 
   static {
     unsafeCommands.put("help", help.class);
@@ -73,7 +76,8 @@ public class SystemResolver implements CommandResolver {
     unsafeDescriptions.put("exit", "Exits.");
     unsafeDescriptions.put("bye", "Exits, same as exit.");
 
-    // Add handlers for commands such that the user gets a suitable message if they try to run in safe mode.
+    // Add handlers for commands such that the user gets a suitable message if they try to run in
+    // safe mode.
     UnsafeSafeModeCmdResolution.addSafeHandlers(safeCommands, false, true);
     UnsafeSafeModeCmdResolution.addSafeHandlers(safeCommandsWithoutMan, false, false);
     UnsafeSafeModeCmdResolution.addSafeHandlers(semiSafeCommands, true, true);
@@ -87,11 +91,13 @@ public class SystemResolver implements CommandResolver {
     semiSafeCommands.put("help", help.class);
     semiSafeDescriptions.put("help", "provides basic help (safe mode commands).");
     semiSafeDescriptions.put("exit", "Exits (currently permitted in safe mode shell).");
-    semiSafeDescriptions.put("bye", "Exits (currently permitted in safe mode shell), same as exit.");
+    semiSafeDescriptions.put(
+        "bye", "Exits (currently permitted in safe mode shell), same as exit.");
     semiSafeCommandsWithoutMan.put("help", help.class);
     semiSafeDescriptionsWithoutMan.put("help", "provides basic help (safe mode commands).");
     semiSafeDescriptionsWithoutMan.put("exit", "Exits (currently permitted in safe mode shell).");
-    semiSafeDescriptionsWithoutMan.put("bye", "Exits (currently permitted in safe mode shell), same as exit.");
+    semiSafeDescriptionsWithoutMan.put(
+        "bye", "Exits (currently permitted in safe mode shell), same as exit.");
   }
 
   private final boolean safeInstance;
@@ -106,13 +112,23 @@ public class SystemResolver implements CommandResolver {
 
   @Override
   public Iterable<Map.Entry<String, String>> getDescriptions(ShellSafety shellSafety) {
-    return safeInstance ? (allowExit ? (allowMan ? semiSafeDescriptions.entrySet() : semiSafeDescriptionsWithoutMan.entrySet()) : (allowMan ? safeDescriptions.entrySet() : safeDescriptionsWithoutMan.entrySet())) : unsafeDescriptions.entrySet();
+    return safeInstance
+        ? (allowExit
+            ? (allowMan
+                ? semiSafeDescriptions.entrySet()
+                : semiSafeDescriptionsWithoutMan.entrySet())
+            : (allowMan ? safeDescriptions.entrySet() : safeDescriptionsWithoutMan.entrySet()))
+        : unsafeDescriptions.entrySet();
   }
 
   @Override
-  public Command<?> resolveCommand(String name, ShellSafety shellSafety) throws CommandException, NullPointerException {
-    final Class<? extends BaseCommand> systemCommand = safeInstance
-            ? (allowExit ? (allowMan ? semiSafeCommands.get(name) : semiSafeCommandsWithoutMan.get(name)) : (allowMan ? safeCommands.get(name) : safeCommandsWithoutMan.get(name)))
+  public Command<?> resolveCommand(String name, ShellSafety shellSafety)
+      throws CommandException, NullPointerException {
+    final Class<? extends BaseCommand> systemCommand =
+        safeInstance
+            ? (allowExit
+                ? (allowMan ? semiSafeCommands.get(name) : semiSafeCommandsWithoutMan.get(name))
+                : (allowMan ? safeCommands.get(name) : safeCommandsWithoutMan.get(name)))
             : unsafeCommands.get(name);
     if (systemCommand != null) {
       return createCommand(systemCommand, shellSafety).getCommand();
@@ -120,23 +136,25 @@ public class SystemResolver implements CommandResolver {
     return null;
   }
 
-  private <C extends BaseCommand> CommandResolution createCommand(final Class<C> commandClass, ShellSafety shellSafety) throws CommandException {
+  private <C extends BaseCommand> CommandResolution createCommand(
+      final Class<C> commandClass, ShellSafety shellSafety) throws CommandException {
     final ClassShellCommand<C> shellCommand;
     final String description;
     try {
       shellCommand = new ClassShellCommand<C>(commandClass, shellSafety);
       description = shellCommand.describe(commandClass.getSimpleName(), Format.DESCRIBE);
-    }
-    catch (IntrospectionException e) {
-      throw new CommandException(ErrorKind.SYNTAX, "Invalid cli annotation in command " + commandClass.getSimpleName(), e);
+    } catch (IntrospectionException e) {
+      throw new CommandException(
+          ErrorKind.SYNTAX, "Invalid cli annotation in command " + commandClass.getSimpleName(), e);
     }
     return new CommandResolution() {
       @Override
       public String getDescription() {
         return description;
       }
+
       @Override
-      public Command<?> getCommand() throws CommandException {
+      public Command<?> getCommand() {
         return shellCommand;
       }
     };

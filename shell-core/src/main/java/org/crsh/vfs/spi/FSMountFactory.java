@@ -18,9 +18,8 @@
  */
 package org.crsh.vfs.spi;
 
-import org.crsh.vfs.Path;
-
 import java.io.IOException;
+import org.crsh.vfs.Path;
 
 /**
  * The mount factory is able to create mounts for a given file system and a specified path.
@@ -37,5 +36,4 @@ public interface FSMountFactory<H> {
    * @throws IOException any io exception
    */
   Mount<H> create(Path path) throws IOException;
-
 }

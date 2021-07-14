@@ -20,16 +20,15 @@
 package org.crsh.shell.impl.async;
 
 import com.google.common.util.concurrent.MoreExecutors;
+import java.io.IOException;
+import java.util.concurrent.Executors;
 import org.crsh.AbstractTestCase;
+import org.crsh.shell.*;
+import test.plugin.TestPluginLifeCycle;
 import test.shell.base.BaseProcess;
 import test.shell.base.BaseProcessContext;
 import test.shell.base.BaseProcessFactory;
 import test.shell.base.BaseShell;
-import test.plugin.TestPluginLifeCycle;
-import org.crsh.shell.*;
-
-import java.io.IOException;
-import java.util.concurrent.Executors;
 
 public class AsyncShellTestCase extends AbstractTestCase {
 
@@ -54,24 +53,25 @@ public class AsyncShellTestCase extends AbstractTestCase {
   public void testReadLine() throws Exception {
 
     //
-    BaseProcessFactory factory = new BaseProcessFactory() {
-      @Override
-      public BaseProcess create(String request) {
-        return new BaseProcess(request) {
+    BaseProcessFactory factory =
+        new BaseProcessFactory() {
           @Override
-          public void process(String request, ShellProcessContext processContext) throws IOException {
-            String a = null;
-            try {
-              a = readLine("bar", true);
-            }
-            catch (InterruptedException e) {
-            }
-            processContext.append(a);
-            processContext.end(ShellResponse.ok());
+          public BaseProcess create(String request) {
+            return new BaseProcess(request) {
+              @Override
+              public void process(String request, ShellProcessContext processContext)
+                  throws IOException {
+                String a = null;
+                try {
+                  a = readLine("bar", true);
+                } catch (InterruptedException e) {
+                }
+                processContext.append(a);
+                processContext.end(ShellResponse.ok());
+              }
+            };
           }
         };
-      }
-    };
 
     //
     Shell shell = new BaseShell(factory);
@@ -94,12 +94,16 @@ public class AsyncShellTestCase extends AbstractTestCase {
   }
 
   public void testAsyncEvaluation() throws InterruptedException {
-    AsyncShell connector = new AsyncShell(Executors.newSingleThreadExecutor(), lifeCycle.createShell());
+    AsyncShell connector =
+        new AsyncShell(Executors.newSingleThreadExecutor(), lifeCycle.createShell());
     status = 0;
-    BaseProcessContext ctx = BaseProcessContext.create(connector, "invoke " + AsyncShellTestCase.class.getName() + " bilto");
+    BaseProcessContext ctx =
+        BaseProcessContext.create(
+            connector, "invoke " + AsyncShellTestCase.class.getName() + " bilto");
     ctx.execute();
     ShellResponse resp = ctx.getResponse();
-    assertTrue("Was not expecting response to be " + resp.getMessage(), resp instanceof ShellResponse.Ok);
+    assertTrue(
+        "Was not expecting response to be " + resp.getMessage(), resp instanceof ShellResponse.Ok);
     assertEquals(1, status);
     ctx.getResponse();
   }
@@ -114,11 +118,11 @@ public class AsyncShellTestCase extends AbstractTestCase {
 
   public void testDirect() throws Exception {
     Shell shell = new BaseShell(BaseProcessFactory.ECHO);
-    AsyncShell  asyncShell = new AsyncShell(MoreExecutors.newDirectExecutorService(), shell);
+    AsyncShell asyncShell = new AsyncShell(MoreExecutors.newDirectExecutorService(), shell);
 
     //
     BaseProcessContext ctx = BaseProcessContext.create(asyncShell, "hello").execute();
-    assertEquals(Status.TERMINATED, ((AsyncProcess)ctx.getProcess()).getStatus());
+    assertEquals(Status.TERMINATED, ((AsyncProcess) ctx.getProcess()).getStatus());
     assertInstance(ShellResponse.Ok.class, ctx.getResponse());
     assertEquals("hello", ctx.getOutput());
   }

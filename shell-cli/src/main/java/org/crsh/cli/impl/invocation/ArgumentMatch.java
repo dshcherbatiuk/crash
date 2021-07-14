@@ -19,20 +19,20 @@
 
 package org.crsh.cli.impl.invocation;
 
+import java.util.List;
 import org.crsh.cli.descriptor.ArgumentDescriptor;
 import org.crsh.cli.impl.LiteralValue;
-
-import java.util.List;
 
 public class ArgumentMatch extends ParameterMatch<ArgumentDescriptor> {
 
   /** . */
-  private int start;
+  private final int start;
 
   /** . */
-  private int end;
+  private final int end;
 
-  public ArgumentMatch(ArgumentDescriptor parameter, int start, int end, List<LiteralValue> values) {
+  public ArgumentMatch(
+      ArgumentDescriptor parameter, int start, int end, List<LiteralValue> values) {
     super(parameter, values);
     this.start = start;
     this.end = end;

@@ -20,11 +20,8 @@ package org.crsh.console;
 
 import jline.console.Operation;
 
-/**
- * @author Julien Viet
- */
+/** @author Julien Viet */
 public class KeyStrokes {
-
 
   /** . */
   public static final KeyStroke a = new KeyStroke(Operation.SELF_INSERT, 'a');
@@ -125,7 +122,7 @@ public class KeyStrokes {
   public static KeyStroke[] of(CharSequence value) {
     int len = value.length();
     KeyStroke[] keyStrokes = new KeyStroke[len];
-    for (int i = 0;i < len;i++) {
+    for (int i = 0; i < len; i++) {
       keyStrokes[i] = of(Character.codePointAt(value, i));
     }
     return keyStrokes;

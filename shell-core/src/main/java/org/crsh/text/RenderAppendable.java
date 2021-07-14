@@ -38,8 +38,7 @@ public class RenderAppendable implements ScreenContext {
   public RenderAppendable append(CharSequence s) {
     try {
       context.append(s);
-    }
-    catch (java.io.IOException ignore) {
+    } catch (java.io.IOException ignore) {
     }
     return this;
   }
@@ -48,8 +47,7 @@ public class RenderAppendable implements ScreenContext {
   public Screenable append(char c) {
     try {
       context.append(c);
-    }
-    catch (java.io.IOException ignore) {
+    } catch (java.io.IOException ignore) {
     }
     return this;
   }
@@ -58,8 +56,7 @@ public class RenderAppendable implements ScreenContext {
   public Screenable append(CharSequence csq, int start, int end) {
     try {
       context.append(csq, start, end);
-    }
-    catch (java.io.IOException ignore) {
+    } catch (java.io.IOException ignore) {
     }
     return this;
   }
@@ -68,8 +65,7 @@ public class RenderAppendable implements ScreenContext {
   public Screenable append(Style style) {
     try {
       context.append(style);
-    }
-    catch (java.io.IOException ignore) {
+    } catch (java.io.IOException ignore) {
     }
     return this;
   }
@@ -78,8 +74,7 @@ public class RenderAppendable implements ScreenContext {
   public Screenable cls() {
     try {
       context.cls();
-    }
-    catch (java.io.IOException ignore) {
+    } catch (java.io.IOException ignore) {
     }
     return this;
   }
@@ -125,10 +120,8 @@ public class RenderAppendable implements ScreenContext {
       Color fg = foo(last.getForeground(), merged.getForeground(), Color.def);
       Color bg = foo(last.getBackground(), merged.getBackground(), Color.def);
 
-      //
       Style.Composite bilto = Style.style(bold, underline, blink, fg, bg);
 
-      //   
       append(bilto);
     } else {
       append(Style.reset);
@@ -144,7 +137,7 @@ public class RenderAppendable implements ScreenContext {
   private Style.Composite getMerged() {
     Style.Composite merged = Style.style();
     for (Style s : stack) {
-      merged = (Style.Composite)merged.merge(s);
+      merged = (Style.Composite) merged.merge(s);
     }
     return merged;
   }

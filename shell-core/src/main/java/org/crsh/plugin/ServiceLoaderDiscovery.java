@@ -57,8 +57,7 @@ public class ServiceLoaderDiscovery implements PluginDiscovery {
         log.log(Level.INFO, "Loaded plugin " + plugin);
         plugins.add(plugin);
       }
-    }
-    catch (ServiceConfigurationError e) {
+    } catch (ServiceConfigurationError e) {
       log.log(Level.SEVERE, "Could not load plugins", e);
     }
 

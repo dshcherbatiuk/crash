@@ -19,10 +19,9 @@
 
 package org.crsh.command.base;
 
+import java.sql.SQLException;
 import org.crsh.command.ScriptException;
 import org.crsh.shell.AbstractShellTestCase;
-
-import java.sql.SQLException;
 
 public class JDBCCommandTestCase extends AbstractShellTestCase {
 
@@ -31,7 +30,8 @@ public class JDBCCommandTestCase extends AbstractShellTestCase {
   }
 
   public void testNotConnected() {
-    assertEvalError("jdbc execute create table derbyDB(num int, addr varchar(40))", ScriptException.class);
+    assertEvalError(
+        "jdbc execute create table derbyDB(num int, addr varchar(40))", ScriptException.class);
   }
 
   public void testExecute() {

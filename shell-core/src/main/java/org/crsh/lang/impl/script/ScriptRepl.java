@@ -18,21 +18,20 @@
  */
 package org.crsh.lang.impl.script;
 
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.spi.Completion;
 import org.crsh.lang.spi.*;
+import org.crsh.shell.ShellResponse;
 import org.crsh.shell.impl.command.RuntimeContextImpl;
 import org.crsh.shell.impl.command.ShellSession;
+import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
-import org.crsh.shell.impl.command.spi.Command;
-import org.crsh.shell.ShellResponse;
 import org.crsh.util.Utils;
-
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** @author Julien Viet */
 public class ScriptRepl implements Repl {
@@ -48,18 +47,41 @@ public class ScriptRepl implements Repl {
   }
 
   /** . */
-  private final Language lang = new Language() {
-    @Override public String getName() { return "script"; }
-    @Override public String getDisplayName() { return "Script 1.0"; }
-    @Override public boolean isActive() { return true; }
-    @Override public Repl getRepl() { return ScriptRepl.this; }
-    @Override public org.crsh.lang.spi.Compiler getCompiler() { return ScriptCompiler.instance; }
-    @Override public void init(ShellSession session) { }
-    @Override public void destroy(ShellSession session) { }
-  };
+  private final Language lang =
+      new Language() {
+        @Override
+        public String getName() {
+          return "script";
+        }
 
-  private ScriptRepl() {
-  }
+        @Override
+        public String getDisplayName() {
+          return "Script 1.0";
+        }
+
+        @Override
+        public boolean isActive() {
+          return true;
+        }
+
+        @Override
+        public Repl getRepl() {
+          return ScriptRepl.this;
+        }
+
+        @Override
+        public org.crsh.lang.spi.Compiler getCompiler() {
+          return ScriptCompiler.instance;
+        }
+
+        @Override
+        public void init(ShellSession session) {}
+
+        @Override
+        public void destroy(ShellSession session) {}
+      };
+
+  private ScriptRepl() {}
 
   @Override
   public Language getLanguage() {
@@ -79,20 +101,18 @@ public class ScriptRepl implements Repl {
     PipeLineFactory factory;
     try {
       factory = Token.parse(request).createFactory();
-    }
-    catch (CommandException e) {
-      return new ReplResponse.Response(ShellResponse.error(e.getErrorKind(), e.getMessage(), e.getCause()));
+    } catch (CommandException e) {
+      return new ReplResponse.Response(
+          ShellResponse.error(e.getErrorKind(), e.getMessage(), e.getCause()));
     }
     if (factory != null) {
       try {
         CommandInvoker<Void, Object> invoker = factory.create(session);
         return new ReplResponse.Invoke(invoker);
-      }
-      catch (CommandNotFoundException e) {
+      } catch (CommandNotFoundException e) {
         log.log(Level.FINER, "Could not create command", e);
         return new ReplResponse.Response(ShellResponse.unknownCommand(e.getName()));
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         log.log(Level.FINER, "Could not create command", e);
         return new ReplResponse.Response(ShellResponse.error(e.getErrorKind(), e.getMessage(), e));
       }
@@ -130,12 +150,14 @@ public class ScriptRepl implements Repl {
       try {
         Command<?> command = session.getCommand(commandName);
         if (command != null) {
-          completion = command.complete(new RuntimeContextImpl(session, session.getContext().getAttributes()), termPrefix);
+          completion =
+              command.complete(
+                  new RuntimeContextImpl(session, session.getContext().getAttributes()),
+                  termPrefix);
         } else {
           completion = new CompletionMatch(Delimiter.EMPTY, Completion.create());
         }
-      }
-      catch (CommandException e) {
+      } catch (CommandException e) {
         log.log(Level.FINE, "Could not create command for completion of " + prefix, e);
         completion = new CompletionMatch(Delimiter.EMPTY, Completion.create());
       }

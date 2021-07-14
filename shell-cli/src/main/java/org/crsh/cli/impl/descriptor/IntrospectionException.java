@@ -42,8 +42,7 @@ import org.crsh.cli.impl.CLIException;
 
 public class IntrospectionException extends CLIException {
 
-  public IntrospectionException() {
-  }
+  public IntrospectionException() {}
 
   public IntrospectionException(String message) {
     super(message);

@@ -19,12 +19,11 @@
 
 package org.crsh.cli.impl.invocation;
 
-import org.crsh.cli.impl.SyntaxException;
-import org.crsh.cli.impl.LiteralValue;
-import org.crsh.cli.descriptor.ParameterDescriptor;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.crsh.cli.descriptor.ParameterDescriptor;
+import org.crsh.cli.impl.LiteralValue;
+import org.crsh.cli.impl.SyntaxException;
 
 public class ParameterMatch<P extends ParameterDescriptor> {
 
@@ -66,7 +65,8 @@ public class ParameterMatch<P extends ParameterDescriptor> {
    * Compute the value from the parameter metadata and the values list.
    *
    * @return the invocation value
-   * @throws org.crsh.cli.impl.SyntaxException anything that would prevent the value from being computed
+   * @throws org.crsh.cli.impl.SyntaxException anything that would prevent the value from being
+   *     computed
    */
   public Object computeValue() throws SyntaxException {
     List<String> strings = getStrings();
