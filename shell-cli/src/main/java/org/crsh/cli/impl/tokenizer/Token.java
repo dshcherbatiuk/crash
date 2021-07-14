@@ -49,7 +49,6 @@ public abstract class Token {
 
     public abstract static class Option extends Literal {
 
-      /** . */
       private final String name;
 
       public final String getName() {
@@ -62,6 +61,7 @@ public abstract class Token {
       }
 
       public static final class Short extends Option {
+
         public Short(int index, String raw, String value) {
           super(index, raw, value, value.substring(1));
         }
@@ -72,6 +72,7 @@ public abstract class Token {
       }
 
       public static final class Long extends Option {
+
         public Long(int index, String value) {
           this(index, value, value);
         }
@@ -83,6 +84,7 @@ public abstract class Token {
     }
 
     public static final class Word extends Literal {
+
       public Word(int index, String raw, String value) {
         super(index, raw, value);
       }
@@ -92,7 +94,6 @@ public abstract class Token {
       }
     }
 
-    /** . */
     final String value;
 
     Literal(int index, String value) {
@@ -139,10 +140,11 @@ public abstract class Token {
     }
   }
 
-  /** The index in the containing sequence. */
+  /**
+   * The index in the containing sequence.
+   */
   final int index;
 
-  /** . */
   final String raw;
 
   Token(int index, String raw) {

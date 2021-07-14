@@ -19,34 +19,44 @@
 
 package org.crsh.cli.type;
 
+import static java.util.logging.Level.WARNING;
+import static java.util.logging.Logger.getLogger;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** A factory for value types. */
+/**
+ * A factory for value types.
+ */
 public class ValueTypeFactory {
 
-  /** A value type factory instance that provides a predefined set of value types. */
+  private static final Logger LOGGER = getLogger(ValueTypeFactory.class.getName());
+
+  /**
+   * A value type factory instance that provides a predefined set of value types.
+   */
   public static final ValueTypeFactory DEFAULT = new ValueTypeFactory();
 
-  /** The known types. */
+  /**
+   * The known types.
+   */
   private final ValueType<?>[] types;
 
   private ValueTypeFactory() {
     this.types =
-        new ValueType<?>[] {
-          ValueType.STRING,
-          ValueType.INTEGER,
-          ValueType.BOOLEAN,
-          ValueType.ENUM,
-          ValueType.PROPERTIES,
-          ValueType.OBJECT_NAME,
-          ValueType.THREAD,
-          ValueType.FILE
+        new ValueType<?>[]{
+            ValueType.STRING,
+            ValueType.INTEGER,
+            ValueType.BOOLEAN,
+            ValueType.ENUM,
+            ValueType.PROPERTIES,
+            ValueType.OBJECT_NAME,
+            ValueType.THREAD,
+            ValueType.FILE
         };
   }
 
@@ -62,22 +72,18 @@ public class ValueTypeFactory {
       throw new NullPointerException("No null loader accepted");
     }
 
-    //
-    LinkedHashSet<ValueType> types = new LinkedHashSet<ValueType>();
+    final LinkedHashSet<ValueType<?>> types = new LinkedHashSet<>();
     Collections.addAll(types, DEFAULT.types);
     Iterator<ValueType> sl = ServiceLoader.load(ValueType.class, loader).iterator();
     while (sl.hasNext()) {
       try {
-        ValueType type = sl.next();
+        final ValueType<?> type = sl.next();
         types.add(type);
       } catch (ServiceConfigurationError e) {
-        // Log it
-        Logger logger = Logger.getLogger(ValueTypeFactory.class.getName());
-        logger.log(Level.WARNING, "Could not load value type factory", e);
+        LOGGER.log(WARNING, "Could not load value type factory", e);
       }
     }
 
-    //
     this.types = types.toArray(new ValueType[types.size()]);
   }
 

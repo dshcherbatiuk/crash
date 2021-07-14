@@ -24,10 +24,8 @@ import org.crsh.cli.impl.line.LineParser;
 
 public class TokenizerImpl extends Tokenizer {
 
-  /** . */
   private final Automaton automaton;
 
-  /** . */
   private Delimiter endingDelimiter;
 
   public TokenizerImpl(CharSequence s) {
@@ -54,12 +52,10 @@ public class TokenizerImpl extends Tokenizer {
           }
         };
 
-    //
     LineParser parser = new LineParser(automaton, parser2);
     parser.append(s);
     automaton.close();
 
-    //
     this.automaton = automaton;
   }
 

@@ -72,7 +72,9 @@ import java.util.Set;
  */
 public final class Completion implements Iterable<Map.Entry<String, Boolean>>, Serializable {
 
-  /** . */
+  /**
+   * .
+   */
   private static final Completion EMPTY = create("");
 
   public static Builder builder(String prefix) {
@@ -84,7 +86,7 @@ public final class Completion implements Iterable<Map.Entry<String, Boolean>>, S
   }
 
   public static Completion create(String prefix) {
-    return create(prefix, Collections.<String, Boolean>emptyMap());
+    return create(prefix, Collections.emptyMap());
   }
 
   public static Completion create(String prefix, String suffix, boolean value) {
@@ -99,10 +101,8 @@ public final class Completion implements Iterable<Map.Entry<String, Boolean>>, S
     return new Completion(prefix, suffixes);
   }
 
-  /** . */
   private final String prefix;
 
-  /** . */
   private final Map<String, Boolean> values;
 
   private Completion(String prefix, Map<String, Boolean> values) {
@@ -166,10 +166,8 @@ public final class Completion implements Iterable<Map.Entry<String, Boolean>>, S
 
   public static class Builder {
 
-    /** . */
-    private String prefix;
+    private final String prefix;
 
-    /** . */
     private Map<String, Boolean> entries;
 
     public Builder(String prefix) {

@@ -19,6 +19,8 @@
 
 package org.crsh.cli.impl.lang;
 
+import static java.util.logging.Logger.getLogger;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,16 +44,14 @@ import org.crsh.cli.impl.ParameterType;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.type.ValueTypeFactory;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public class CommandFactory {
 
-  /** . */
+  private static final Logger LOGGER = getLogger(CommandFactory.class.getName());
   public static final CommandFactory DEFAULT = new CommandFactory();
 
-  /** . */
-  private static final Logger log = Logger.getLogger(CommandFactory.class.getName());
-
-  /** . */
   protected final ValueTypeFactory valueTypeFactory;
 
   public CommandFactory() {
@@ -67,15 +67,14 @@ public class CommandFactory {
       throw new NullPointerException("No null value type factory accepted");
     }
 
-    //
     this.valueTypeFactory = valueTypeFactory;
   }
 
-  private List<Method> findAllMethods(Class<?> introspected) throws IntrospectionException {
+  private List<Method> findAllMethods(Class<?> introspected) {
     List<Method> methods;
-    Class<?> superIntrospected = introspected.getSuperclass();
+    final Class<?> superIntrospected = introspected.getSuperclass();
     if (superIntrospected == null) {
-      methods = new ArrayList<Method>();
+      methods = new ArrayList<>();
     } else {
       methods = findAllMethods(superIntrospected);
       for (Method method : introspected.getDeclaredMethods()) {
@@ -92,7 +91,6 @@ public class CommandFactory {
     // Find all command methods
     List<Method> methods = findAllMethods(type);
 
-    //
     String commandName;
     if (type.getAnnotation(Named.class) != null) {
       commandName = type.getAnnotation(Named.class).value();
@@ -100,7 +98,6 @@ public class CommandFactory {
       commandName = type.getSimpleName();
     }
 
-    //
     if (methods.size() == 1 && methods.get(0).getName().equals("main")) {
       MethodDescriptor<T> methodDescriptor = create(null, commandName, methods.get(0));
       for (ParameterDescriptor parameter : parameters(type)) {
@@ -156,7 +153,7 @@ public class CommandFactory {
       if (parameter != null) {
         methodDescriptor.addParameter(parameter);
       } else {
-        log.log(
+        LOGGER.log(
             Level.FINE,
             "Method argument with index " + i + " of method " + method + " is not annotated");
       }
@@ -174,13 +171,11 @@ public class CommandFactory {
       Annotation ann)
       throws IntrospectionException {
 
-    //
     if (argumentAnn != null) {
       if (optionAnn != null) {
         throw new IntrospectionException();
       }
 
-      //
       return new BoundArgumentDescriptor(
           binding,
           argumentAnn.name(),
@@ -221,9 +216,8 @@ public class CommandFactory {
       } else if (parameterAnnotation instanceof Required) {
         required = ((Required) parameterAnnotation).value();
       } else if (info == null) {
-
         // Look at annotated annotations
-        Class<? extends Annotation> a = parameterAnnotation.annotationType();
+        final Class<? extends Annotation> a = parameterAnnotation.annotationType();
         if (a.getAnnotation(Option.class) != null) {
           optionAnn = a.getAnnotation(Option.class);
           info = parameterAnnotation;
@@ -232,13 +226,8 @@ public class CommandFactory {
           info = parameterAnnotation;
         }
 
-        //
         if (info != null) {
-
-          //
           description = new Description(description, new Description(a));
-
-          //
           if (required == null) {
             Required metaReq = a.getAnnotation(Required.class);
             if (metaReq != null) {
@@ -249,12 +238,14 @@ public class CommandFactory {
       }
     }
 
-    //
     return new Tuple(argumentAnn, optionAnn, required != null && required, description, info);
   }
 
-  /** Jus grouping some data for conveniency */
+  /**
+   * Jus grouping some data for conveniency
+   */
   protected static class Tuple {
+
     final Argument argumentAnn;
     final Option optionAnn;
     final boolean required;
@@ -280,7 +271,7 @@ public class CommandFactory {
     List<ParameterDescriptor> parameters;
     Class<?> superIntrospected = introspected.getSuperclass();
     if (superIntrospected == null) {
-      parameters = new ArrayList<ParameterDescriptor>();
+      parameters = new ArrayList<>();
     } else {
       parameters = parameters(superIntrospected);
       for (Field f : introspected.getDeclaredFields()) {

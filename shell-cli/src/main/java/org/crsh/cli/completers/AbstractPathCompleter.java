@@ -43,7 +43,6 @@ public abstract class AbstractPathCompleter<P> implements Completer {
 
   public final Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
 
-    //
     String sep = File.separator;
 
     // Handle empty dir

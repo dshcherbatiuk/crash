@@ -24,7 +24,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** Annotates a method for declaring a CRaSH command. */
+/**
+ * Annotates a method for declaring a CRaSH command.
+ */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Command {}
+public @interface Command {
+
+}

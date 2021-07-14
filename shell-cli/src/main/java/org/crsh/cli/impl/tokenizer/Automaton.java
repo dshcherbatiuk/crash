@@ -22,25 +22,21 @@ import java.util.LinkedList;
 import org.crsh.cli.impl.line.LineParser;
 import org.crsh.cli.impl.line.Quoting;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class Automaton extends LineParser.Visitor {
 
-  /** . */
   private Status status = Status.WHITESPACE;
 
-  /** . */
   private final StringBuilder buffer = new StringBuilder();
 
-  /** . */
   final LinkedList<Token> tokens = new LinkedList<Token>();
 
-  /** . */
   private int from = 0;
 
-  /** . */
   private int lastWhitespace = 0;
 
-  /** . */
   private final CharSequence s;
 
   Automaton(CharSequence s) {

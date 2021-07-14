@@ -47,17 +47,17 @@ public class UIBuilder extends BuilderSupport implements Iterable<LineRenderer> 
   @Override
   protected Object doInvokeMethod(String methodName, Object name, Object args) {
     if ("eval".equals(name)) {
-      List list = InvokerHelper.asList(args);
+      final List<?> list = InvokerHelper.asList(args);
       if (list.size() == 1 && list.get(0) instanceof Closure) {
-        EvalElement element = (EvalElement) super.doInvokeMethod(methodName, name, null);
-        element.closure = (Closure) list.get(0);
+        final EvalElement element = (EvalElement) super.doInvokeMethod(methodName, name, null);
+        element.closure = (Closure<?>) list.get(0);
         return element;
-      } else {
-        return super.doInvokeMethod(methodName, name, args);
       }
-    } else {
+
       return super.doInvokeMethod(methodName, name, args);
     }
+
+    return super.doInvokeMethod(methodName, name, args);
   }
 
   @Override
@@ -89,7 +89,6 @@ public class UIBuilder extends BuilderSupport implements Iterable<LineRenderer> 
           "Cannot build object with name " + name + " and value " + value);
     }
 
-    //
     Style.Composite style = element.getStyle();
     if (style == null) {
       style = Style.style();
@@ -113,7 +112,6 @@ public class UIBuilder extends BuilderSupport implements Iterable<LineRenderer> 
     }
     element.setStyle(style);
 
-    //
     if (element instanceof TableElement) {
       TableElement table = (TableElement) element;
 
@@ -194,7 +192,6 @@ public class UIBuilder extends BuilderSupport implements Iterable<LineRenderer> 
       table.setRightCellPadding(rightCellPadding);
     }
 
-    //
     return element;
   }
 
@@ -240,7 +237,7 @@ public class UIBuilder extends BuilderSupport implements Iterable<LineRenderer> 
 
   public Iterator<LineRenderer> iterator() {
     return new Iterator<LineRenderer>() {
-      Iterator<Element> i = elements.iterator();
+      final Iterator<Element> i = elements.iterator();
 
       public boolean hasNext() {
         return i.hasNext();

@@ -25,17 +25,14 @@ import java.util.NoSuchElementException;
 
 public abstract class Tokenizer implements Iterator<Token> {
 
-  /** . */
-  private ArrayList<Token> stack;
+  private final ArrayList<Token> stack;
 
-  /** . */
   private int ptr;
 
-  /** . */
   private int index = 0;
 
   protected Tokenizer() {
-    this.stack = new ArrayList<Token>();
+    this.stack = new ArrayList<>();
     this.ptr = 0;
   }
 

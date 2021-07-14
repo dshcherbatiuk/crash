@@ -26,7 +26,9 @@ import java.lang.annotation.Target;
 import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.spi.Completer;
 
-/** A command argument. */
+/**
+ * A command argument.
+ */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Argument {

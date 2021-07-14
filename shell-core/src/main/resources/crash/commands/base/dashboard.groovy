@@ -15,7 +15,6 @@ public class dashboard implements KeyHandler {
     }
   }
 
-  /** . */
   private volatile Thread current;
 
   @Command

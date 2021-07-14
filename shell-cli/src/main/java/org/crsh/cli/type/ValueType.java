@@ -45,7 +45,9 @@ import org.crsh.cli.spi.Completer;
  */
 public abstract class ValueType<V> {
 
-  /** Identity. */
+  /**
+   * Identity.
+   */
   public static final ValueType<String> STRING =
       new ValueType<String>(String.class) {
         @Override
@@ -54,7 +56,9 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** Integer. */
+  /**
+   * Integer.
+   */
   public static final ValueType<Integer> INTEGER =
       new ValueType<Integer>(Integer.class) {
         @Override
@@ -63,7 +67,9 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** Boolean. */
+  /**
+   * Boolean.
+   */
   public static final ValueType<Boolean> BOOLEAN =
       new ValueType<Boolean>(Boolean.class) {
         @Override
@@ -72,19 +78,22 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** Any Java enum. */
+  /**
+   * Any Java enum.
+   */
   public static final ValueType<Enum> ENUM =
       new ValueType<Enum>(Enum.class, EnumCompleter.class) {
         @Override
         public <S extends Enum> S parse(Class<S> type, String s) {
           // We cannot express S extends Enum<S> type
           // so we need this necessary cast to make the java compiler happy
-          S s1 = (S) Enum.valueOf(type, s);
-          return s1;
+          return (S) Enum.valueOf(type, s);
         }
       };
 
-  /** Properties as semi colon separated values. */
+  /**
+   * Properties as semi colon separated values.
+   */
   public static final ValueType<Properties> PROPERTIES =
       new ValueType<Properties>(Properties.class) {
         @Override
@@ -103,7 +112,9 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** A JMX object name value type. */
+  /**
+   * A JMX object name value type.
+   */
   public static final ValueType<ObjectName> OBJECT_NAME =
       new ValueType<ObjectName>(ObjectName.class, ObjectNameCompleter.class) {
         @Override
@@ -112,7 +123,9 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** A value type for threads. */
+  /**
+   * A value type for threads.
+   */
   public static final ValueType<Thread> THREAD =
       new ValueType<Thread>(Thread.class, ThreadCompleter.class) {
         @Override
@@ -127,7 +140,9 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** A value type for files. */
+  /**
+   * A value type for files.
+   */
   public static final ValueType<File> FILE =
       new ValueType<File>(File.class, FileCompleter.class) {
         @Override
@@ -136,10 +151,8 @@ public abstract class ValueType<V> {
         }
       };
 
-  /** . */
   protected final Class<V> type;
 
-  /** . */
   protected final Class<? extends Completer> completer;
 
   protected ValueType(Class<V> type, Class<? extends Completer> completer)
@@ -151,7 +164,6 @@ public abstract class ValueType<V> {
       throw new NullPointerException("No null completer accepted");
     }
 
-    //
     this.completer = completer;
     this.type = type;
   }
@@ -161,7 +173,6 @@ public abstract class ValueType<V> {
       throw new NullPointerException("No null value type accepted");
     }
 
-    //
     this.completer = EmptyCompleter.class;
     this.type = type;
   }
@@ -220,8 +231,8 @@ public abstract class ValueType<V> {
    * value type V.
    *
    * @param type the target type of the value
-   * @param s the string to convert
-   * @param <S> the generic type of the converted value
+   * @param s    the string to convert
+   * @param <S>  the generic type of the converted value
    * @return the converted value
    * @throws Exception any exception that would prevent the conversion to happen
    */
