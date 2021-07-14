@@ -113,7 +113,6 @@ consumed.""")
     // Regex filter
     def pattern = Pattern.compile(filter ?: ".*");
 
-    //
     loggers.each {
        def matcher = it =~ pattern;
        if (matcher.matches()) {
