@@ -38,7 +38,7 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
-import java.util.logging.Logger;
+import com.google.auto.service.AutoService;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
@@ -52,13 +52,10 @@ import org.crsh.cli.Command;
 import org.crsh.groovy.GroovyCommand;
 
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
+@AutoService(ASTTransformation.class)
 public class CommandTransformer implements ASTTransformation {
 
-  /** . */
   private static final ClassNode CRASH_COMMAND = ClassHelper.make(GroovyCommand.class);
-
-  /** . */
-  private static final Logger log = Logger.getLogger(CommandTransformer.class.getName());
 
   public void visit(ASTNode[] nodes, final SourceUnit source) {
 

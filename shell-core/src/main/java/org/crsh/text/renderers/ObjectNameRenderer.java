@@ -18,6 +18,7 @@
  */
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.lang.management.ManagementFactory;
 import java.util.Collections;
 import java.util.Iterator;
@@ -35,7 +36,10 @@ import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 import org.crsh.util.Utils;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
+@AutoService(Renderer.class)
 public class ObjectNameRenderer extends Renderer<ObjectName> {
 
   @Override

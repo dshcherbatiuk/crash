@@ -18,12 +18,14 @@
  */
 package org.crsh.lang.impl.script;
 
+import com.google.auto.service.AutoService;
 import org.crsh.lang.spi.Language;
 import org.crsh.plugin.CRaSHPlugin;
 
 /**
  * @author Julien Viet
  */
+@AutoService(CRaSHPlugin.class)
 public class ScriptLanguage extends CRaSHPlugin<Language> {
 
   @Override

@@ -18,11 +18,14 @@
  */
 package org.crsh.lang.impl.groovy;
 
+import com.google.auto.service.AutoService;
 import org.crsh.lang.impl.LanguageProxy;
+import org.crsh.plugin.CRaSHPlugin;
 
 /**
  * @author Julien Viet
  */
+@AutoService(CRaSHPlugin.class)
 public class GroovyLanguageProxy extends LanguageProxy {
 
   public GroovyLanguageProxy() {

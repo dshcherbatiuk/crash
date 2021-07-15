@@ -19,11 +19,13 @@
 
 package org.crsh.text.ui;
 
+import com.google.auto.service.AutoService;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 
+@AutoService(Renderer.class)
 public class ElementRenderer extends Renderer<Element> {
 
   @Override

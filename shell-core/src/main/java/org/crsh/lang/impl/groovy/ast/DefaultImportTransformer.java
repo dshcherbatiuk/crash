@@ -19,6 +19,7 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
+import com.google.auto.service.AutoService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ASTNode;
@@ -42,27 +43,25 @@ import org.crsh.text.Style;
 import org.crsh.text.ui.BorderStyle;
 
 @GroovyASTTransformation(phase = CompilePhase.CONVERSION)
+@AutoService(ASTTransformation.class)
 public class DefaultImportTransformer implements ASTTransformation {
 
-  /** . */
   private static final Logger log = Logger.getLogger(DefaultImportTransformer.class.getName());
 
-  /** . */
   private static final Class<?>[] defaultImports = {
-    Required.class,
-    Man.class,
-    Usage.class,
-    Argument.class,
-    Option.class,
-    Command.class,
-    ScriptException.class,
-    InvocationContext.class,
-    GroovyCommand.class,
+      Required.class,
+      Man.class,
+      Usage.class,
+      Argument.class,
+      Option.class,
+      Command.class,
+      ScriptException.class,
+      InvocationContext.class,
+      GroovyCommand.class,
   };
 
-  /** . */
   private static final Class<?>[] defaultStaticImports = {
-    Color.class, Decoration.class, Style.class, BorderStyle.class
+      Color.class, Decoration.class, Style.class, BorderStyle.class
   };
 
   public void visit(ASTNode[] nodes, final SourceUnit source) {

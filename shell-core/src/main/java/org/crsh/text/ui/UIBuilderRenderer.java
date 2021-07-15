@@ -19,11 +19,13 @@
 
 package org.crsh.text.ui;
 
+import com.google.auto.service.AutoService;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 
+@AutoService(Renderer.class)
 public class UIBuilderRenderer extends Renderer<UIBuilder> {
 
   @Override
@@ -33,7 +35,7 @@ public class UIBuilderRenderer extends Renderer<UIBuilder> {
 
   @Override
   public LineRenderer renderer(Iterator<UIBuilder> stream) {
-    LinkedList<LineRenderer> renderers = new LinkedList<LineRenderer>();
+    final LinkedList<LineRenderer> renderers = new LinkedList<>();
     while (stream.hasNext()) {
       for (Element element : stream.next().getElements()) {
         renderers.add(element.renderer());

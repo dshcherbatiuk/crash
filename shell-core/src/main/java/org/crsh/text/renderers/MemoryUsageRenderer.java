@@ -19,12 +19,14 @@
 
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 
+@AutoService(Renderer.class)
 public class MemoryUsageRenderer extends Renderer<MemoryUsage> {
 
   @Override

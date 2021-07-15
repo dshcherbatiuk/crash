@@ -19,6 +19,7 @@
 
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import org.crsh.text.ui.Overflow;
 import org.crsh.text.ui.TableElement;
 import org.crsh.util.Utils;
 
+@AutoService(Renderer.class)
 public class FileRenderer extends Renderer<File> {
 
   @Override

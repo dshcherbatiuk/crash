@@ -18,6 +18,7 @@
  */
 package org.crsh.lang.impl.groovy.ast;
 
+import com.google.auto.service.AutoService;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import org.codehaus.groovy.ast.ASTNode;
@@ -43,12 +44,11 @@ import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
  * @author Julien Viet
  */
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
+@AutoService(ASTTransformation.class)
 public class ScriptLastStatementTransformer implements ASTTransformation {
 
-  /** . */
   public static final String FIELD_NAME = "org_crsh_has_explicit_return";
 
-  /** . */
   private static final ClassNode GROOVY_SCRIPT_COMMAND =
       ClassHelper.make(GroovyScriptCommand.class);
 

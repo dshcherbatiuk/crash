@@ -18,6 +18,7 @@
  */
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.util.Iterator;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
@@ -25,7 +26,10 @@ import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 
-/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
+/**
+ * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
+ */
+@AutoService(Renderer.class)
 public class BindingRenderer extends Renderer<BindingRenderer.BindingData> {
 
   @Override

@@ -18,6 +18,7 @@
  */
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -34,6 +35,7 @@ import org.crsh.util.BaseIterator;
  *
  * @author Julien Viet
  */
+@AutoService(Renderer.class)
 public class LogRecordRenderer extends Renderer<LogRecord> {
 
   @Override

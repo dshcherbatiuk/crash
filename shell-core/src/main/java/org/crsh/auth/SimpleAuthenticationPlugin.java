@@ -19,11 +19,13 @@
 
 package org.crsh.auth;
 
+import com.google.auto.service.AutoService;
 import java.util.Arrays;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PluginContext;
 import org.crsh.plugin.PropertyDescriptor;
 
+@AutoService(CRaSHPlugin.class)
 public class SimpleAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
     implements AuthenticationPlugin<String> {
 

@@ -19,6 +19,7 @@
 
 package org.crsh.shell.impl.command;
 
+import com.google.auto.service.AutoService;
 import java.security.Principal;
 import org.crsh.auth.AuthInfo;
 import org.crsh.command.ShellSafety;
@@ -28,11 +29,13 @@ import org.crsh.shell.Shell;
 import org.crsh.shell.ShellFactory;
 import org.crsh.shell.impl.async.AsyncShell;
 
+@AutoService(CRaSHPlugin.class)
 public class CRaSHShellFactory extends CRaSHPlugin<ShellFactory> implements ShellFactory {
 
   private CRaSH crash;
 
-  public CRaSHShellFactory() {}
+  public CRaSHShellFactory() {
+  }
 
   @Override
   public void init() {

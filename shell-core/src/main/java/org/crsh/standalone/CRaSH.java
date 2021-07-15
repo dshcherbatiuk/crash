@@ -320,25 +320,13 @@ public class CRaSH {
       }
 
       // Register shutdown hook
-      Runtime.getRuntime()
-          .addShutdownHook(
-              new Thread() {
-                @Override
-                public void run() {
-                  // Should trigger some kind of run interruption
-                }
-              });
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        // Should trigger some kind of run interruption
+      }));
 
       // Do bootstrap
       bootstrap.bootstrap();
-      Runtime.getRuntime()
-          .addShutdownHook(
-              new Thread() {
-                @Override
-                public void run() {
-                  bootstrap.shutdown();
-                }
-              });
+      Runtime.getRuntime().addShutdownHook(new Thread(bootstrap::shutdown));
 
       if (interactive) {
         ShellFactory factory = bootstrap.getContext().getPlugin(ShellFactory.class);
@@ -352,9 +340,7 @@ public class CRaSH {
     }
 
     if (shell != null) {
-
       final Terminal term = TerminalFactory.create();
-
       Runtime.getRuntime()
           .addShutdownHook(new Thread(() -> {
             try {
@@ -389,7 +375,6 @@ public class CRaSH {
         ansi = false;
       }
 
-      //
       FileInputStream in = new FileInputStream(FileDescriptor.in);
       ConsoleReader reader = new ConsoleReader(null, in, out, term);
 

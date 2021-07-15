@@ -19,7 +19,7 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
-import java.util.List;
+import com.google.auto.service.AutoService;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -36,18 +36,16 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.crsh.cli.Argument;
 
 @GroovyASTTransformation(phase = CompilePhase.INSTRUCTION_SELECTION)
+@AutoService(ASTTransformation.class)
 public class ArgumentNameTransformer implements ASTTransformation {
 
   public void visit(ASTNode[] nodes, final SourceUnit source) {
     for (ClassNode classNode : source.getAST().getClasses()) {
-
-      //
       for (FieldNode field : classNode.getFields()) {
         String name = field.getName();
         handle(name, field);
       }
 
-      //
       for (MethodNode method : classNode.getMethods()) {
         for (Parameter parameter : method.getParameters()) {
           String name = parameter.getName();

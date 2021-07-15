@@ -19,6 +19,7 @@
 
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -30,12 +31,12 @@ import org.crsh.text.Renderer;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 
+@AutoService(Renderer.class)
 public class MapRenderer extends Renderer<Map<?, ?>> {
 
   @Override
   public Class<Map<?, ?>> getType() {
-    Object mapClass = Map.class;
-    return (Class<Map<?, ?>>) mapClass;
+    return (Class<Map<?, ?>>) (Object) Map.class;
   }
 
   @Override

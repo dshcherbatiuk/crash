@@ -19,6 +19,7 @@
 
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +30,7 @@ import org.crsh.text.Renderer;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 
+@AutoService(Renderer.class)
 public class LoggerRenderer extends Renderer<Logger> {
 
   @Override

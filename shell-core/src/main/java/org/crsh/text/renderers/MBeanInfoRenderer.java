@@ -1,5 +1,6 @@
 package org.crsh.text.renderers;
 
+import com.google.auto.service.AutoService;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,10 @@ import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
 import org.crsh.text.ui.TreeElement;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
+@AutoService(Renderer.class)
 public class MBeanInfoRenderer extends Renderer<MBeanInfo> {
 
   @Override

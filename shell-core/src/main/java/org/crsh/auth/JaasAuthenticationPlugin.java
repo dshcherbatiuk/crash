@@ -19,6 +19,7 @@
 
 package org.crsh.auth;
 
+import com.google.auto.service.AutoService;
 import java.util.Collections;
 import java.util.logging.Level;
 import javax.security.auth.Subject;
@@ -30,6 +31,7 @@ import javax.security.auth.login.LoginContext;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PropertyDescriptor;
 
+@AutoService(CRaSHPlugin.class)
 public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
     implements AuthenticationPlugin<String> {
 

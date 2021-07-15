@@ -18,6 +18,7 @@
  */
 package org.crsh.lang.impl.java;
 
+import com.google.auto.service.AutoService;
 import org.crsh.lang.spi.Language;
 import org.crsh.lang.spi.Repl;
 import org.crsh.plugin.CRaSHPlugin;
@@ -26,6 +27,7 @@ import org.crsh.shell.impl.command.ShellSession;
 /**
  * @author Julien Viet
  */
+@AutoService(CRaSHPlugin.class)
 public class JavaLanguage extends CRaSHPlugin<Language> implements Language {
 
   private JavaCompiler compiler;

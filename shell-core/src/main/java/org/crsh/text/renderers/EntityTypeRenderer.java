@@ -19,12 +19,20 @@
 
 package org.crsh.text.renderers;
 
-import java.util.*;
+import com.google.auto.service.AutoService;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
-import org.crsh.text.ui.*;
+import org.crsh.text.ui.Layout;
+import org.crsh.text.ui.RowElement;
+import org.crsh.text.ui.TableElement;
 
-/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
+/**
+ * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
+ */
+@AutoService(Renderer.class)
 public class EntityTypeRenderer extends Renderer<EntityTypeRenderer.EntityTypeData> {
 
   @Override
@@ -121,6 +129,7 @@ public class EntityTypeRenderer extends Renderer<EntityTypeRenderer.EntityTypeDa
   }
 
   public static class AttributeData {
+
     public final String name;
     public final String type;
     public final Boolean association;

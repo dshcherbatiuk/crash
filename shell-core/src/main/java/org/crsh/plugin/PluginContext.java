@@ -19,7 +19,9 @@
 package org.crsh.plugin;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,37 +36,29 @@ import org.crsh.vfs.Resource;
 
 public final class PluginContext {
 
-  /** . */
   private static final Logger log = Logger.getLogger(PluginContext.class.getName());
 
-  /** . */
   final PluginManager manager;
 
-  /** . */
   private final ClassLoader loader;
 
-  /** . */
   private final String version;
 
-  /** . */
   private final ScheduledExecutorService scanner;
 
-  /** . */
   private final Map<String, Object> attributes;
 
-  /** The shared executor. */
+  /**
+   * The shared executor.
+   */
   private final ExecutorService executor;
 
-  /** . */
   private boolean started;
 
-  /** . */
   private ScheduledFuture scannerFuture;
 
-  /** . */
   private final ResourceManager resourceManager;
 
-  /** . */
   private final PropertyManager propertyManager;
 
   /**
@@ -78,11 +72,11 @@ public final class PluginContext {
    *    confFS,
    *    loader);</pre></code>
    *
-   * @param discovery the plugin discovery
-   * @param cmdFS the command file system
+   * @param discovery  the plugin discovery
+   * @param cmdFS      the command file system
    * @param attributes the attributes
-   * @param confFS the conf file system
-   * @param loader the loader
+   * @param confFS     the conf file system
+   * @param loader     the loader
    * @throws NullPointerException if any parameter argument is null
    */
   public PluginContext(
@@ -105,13 +99,13 @@ public final class PluginContext {
   /**
    * Create a new plugin context.
    *
-   * @param executor the executor for executing asynchronous jobs
-   * @param scanner the background scanner for scanning commands
-   * @param discovery the plugin discovery
-   * @param cmdFS the command file system
+   * @param executor   the executor for executing asynchronous jobs
+   * @param scanner    the background scanner for scanning commands
+   * @param discovery  the plugin discovery
+   * @param cmdFS      the command file system
    * @param attributes the attributes
-   * @param confFS the conf file system
-   * @param loader the loader
+   * @param confFS     the conf file system
+   * @param loader     the loader
    * @throws NullPointerException if any parameter argument is null
    */
   public PluginContext(
@@ -191,7 +185,9 @@ public final class PluginContext {
     return executor;
   }
 
-  /** @return the property manager */
+  /**
+   * @return the property manager
+   */
   public PropertyManager getPropertyManager() {
     return propertyManager;
   }
@@ -200,7 +196,7 @@ public final class PluginContext {
    * Returns a context property or null if it cannot be found.
    *
    * @param desc the property descriptor
-   * @param <T> the property parameter type
+   * @param <T>  the property parameter type
    * @return the property value
    * @throws NullPointerException if the descriptor argument is null
    */
@@ -212,9 +208,9 @@ public final class PluginContext {
    * Set a context property to a new value. If the provided value is null, then the property is
    * removed.
    *
-   * @param desc the property descriptor
+   * @param desc  the property descriptor
    * @param value the property value
-   * @param <T> the property parameter type
+   * @param <T>   the property parameter type
    * @throws NullPointerException if the descriptor argument is null
    */
   public <T> void setProperty(PropertyDescriptor<T> desc, T value) throws NullPointerException {
@@ -225,10 +221,10 @@ public final class PluginContext {
    * Set a context property to a new value. If the provided value is null, then the property is
    * removed.
    *
-   * @param desc the property descriptor
+   * @param desc  the property descriptor
    * @param value the property value
-   * @param <T> the property parameter type
-   * @throws NullPointerException if the descriptor argument is null
+   * @param <T>   the property parameter type
+   * @throws NullPointerException     if the descriptor argument is null
    * @throws IllegalArgumentException if the string value cannot be converted to the property type
    */
   public <T> void setProperty(PropertyDescriptor<T> desc, String value)
@@ -239,7 +235,7 @@ public final class PluginContext {
   /**
    * Load a resource from the context.
    *
-   * @param resourceId the resource id
+   * @param resourceId   the resource id
    * @param resourceKind the resource kind
    * @return the resource or null if it cannot be found
    */
@@ -250,7 +246,7 @@ public final class PluginContext {
   /**
    * Load a resource from the context.
    *
-   * @param resourceId the resource id
+   * @param resourceId   the resource id
    * @param resourceKind the resource kind
    * @return the resource or null if it cannot be found
    */
@@ -285,7 +281,7 @@ public final class PluginContext {
    * Returns the plugins associated with this context.
    *
    * @param pluginType the plugin type
-   * @param <T> the plugin generic type
+   * @param <T>        the plugin generic type
    * @return the plugins
    */
   public <T> Iterable<T> getPlugins(Class<T> pluginType) {
@@ -296,7 +292,7 @@ public final class PluginContext {
    * Returns the first plugin associated with this context implementing the specified type.
    *
    * @param pluginType the plugin type
-   * @param <T> the plugin generic type
+   * @param <T>        the plugin generic type
    * @return the plugins
    */
   public <T> T getPlugin(Class<T> pluginType) {
@@ -322,7 +318,7 @@ public final class PluginContext {
         TimeUnit tu = timeUnit != null ? timeUnit : TimeUnit.SECONDS;
         scannerFuture =
             scanner.scheduleWithFixedDelay(
-                () -> refresh(),
+                this::refresh,
                 0,
                 refreshRate,
                 tu);
@@ -339,8 +335,6 @@ public final class PluginContext {
   }
 
   synchronized void stop() {
-
-    //
     if (started) {
 
       // Shutdown manager
@@ -351,7 +345,6 @@ public final class PluginContext {
         scannerFuture.cancel(true);
       }
 
-      //
       scanner.shutdownNow();
 
       // Shutdown executor

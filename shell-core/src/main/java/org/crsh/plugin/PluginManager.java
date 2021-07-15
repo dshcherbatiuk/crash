@@ -19,24 +19,22 @@
 
 package org.crsh.plugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.crsh.util.Utils;
 
 class PluginManager {
 
-  /** . */
   private final Logger log = Logger.getLogger(PluginManager.class.getName());
 
-  /** . */
   private final PluginContext context;
 
-  /** . */
   private List<CRaSHPlugin<?>> plugins;
 
-  /** . */
-  private PluginDiscovery discovery;
+  private final PluginDiscovery discovery;
 
   PluginManager(PluginContext context, PluginDiscovery discovery) {
     this.context = context;
@@ -57,11 +55,8 @@ class PluginManager {
   }
 
   synchronized <T> Iterable<T> getPlugins(Class<T> wantedType) {
-
-    //
     Iterable<CRaSHPlugin<?>> plugins = getPlugins();
 
-    //
     List<T> tmp = Collections.emptyList();
 
     //
