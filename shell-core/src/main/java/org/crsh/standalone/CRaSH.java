@@ -19,6 +19,8 @@
 
 package org.crsh.standalone;
 
+import static java.util.logging.Logger.getLogger;
+
 import com.sun.tools.attach.VirtualMachine;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -75,7 +77,7 @@ import org.fusesource.jansi.AnsiConsole;
 @Named("crash")
 public class CRaSH {
 
-  private static Logger LOGGER = Logger.getLogger(CRaSH.class.getName());
+  private static final Logger LOGGER = getLogger(CRaSH.class.getName());
 
   private final CommandDescriptor<Instance<CRaSH>> descriptor;
 
@@ -157,10 +159,8 @@ public class CRaSH {
           List<Integer> pids)
       throws Exception {
 
-    //
     boolean interactive = nonInteractive == null || !nonInteractive;
 
-    //
     if (conf == null) {
       conf = "classpath:/crash/";
     }
@@ -180,7 +180,6 @@ public class CRaSH {
       confBuilder = createBuilder().mount("file", Path.get(dst));
     }
 
-    //
     if (cmd == null) {
       cmd = "classpath:/crash/commands/";
     }
@@ -196,11 +195,9 @@ public class CRaSH {
       cmdBuilder = createBuilder().mount("file", Path.get(dst));
     }
 
-    //
     LOGGER.log(Level.INFO, "conf mounts: " + confBuilder.toString());
     LOGGER.log(Level.INFO, "cmd mounts: " + cmdBuilder.toString());
 
-    //
     CloseableList closeable = new CloseableList();
     Shell shell;
     if (pids != null && pids.size() > 0) {
@@ -267,7 +264,6 @@ public class CRaSH {
         }
       }
 
-      //
       if (interactive) {
         RemoteServer server = new RemoteServer(0);
         int port = server.bind();
@@ -355,7 +351,6 @@ public class CRaSH {
       closeable = null;
     }
 
-    //
     if (shell != null) {
 
       final Terminal term = TerminalFactory.create();
@@ -400,8 +395,7 @@ public class CRaSH {
 
       final JLineProcessor processor = new JLineProcessor(ansi, shell, reader, out);
 
-      InterruptHandler interruptHandler =
-          new InterruptHandler(() -> processor.interrupt());
+      final InterruptHandler interruptHandler = new InterruptHandler(processor::interrupt);
       interruptHandler.install();
 
       Thread thread = new Thread(processor);
@@ -425,8 +419,7 @@ public class CRaSH {
   }
 
   public static void main(String[] args) throws Exception {
-
-    StringBuilder line = new StringBuilder();
+    final StringBuilder line = new StringBuilder();
     for (int i = 0; i < args.length; i++) {
       if (i > 0) {
         line.append(' ');
@@ -434,10 +427,9 @@ public class CRaSH {
       Delimiter.EMPTY.escape(args[i], line);
     }
 
-    //
-    CRaSH main = new CRaSH();
-    InvocationMatcher<Instance<CRaSH>> matcher = main.descriptor.matcher();
-    InvocationMatch<Instance<CRaSH>> match = matcher.parse(line.toString());
+    final CRaSH main = new CRaSH();
+    final InvocationMatcher<Instance<CRaSH>> matcher = main.descriptor.matcher();
+    final InvocationMatch<Instance<CRaSH>> match = matcher.parse(line.toString());
     match.invoke(Util.wrap(main));
   }
 }

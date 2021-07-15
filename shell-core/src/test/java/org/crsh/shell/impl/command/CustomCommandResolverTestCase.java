@@ -33,10 +33,13 @@ import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandResolver;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class CustomCommandResolverTestCase extends AbstractShellTestCase {
 
   public static class mycommand extends BaseCommand {
+
     @org.crsh.cli.Command
     public String main() {
       return "ok_mycommand";

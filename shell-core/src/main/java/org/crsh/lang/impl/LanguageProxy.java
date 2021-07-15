@@ -34,13 +34,10 @@ import org.crsh.shell.impl.command.ShellSession;
  */
 public class LanguageProxy extends CRaSHPlugin<Language> implements Language {
 
-  /** . */
   private final AtomicReference<Language> real = new AtomicReference<Language>();
 
-  /** . */
   private final String name;
 
-  /** . */
   private final String className;
 
   public LanguageProxy(String name, String className) {

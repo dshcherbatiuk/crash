@@ -27,27 +27,31 @@ import org.crsh.shell.impl.command.ShellSession;
  */
 public interface Language {
 
-  /** @return the language name */
+  /**
+   * @return the language name
+   */
   String getName();
 
-  /** @return the language display name, including the version if possible */
+  /**
+   * @return the language display name, including the version if possible
+   */
   String getDisplayName();
 
   /**
    * @return true if this language is active. Implementation can decide based on the runtime, for
-   *     instance the Groovy language can be inactive when the Groovy runtime is not available
+   * instance the Groovy language can be inactive when the Groovy runtime is not available
    */
   boolean isActive();
 
   /**
    * @return the repl for this language, null should be returned when the language does not support
-   *     the repl feature
+   * the repl feature
    */
   Repl getRepl();
 
   /**
    * @return the compiler for this language, null should be returned when the language does not
-   *     support the compilation feature
+   * support the compilation feature
    */
   Compiler getCompiler();
 

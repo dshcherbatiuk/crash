@@ -27,16 +27,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.crsh.vfs.Resource;
 
-/** The base class for managing the CRaSH life cycle. */
+/**
+ * The base class for managing the CRaSH life cycle.
+ */
 public abstract class PluginLifeCycle {
 
-  /** . */
   protected final Logger log = Logger.getLogger(getClass().getName());
 
-  /** . */
   private PluginContext context;
 
-  /** . */
   private Properties config;
 
   public Properties getConfig() {
@@ -97,10 +96,8 @@ public abstract class PluginLifeCycle {
       }
     }
 
-    //
     context.start();
 
-    //
     this.context = context;
   }
 

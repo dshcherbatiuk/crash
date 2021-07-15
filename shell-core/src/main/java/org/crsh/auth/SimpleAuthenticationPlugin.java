@@ -27,18 +27,20 @@ import org.crsh.plugin.PropertyDescriptor;
 public class SimpleAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
     implements AuthenticationPlugin<String> {
 
-  /** The username. */
+  /**
+   * The username.
+   */
   public static final PropertyDescriptor<String> SIMPLE_USERNAME =
       PropertyDescriptor.create("auth.simple.username", "admin", "The username");
 
-  /** The password. */
+  /**
+   * The password.
+   */
   public static final PropertyDescriptor<String> SIMPLE_PASSWORD =
       PropertyDescriptor.create("auth.simple.password", "admin", "The password", true);
 
-  /** . */
   private String username;
 
-  /** . */
   private String password;
 
   @Override
@@ -66,15 +68,10 @@ public class SimpleAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin
     return "simple";
   }
 
-  public AuthInfo authenticate(String username, String password) throws Exception {
-    return new AuthInfo() {
-      @Override
-      public boolean isSuccessful() {
-        return SimpleAuthenticationPlugin.this.username != null
-            && SimpleAuthenticationPlugin.this.password != null
-            && SimpleAuthenticationPlugin.this.username.equals(username)
-            && SimpleAuthenticationPlugin.this.password.equals(password);
-      }
-    };
+  public AuthInfo authenticate(String username, String password) {
+    return () -> SimpleAuthenticationPlugin.this.username != null
+        && SimpleAuthenticationPlugin.this.password != null
+        && SimpleAuthenticationPlugin.this.username.equals(username)
+        && SimpleAuthenticationPlugin.this.password.equals(password);
   }
 }

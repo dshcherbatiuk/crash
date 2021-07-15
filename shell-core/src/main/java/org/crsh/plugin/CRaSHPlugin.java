@@ -27,31 +27,22 @@ import org.crsh.util.Utils;
 
 public abstract class CRaSHPlugin<P> {
 
-  /** . */
   protected final Logger log = Logger.getLogger(getClass().getName());
 
-  /** . */
   public static final int FAILED = -1;
 
-  /** . */
   public static final int CONSTRUCTED = 0;
 
-  /** . */
   public static final int INITIALIZING = 1;
 
-  /** . */
   public static final int INITIALIZED = 2;
 
-  /** . */
   PluginContext context;
 
-  /** . */
   int status;
 
-  /** . */
   private final Class<P> type;
 
-  /** . */
   private List<PropertyDescriptor<?>> configurationCapabilities;
 
   protected CRaSHPlugin() {
@@ -120,11 +111,17 @@ public abstract class CRaSHPlugin<P> {
    */
   public abstract P getImplementation();
 
-  /** Implement this method to know about init life cycle callback. */
-  public void init() throws Exception {}
+  /**
+   * Implement this method to know about init life cycle callback.
+   */
+  public void init() throws Exception {
+  }
 
-  /** Implement this method to know about destroy life cycle callback. */
-  public void destroy() {}
+  /**
+   * Implement this method to know about destroy life cycle callback.
+   */
+  public void destroy() {
+  }
 
   @Override
   public String toString() {

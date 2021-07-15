@@ -18,14 +18,16 @@
  */
 package org.crsh.lang.impl.java;
 
-import org.crsh.lang.spi.*;
+import org.crsh.lang.spi.Language;
+import org.crsh.lang.spi.Repl;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.shell.impl.command.ShellSession;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class JavaLanguage extends CRaSHPlugin<Language> implements Language {
 
-  /** . */
   private JavaCompiler compiler;
 
   @Override

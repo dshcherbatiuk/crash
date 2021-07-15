@@ -18,7 +18,9 @@
  */
 package org.crsh.cli.impl.lang;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public interface Instance<T> {
 
   /**
@@ -26,7 +28,7 @@ public interface Instance<T> {
    * satisfy the class type was resolved.
    *
    * @param type the type to resolve
-   * @param <T> the generic type parameter
+   * @param <T>  the generic type parameter
    * @return the resolved instance
    */
   <T> T resolve(Class<T> type);

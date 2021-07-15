@@ -33,9 +33,6 @@ import org.crsh.plugin.PropertyDescriptor;
 public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
     implements AuthenticationPlugin<String> {
 
-  /**
-   * .
-   */
   static final PropertyDescriptor<String> JAAS_DOMAIN =
       PropertyDescriptor.create(
           "auth.jaas.domain", (String) null, "The JAAS domain name used for authentication");

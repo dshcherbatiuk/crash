@@ -38,54 +38,37 @@ import org.crsh.cli.impl.invocation.InvocationMatcher;
 
 public abstract class CommandDescriptor<T> {
 
-  /** . */
   private final String name;
 
-  /** . */
   private final Description description;
 
-  /** . */
   private final Map<String, OptionDescriptor> optionMap;
 
-  /** . */
   private final Set<String> shortOptionNames;
 
-  /** . */
   private final Set<String> longOptionNames;
 
-  /** . */
   private boolean listArgument;
 
-  /** . */
   private final List<OptionDescriptor> options;
 
-  /** . */
   private final List<ArgumentDescriptor> arguments;
 
-  /** . */
   private final List<ParameterDescriptor> parameters;
 
-  /** . */
   private final Map<String, OptionDescriptor> uOptionMap;
 
-  /** . */
   private final Set<String> uShortOptionNames;
 
-  /** . */
   private final Set<String> uLongOptionNames;
 
-  /** . */
   private final List<OptionDescriptor> uOptions;
 
-  /** . */
   private final List<ArgumentDescriptor> uArguments;
 
-  /** . */
   private final List<ParameterDescriptor> uParameters;
 
   protected CommandDescriptor(String name, Description description) throws IntrospectionException {
-
-    //
     int nameLength = name.length();
     if (nameLength == 0) {
       throw new IntrospectionException("Command name cannot be null");
@@ -112,18 +95,16 @@ public abstract class CommandDescriptor<T> {
       }
     }
 
-    //
     this.description = description;
-    this.optionMap = new LinkedHashMap<String, OptionDescriptor>();
-    this.arguments = new ArrayList<ArgumentDescriptor>();
-    this.options = new ArrayList<OptionDescriptor>();
+    this.optionMap = new LinkedHashMap<>();
+    this.arguments = new ArrayList<>();
+    this.options = new ArrayList<>();
     this.name = name;
-    this.parameters = new ArrayList<ParameterDescriptor>();
+    this.parameters = new ArrayList<>();
     this.listArgument = false;
-    this.shortOptionNames = new HashSet<String>();
-    this.longOptionNames = new HashSet<String>();
+    this.shortOptionNames = new HashSet<>();
+    this.longOptionNames = new HashSet<>();
 
-    //
     this.uOptionMap = Collections.unmodifiableMap(optionMap);
     this.uParameters = Collections.unmodifiableList(parameters);
     this.uOptions = Collections.unmodifiableList(options);
@@ -136,20 +117,18 @@ public abstract class CommandDescriptor<T> {
    * Add a parameter to the command.
    *
    * @param parameter the parameter to add
-   * @throws IntrospectionException any introspection exception that would prevent the parameter to
-   *     be added
-   * @throws NullPointerException if the parameter is null
+   * @throws IntrospectionException   any introspection exception that would prevent the parameter
+   *                                  to be added
+   * @throws NullPointerException     if the parameter is null
    * @throws IllegalArgumentException if the parameter is already associated with another command
    */
   protected void addParameter(ParameterDescriptor parameter)
       throws IntrospectionException, NullPointerException, IllegalArgumentException {
 
-    //
     if (parameter == null) {
       throw new NullPointerException("No null parameter accepted");
     }
 
-    //
     if (parameter instanceof OptionDescriptor) {
       OptionDescriptor option = (OptionDescriptor) parameter;
       for (String optionName : option.getNames()) {
@@ -215,7 +194,9 @@ public abstract class CommandDescriptor<T> {
     format.print(this, to);
   }
 
-  /** @return the command subordinates as a map. */
+  /**
+   * @return the command subordinates as a map.
+   */
   public abstract Map<String, ? extends CommandDescriptor<T>> getSubordinates();
 
   /**

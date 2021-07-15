@@ -30,22 +30,19 @@ import org.crsh.cli.descriptor.OptionDescriptor;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.SyntaxException;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public final class InvocationMatch<T> {
 
-  /** . */
   private final CommandDescriptor<T> descriptor;
 
-  /** . */
   private Map<OptionDescriptor, OptionMatch> options;
 
-  /** . */
   private List<ArgumentMatch> arguments;
 
-  /** . */
   private String rest;
 
-  /** . */
   private final InvocationMatch<T> owner;
 
   public InvocationMatch(CommandDescriptor<T> descriptor) {
@@ -109,7 +106,7 @@ public final class InvocationMatch<T> {
 
   public void option(OptionMatch option) {
     if (options.isEmpty()) {
-      options = new LinkedHashMap<OptionDescriptor, OptionMatch>();
+      options = new LinkedHashMap<>();
     }
     options.put(option.getParameter(), option);
   }
@@ -120,7 +117,7 @@ public final class InvocationMatch<T> {
 
   public void argument(ArgumentMatch argument) {
     if (arguments.isEmpty()) {
-      arguments = new LinkedList<ArgumentMatch>();
+      arguments = new LinkedList<>();
     }
     arguments.add(argument);
   }

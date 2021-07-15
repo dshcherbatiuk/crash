@@ -25,7 +25,9 @@ import java.util.logging.Level;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.spi.FSMountFactory;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class Embedded extends PluginLifeCycle {
 
   /**
@@ -37,7 +39,6 @@ public class Embedded extends PluginLifeCycle {
   protected PluginContext create(
       Map<String, Object> attributes, PluginDiscovery discovery, ClassLoader loader) {
 
-    //
     FS cmdFS;
     FS confFS;
     try {
@@ -48,7 +49,6 @@ public class Embedded extends PluginLifeCycle {
       return null;
     }
 
-    //
     return new PluginContext(discovery, attributes, cmdFS, confFS, loader);
   }
 
@@ -90,7 +90,7 @@ public class Embedded extends PluginLifeCycle {
 
   /**
    * @return the registered drivers, by default an empty map is returned, subclasses can override to
-   *     customize
+   * customize
    */
   protected Map<String, FSMountFactory<?>> getMountFactories() {
     return Collections.emptyMap();
