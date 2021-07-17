@@ -41,54 +41,48 @@ package org.crsh.cli.descriptor;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.List;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.impl.Multiplicity;
 import org.crsh.cli.impl.ParameterType;
 import org.crsh.cli.impl.SyntaxException;
 import org.crsh.cli.impl.descriptor.IllegalParameterException;
 import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.completers.Completer;
 import org.crsh.cli.type.ValueType;
 
 public abstract class ParameterDescriptor {
 
-  /** . */
   private final Description description;
 
-  /** . */
   private final ParameterType<?> type;
 
-  /** . */
   private final boolean required;
 
-  /** . */
   private final boolean password;
 
-  /** . */
   private final Class<? extends Completer> completerType;
 
-  /** The annotation when it exists. */
+  /**
+   * The annotation when it exists.
+   */
   private final Annotation annotation;
 
-  /** . */
   private final boolean unquote;
 
   public ParameterDescriptor(
-      ParameterType<?> type,
-      Description description,
-      boolean required,
-      boolean password,
-      boolean unquote,
+      final ParameterType<?> type,
+      final Description description,
+      final boolean required,
+      final boolean password,
+      final boolean unquote,
       Class<? extends Completer> completerType,
-      Annotation annotation)
+      final Annotation annotation)
       throws IllegalValueTypeException, IllegalParameterException {
 
-    //
     if (completerType == EmptyCompleter.class) {
       completerType = type.getValueType().getCompleter();
     }
 
-    //
     this.description = description;
     this.required = required;
     this.password = password;
@@ -132,7 +126,7 @@ public abstract class ParameterDescriptor {
     return password;
   }
 
-  public final ValueType getType() {
+  public final ValueType<?> getType() {
     return type.getValueType();
   }
 

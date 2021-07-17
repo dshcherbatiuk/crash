@@ -77,7 +77,6 @@ public enum Delimiter {
     }
   };
 
-  /** . */
   private final char value;
 
   Delimiter(char value) {

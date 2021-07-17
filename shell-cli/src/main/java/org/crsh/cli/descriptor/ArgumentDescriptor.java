@@ -42,16 +42,15 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.impl.Multiplicity;
 import org.crsh.cli.impl.ParameterType;
 import org.crsh.cli.impl.SyntaxException;
 import org.crsh.cli.impl.descriptor.IllegalParameterException;
 import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.completers.Completer;
 
 public class ArgumentDescriptor extends ParameterDescriptor {
 
-  /** . */
   private final String name;
 
   public ArgumentDescriptor(
@@ -66,7 +65,6 @@ public class ArgumentDescriptor extends ParameterDescriptor {
       throws IllegalValueTypeException, IllegalParameterException {
     super(type, info, required, password, unquote, completerType, annotation);
 
-    //
     this.name = name;
   }
 
@@ -86,23 +84,24 @@ public class ArgumentDescriptor extends ParameterDescriptor {
       if (values.size() > 1) {
         throw new SyntaxException("Too many option values " + values);
       }
-      String value = values.get(0);
+
+      final String value = values.get(0);
       try {
         return parse(value);
       } catch (Exception e) {
         throw new SyntaxException("Could not parse " + value);
       }
-    } else {
-      List<Object> v = new ArrayList<Object>(values.size());
-      for (String value : values) {
-        try {
-          v.add(parse(value));
-        } catch (Exception e) {
-          throw new SyntaxException("Could not parse " + value);
-        }
-      }
-      return v;
     }
+
+    final List<Object> v = new ArrayList<>(values.size());
+    for (String value : values) {
+      try {
+        v.add(parse(value));
+      } catch (Exception e) {
+        throw new SyntaxException("Could not parse " + value);
+      }
+    }
+    return v;
   }
 
   /**
@@ -112,7 +111,7 @@ public class ArgumentDescriptor extends ParameterDescriptor {
    *   <li>Single valued arguments use the "$arg" pattern.
    *   <li>Multi valued arguments use the "... $arg" pattern.
    * </ul>
-   *
+   * <p>
    * Where $arg is the value "arg" or the argument name when it is not null.
    *
    * @param writer the writer to print to

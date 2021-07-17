@@ -20,15 +20,16 @@
 package org.crsh.cli.type;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import javax.management.ObjectName;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.completers.EnumCompleter;
 import org.crsh.cli.completers.FileCompleter;
 import org.crsh.cli.completers.ObjectNameCompleter;
 import org.crsh.cli.completers.ThreadCompleter;
-import org.crsh.cli.completers.Completer;
 
 /**
  * Defines a type for values, this is used for transforming a textual value into a type, for command
@@ -98,13 +99,13 @@ public abstract class ValueType<V> {
       new ValueType<Properties>(Properties.class) {
         @Override
         public <S extends Properties> S parse(Class<S> type, String s) {
-          java.util.Properties props = new java.util.Properties();
-          StringTokenizer tokenizer = new StringTokenizer(s, ";", false);
+          final java.util.Properties props = new java.util.Properties();
+          final StringTokenizer tokenizer = new StringTokenizer(s, ";", false);
           while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
+            final String token = tokenizer.nextToken();
             if (token.contains("=")) {
-              String key = token.substring(0, token.indexOf('='));
-              String value = token.substring(token.indexOf('=') + 1, token.length());
+              final String key = token.substring(0, token.indexOf('='));
+              final String value = token.substring(token.indexOf('=') + 1);
               props.put(key, value);
             }
           }
@@ -130,7 +131,7 @@ public abstract class ValueType<V> {
       new ValueType<Thread>(Thread.class, ThreadCompleter.class) {
         @Override
         public <S extends Thread> S parse(Class<S> type, String s) {
-          long id = Long.parseLong(s);
+          final long id = Long.parseLong(s);
           for (Thread t : Thread.getAllStackTraces().keySet()) {
             if (t.getId() == id) {
               return type.cast(t);
@@ -180,38 +181,34 @@ public abstract class ValueType<V> {
   final int getDistance(Class<?> clazz) {
     if (type == clazz) {
       return 0;
-    } else if (type.isAssignableFrom(clazz)) {
+    }
+
+    if (type.isAssignableFrom(clazz)) {
       int degree = 0;
       for (Class<?> current = clazz; current != type; current = current.getSuperclass()) {
         degree++;
       }
       return degree;
-    } else {
-      return -1;
     }
+
+    return -1;
   }
 
   @Override
-  public final int hashCode() {
-    return type.hashCode();
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    if (obj == null) {
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
       return false;
-    } else {
-      if (obj == this) {
-        return true;
-      } else {
-        if (obj.getClass() == ValueType.class) {
-          ValueType that = (ValueType) obj;
-          return type == that.type;
-        } else {
-          return false;
-        }
-      }
     }
+    ValueType<?> valueType = (ValueType<?>) o;
+    return type.equals(valueType.type);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type);
   }
 
   public Class<? extends Completer> getCompleter() {

@@ -44,12 +44,12 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.impl.Multiplicity;
 import org.crsh.cli.impl.ParameterType;
 import org.crsh.cli.impl.SyntaxException;
 import org.crsh.cli.impl.descriptor.IllegalParameterException;
 import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
-import org.crsh.cli.completers.Completer;
 import org.crsh.cli.type.ValueType;
 
 public class OptionDescriptor extends ParameterDescriptor {
@@ -80,14 +80,14 @@ public class OptionDescriptor extends ParameterDescriptor {
   private final List<String> names;
 
   public OptionDescriptor(
-      ParameterType<?> type,
+      final ParameterType<?> type,
       List<String> names,
-      Description info,
-      boolean required,
-      boolean password,
-      boolean unquote,
-      Class<? extends Completer> completerType,
-      Annotation annotation)
+      final Description info,
+      final boolean required,
+      final boolean password,
+      final boolean unquote,
+      final Class<? extends Completer> completerType,
+      final Annotation annotation)
       throws IllegalValueTypeException, IllegalParameterException {
     super(type, info, required, password, unquote, completerType, annotation);
 
@@ -100,16 +100,20 @@ public class OptionDescriptor extends ParameterDescriptor {
       if (name == null) {
         throw new IllegalParameterException("Option name must not be null");
       }
+
       int length = name.length();
       if (length == 0) {
         throw new IllegalParameterException("Option name cannot be empty");
       }
+
       if (!A.get(name.charAt(0))) {
         throw new IllegalParameterException(
             "Option name " + name + " cannot start with " + name.charAt(0));
       }
+
       checkChar(name, 0, A);
       checkChar(name, length - 1, A);
+
       for (int i = 1; i < length - 1; i++) {
         checkChar(name, i, B);
       }
@@ -140,34 +144,36 @@ public class OptionDescriptor extends ParameterDescriptor {
       }
       // It's a boolean and it is true
       return Boolean.TRUE;
-    } else {
-      if (getMultiplicity() == Multiplicity.SINGLE) {
-        if (values.size() > 1) {
-          throw new SyntaxException("Too many values " + values + " for option " + names.get(0));
-        }
-        if (values.size() == 0) {
-          throw new SyntaxException("Missing option " + names.get(0) + " value");
-        }
-        String value = values.get(0);
-        try {
-          return parse(value);
-        } catch (Exception e) {
-          throw new SyntaxException(
-              "Could not parse value <" + value + "> for option " + names.get(0));
-        }
-      } else {
-        List<Object> v = new ArrayList<Object>(values.size());
-        for (String value : values) {
-          try {
-            v.add(parse(value));
-          } catch (Exception e) {
-            throw new SyntaxException(
-                "Could not parse value <" + value + "> for option " + names.get(0));
-          }
-        }
-        return v;
+    }
+
+    if (getMultiplicity() == Multiplicity.SINGLE) {
+      if (values.size() > 1) {
+        throw new SyntaxException("Too many values " + values + " for option " + names.get(0));
+      }
+
+      if (values.size() == 0) {
+        throw new SyntaxException("Missing option " + names.get(0) + " value");
+      }
+
+      final String value = values.get(0);
+      try {
+        return parse(value);
+      } catch (Exception e) {
+        throw new SyntaxException(
+            "Could not parse value <" + value + "> for option " + names.get(0));
       }
     }
+
+    final List<Object> v = new ArrayList<Object>(values.size());
+    for (String value : values) {
+      try {
+        v.add(parse(value));
+      } catch (Exception e) {
+        throw new SyntaxException(
+            "Could not parse value <" + value + "> for option " + names.get(0));
+      }
+    }
+    return v;
   }
 
   /**
@@ -177,9 +183,10 @@ public class OptionDescriptor extends ParameterDescriptor {
    * @param writer the writer to print to
    * @throws IOException any io exception
    */
-  public void printUsage(Appendable writer) throws IOException {
+  public void printUsage(final Appendable writer) throws IOException {
     writer.append("[");
     boolean a = false;
+
     for (String optionName : names) {
       if (a) {
         writer.append(" | ");

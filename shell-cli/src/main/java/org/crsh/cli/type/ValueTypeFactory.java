@@ -73,6 +73,7 @@ public class ValueTypeFactory {
 
     final LinkedHashSet<ValueType<?>> types = new LinkedHashSet<>();
     Collections.addAll(types, DEFAULT.types);
+
     final Iterator<ValueType> sl = ServiceLoader.load(ValueType.class, loader).iterator();
     while (sl.hasNext()) {
       try {

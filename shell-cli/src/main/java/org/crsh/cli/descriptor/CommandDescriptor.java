@@ -68,29 +68,31 @@ public abstract class CommandDescriptor<T> {
 
   private final List<ParameterDescriptor> uParameters;
 
-  protected CommandDescriptor(String name, Description description) throws IntrospectionException {
-    int nameLength = name.length();
+  protected CommandDescriptor(final String name, final Description description)
+      throws IntrospectionException {
+    final int nameLength = name.length();
+
     if (nameLength == 0) {
       throw new IntrospectionException("Command name cannot be null");
-    } else {
-      for (int i = 0; i < nameLength; i++) {
-        char c = name.charAt(i);
-        if (i == 0) {
-          if (!Character.isLetter(c)) {
-            throw new IntrospectionException(
-                "Invalid command name <" + name + "> does not start with a letter");
-          }
-        } else {
-          if (!Character.isLetter(c) && !Character.isDigit(c) && c != '_' && c != '-') {
-            throw new IntrospectionException(
-                "Invalid command name <"
-                    + name
-                    + "> char "
-                    + c
-                    + " at position "
-                    + i
-                    + " is now allowed");
-          }
+    }
+
+    for (int i = 0; i < nameLength; i++) {
+      final char c = name.charAt(i);
+      if (i == 0) {
+        if (!Character.isLetter(c)) {
+          throw new IntrospectionException(
+              "Invalid command name <" + name + "> does not start with a letter");
+        }
+      } else {
+        if (!Character.isLetter(c) && !Character.isDigit(c) && c != '_' && c != '-') {
+          throw new IntrospectionException(
+              "Invalid command name <"
+                  + name
+                  + "> char "
+                  + c
+                  + " at position "
+                  + i
+                  + " is now allowed");
         }
       }
     }
@@ -130,7 +132,8 @@ public abstract class CommandDescriptor<T> {
     }
 
     if (parameter instanceof OptionDescriptor) {
-      OptionDescriptor option = (OptionDescriptor) parameter;
+      final OptionDescriptor option = (OptionDescriptor) parameter;
+
       for (String optionName : option.getNames()) {
         String name;
         if (optionName.length() == 1) {
@@ -150,8 +153,9 @@ public abstract class CommandDescriptor<T> {
         }
         optionMap.put(name, option);
       }
+
       options.add(option);
-      ListIterator<ParameterDescriptor> i = parameters.listIterator();
+      final ListIterator<ParameterDescriptor> i = parameters.listIterator();
       while (i.hasNext()) {
         ParameterDescriptor next = i.next();
         if (next instanceof ArgumentDescriptor) {
@@ -159,26 +163,29 @@ public abstract class CommandDescriptor<T> {
           break;
         }
       }
+
       i.add(parameter);
-    } else if (parameter instanceof ArgumentDescriptor) {
-      ArgumentDescriptor argument = (ArgumentDescriptor) parameter;
-      if (argument.getMultiplicity() == Multiplicity.MULTI) {
-        if (listArgument) {
-          throw new IntrospectionException();
-        }
-        listArgument = true;
-      }
-      arguments.add(argument);
-      parameters.add(argument);
     } else {
-      throw new AssertionError("Unreachable");
+      if (parameter instanceof ArgumentDescriptor) {
+        final ArgumentDescriptor argument = (ArgumentDescriptor) parameter;
+        if (argument.getMultiplicity() == Multiplicity.MULTI) {
+          if (listArgument) {
+            throw new IntrospectionException();
+          }
+          listArgument = true;
+        }
+        arguments.add(argument);
+        parameters.add(argument);
+      } else {
+        throw new AssertionError("Unreachable");
+      }
     }
   }
 
   public abstract CommandDescriptor<T> getOwner();
 
   public final int getDepth() {
-    CommandDescriptor<T> owner = getOwner();
+    final CommandDescriptor<T> owner = getOwner();
     return owner == null ? 0 : 1 + owner.getDepth();
   }
 
@@ -274,7 +281,7 @@ public abstract class CommandDescriptor<T> {
   public final OptionDescriptor resolveOption(String name) {
     OptionDescriptor option = getOption(name);
     if (option == null) {
-      CommandDescriptor<T> owner = getOwner();
+      final CommandDescriptor<T> owner = getOwner();
       if (owner != null) {
         option = owner.resolveOption(name);
       }
