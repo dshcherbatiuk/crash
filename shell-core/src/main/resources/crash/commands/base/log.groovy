@@ -14,8 +14,8 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.util.regex.Pattern
 
-@Usage("java.util.logging commands")
-class jul {
+@Usage("Log commands")
+class log {
 
     static Collection<Logger> getLoggers() {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory()
@@ -23,17 +23,17 @@ class jul {
         return context.getLoggerList();
     }
 
-    @Usage("send a message to a jul logger")
+    @Usage("send a message to a sl4j logger")
     @Man("""\
 The send command log one or several loggers with a specified message. For instance the
 following impersonates the javax.management.mbeanserver class and send a message on its own
 logger.
 
-#% jul send -m hello javax.management.mbeanserver
+#% log send -m hello javax.management.mbeanserver
 
 Send is a <Logger, Void> command, it can log messages to consumed log objects:
 
-% jul ls | jul send -m hello -l warn""")
+% log ls | log send -m hello -l warn""")
     @Command
     Pipe<Logger, Object> send(@MsgOpt String msg, @LoggerArg String name, @LevelOpt Level level) {
         level = level ?: Level.info
@@ -55,9 +55,9 @@ Send is a <Logger, Void> command, it can log messages to consumed log objects:
 
     @Usage("list the available loggers")
     @Man("""\
-The jul ls command list all the available loggers, for instance:
+The log ls command list all the available loggers, for instance:
 
-% jul ls
+% log ls
 org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/].[default]
 org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/eXoGadgetServer].[concat]
 org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/dashboard].[jsp]
@@ -65,11 +65,11 @@ org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/dashboard].[jsp]
 
 The -f switch provides filtering with a Java regular expression
 
-% jul ls -f javax.*
+% log ls -f javax.*
 javax.management.mbeanserver
 javax.management.modelmbean
 
-The jul ls command is a <Void,Logger> command, therefore any logger produced can be
+The log ls command is a <Void,Logger> command, therefore any logger produced can be
 consumed.""")
     @Command
     void ls(InvocationContext<Logger> context, @FilterOpt String filter) {
@@ -103,13 +103,13 @@ arguments and the -l option specify the level among the finest, finer, fine, inf
 severe levels. When no level is specified, the level is cleared and the level will be
 inherited from its ancestors.
 
-% jul set -l trace foo
-% jul set foo
+% log set -l trace foo
+% log set foo
 
 The logger name can be omitted and instead stream of logger can be consumed as it is a
 <Logger,Void> command. The following set the level warn on all the available loggers:
 
-% jul ls | jul set -l warn""")
+% log ls | log set -l warn""")
     @Usage("configures the level of one of several loggers")
     @Command
     Pipe<Logger, Object> set(@LoggerArg List<String> names, @LevelOpt @Required Level level) {
@@ -136,7 +136,7 @@ be specified as argument and the -l option configures the level threshold. When 
 name is specified, the root logger will be tailed, when no level is specified, the info
 level will be used:
 
-% jul tail
+% log tail
 Feb 10, 2014 1:50:36 PM java_util_logging_Logger\$log call
 INFO: HELLO
 
