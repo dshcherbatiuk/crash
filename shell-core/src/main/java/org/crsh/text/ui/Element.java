@@ -26,7 +26,6 @@ import org.crsh.text.Style;
 
 public abstract class Element {
 
-  /** . */
   private Style.Composite style;
 
   protected Element() {

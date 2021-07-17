@@ -30,7 +30,9 @@ import org.crsh.cli.impl.line.MultiLineVisitor;
 import org.crsh.cli.spi.Completion;
 import org.crsh.util.Utils;
 
-/** An action on the editor. */
+/**
+ * An action on the editor.
+ */
 class EditorAction {
 
   static class InsertKey extends EditorAction {
@@ -633,10 +635,8 @@ class EditorAction {
 
   static class ChangeChars extends EditorAction {
 
-    /** . */
     public final int count;
 
-    /** . */
     public final int c;
 
     public ChangeChars(int count, int c) {
@@ -664,7 +664,6 @@ class EditorAction {
 
   static class DeleteNextChars extends EditorAction {
 
-    /** . */
     public final int count;
 
     public DeleteNextChars(int count) {

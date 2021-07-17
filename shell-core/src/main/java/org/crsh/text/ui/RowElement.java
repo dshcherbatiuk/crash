@@ -26,10 +26,8 @@ import org.crsh.text.Style;
 
 public class RowElement extends Element {
 
-  /** . */
   List<Element> cols;
 
-  /** . */
   final boolean header;
 
   public RowElement() {

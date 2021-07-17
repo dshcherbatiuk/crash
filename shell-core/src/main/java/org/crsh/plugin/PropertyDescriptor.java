@@ -29,7 +29,9 @@ import org.crsh.util.Utils;
 
 public abstract class PropertyDescriptor<T> {
 
-  /** The display value returned when a property is secret. */
+  /**
+   * The display value returned when a property is secret.
+   */
   public static final String SECRET_DISPLAY_VALUE = "*****";
 
   public static PropertyDescriptor<String> create(
@@ -102,25 +104,21 @@ public abstract class PropertyDescriptor<T> {
 
   public final Class<T> type;
 
-  /** . */
   public final String name;
 
-  /** . */
   public final T defaultValue;
 
-  /** . */
   public final String description;
 
-  /** . */
   public final boolean secret;
 
   /**
    * Create a new property descriptor.
    *
-   * @param type the property type
-   * @param name the property name
+   * @param type         the property type
+   * @param name         the property name
    * @param defaultValue the default value
-   * @param description the description
+   * @param description  the description
    * @throws NullPointerException if the type, name or description is null
    */
   protected PropertyDescriptor(Class<T> type, String name, T defaultValue, String description)
@@ -131,11 +129,11 @@ public abstract class PropertyDescriptor<T> {
   /**
    * Create a new property descriptor.
    *
-   * @param type the property type
-   * @param name the property name
+   * @param type         the property type
+   * @param name         the property name
    * @param defaultValue the default value
-   * @param description the description
-   * @param secret the value is secret (like a password)
+   * @param description  the description
+   * @param secret       the value is secret (like a password)
    * @throws NullPointerException if the type, name or description is null
    */
   protected PropertyDescriptor(
@@ -157,7 +155,6 @@ public abstract class PropertyDescriptor<T> {
     this.description = description;
     this.secret = secret;
 
-    //
     INTERNAL_ALL.put(name, this);
   }
 
@@ -186,7 +183,7 @@ public abstract class PropertyDescriptor<T> {
    *
    * @param s the string to parse
    * @return the corresponding value
-   * @throws NullPointerException if the argument is null
+   * @throws NullPointerException     if the argument is null
    * @throws IllegalArgumentException if the string value cannot be parsed for some reason
    */
   public final T parse(String s) throws NullPointerException, IllegalArgumentException {
@@ -217,7 +214,7 @@ public abstract class PropertyDescriptor<T> {
    *
    * @param s the string to parse
    * @return the corresponding property
-   * @throws NullPointerException if the argument is null
+   * @throws NullPointerException     if the argument is null
    * @throws IllegalArgumentException if the string value cannot be parsed for some reason
    */
   public final Property<T> toProperty(String s)

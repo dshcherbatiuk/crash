@@ -28,19 +28,26 @@ import java.util.NoSuchElementException;
 
 final class EditorBuffer implements Appendable, Iterator<String> {
 
-  /** . */
-  private StringBuilder current;
+  private final StringBuilder current;
 
-  /** Cursor position. */
+  /**
+   * Cursor position.
+   */
   private int cursor;
 
-  /** Previous lines. */
-  private LinkedList<String> lines;
+  /**
+   * Previous lines.
+   */
+  private final LinkedList<String> lines;
 
-  /** The output. */
+  /**
+   * The output.
+   */
   private final ConsoleDriver driver;
 
-  /** True if flush is needed. */
+  /**
+   * True if flush is needed.
+   */
   private boolean needFlush;
 
   EditorBuffer(ConsoleDriver driver) {
@@ -62,7 +69,9 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     }
   }
 
-  /** Reset the buffer state. */
+  /**
+   * Reset the buffer state.
+   */
   void reset() {
     this.lines.clear();
     this.cursor = 0;
@@ -98,12 +107,16 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     return current.charAt(index);
   }
 
-  /** @return the current line */
+  /**
+   * @return the current line
+   */
   public String getLine() {
     return current.toString();
   }
 
-  /** @return the lines */
+  /**
+   * @return the lines
+   */
   public List<String> getLines() {
     ArrayList<String> tmp = new ArrayList<String>(lines.size() + 1);
     tmp.addAll(lines);
@@ -112,8 +125,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
   }
 
   // Iterator<String> implementation
-  // ***********************************************************************************
-
   @Override
   public boolean hasNext() {
     return lines.size() > 0;
@@ -133,8 +144,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
   }
 
   // Appendable implementation
-  // *****************************************************************************************
-
   public EditorBuffer append(char c) throws IOException {
     appendData(Character.toString(c), 0, 1);
     return this;
@@ -150,7 +159,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
   }
 
   // Protected methods
-  // *************************************************************************************************
 
   /**
    * Replace all the characters before the cursor by the provided char sequence.
@@ -295,9 +303,7 @@ final class EditorBuffer implements Appendable, Iterator<String> {
       }
     }
 
-    //
     if (len > 0) {
-
       // Now insert our data
       int count = cursor;
       int size = current.length();
@@ -336,7 +342,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
     if (cursor == current.length()) {
       int popped = pop();
 
-      //
       if (popped != -1) {
         echoDel();
         // We do not care about the return value of echoDel, but we will return a value that
@@ -347,7 +352,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
         // 2/ the boolean indicating if flush is required
       }
 
-      //
       return popped;
     } else {
       // We are editing the line
@@ -355,7 +359,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
       // Shift all the chars after the cursor
       int popped = pop();
 
-      //
       if (popped != -1) {
 
         // We move the cursor to left
@@ -374,7 +377,6 @@ final class EditorBuffer implements Appendable, Iterator<String> {
         }
       }
 
-      //
       return popped;
     }
   }

@@ -35,19 +35,26 @@ import org.crsh.util.Utils;
  */
 public class VirtualScreen implements ScreenContext {
 
-  /** The cached width and height for the current refresh. */
+  /**
+   * The cached width and height for the current refresh.
+   */
   private int width, height;
 
-  /** . */
   private final ArrayList<Foo> buffer;
 
-  /** The current style for last chunk in the buffer. */
+  /**
+   * The current style for last chunk in the buffer.
+   */
   private Style style;
 
-  /** The absolute offset, index and row. */
+  /**
+   * The absolute offset, index and row.
+   */
   private int offset, index, row;
 
-  /** The cursor coordinate. */
+  /**
+   * The cursor coordinate.
+   */
   private int cursorX, cursorY;
 
   // Invariant:
@@ -57,19 +64,23 @@ public class VirtualScreen implements ScreenContext {
   // othewise we always have
   // (currentOffset = 0, currentIndex = 1) for {"a"} and not (currentOffset = 1, currentIndex = 0)
 
-  /** The cursor offset in the {@link #buffer}. */
+  /**
+   * The cursor offset in the {@link #buffer}.
+   */
   private int cursorOffset;
 
-  /** The cursor index in the chunk at the current {@link #cursorOffset}. */
+  /**
+   * The cursor index in the chunk at the current {@link #cursorOffset}.
+   */
   private int cursorIndex;
 
-  /** . */
   private Style cursorStyle;
 
-  /** . */
   private final ScreenContext out;
 
-  /** Do we need to clear screen. */
+  /**
+   * Do we need to clear screen.
+   */
   private int status;
 
   private static final int REFRESH = 0, // Need a full refresh
@@ -77,6 +88,7 @@ public class VirtualScreen implements ScreenContext {
       PAINTED = 3; // Screen is fully painted
 
   private static class Foo {
+
     final CharSequence text;
     final Style style;
 
@@ -97,7 +109,7 @@ public class VirtualScreen implements ScreenContext {
     this.offset = 0;
     this.index = 0;
     this.row = 0;
-    this.buffer = new ArrayList<Foo>();
+    this.buffer = new ArrayList<>();
     this.style = Style.style();
     this.status = REFRESH;
     this.cursorStyle = null; // on purpose
@@ -212,7 +224,7 @@ public class VirtualScreen implements ScreenContext {
     return this;
   }
 
-  public synchronized boolean previousRow() throws IOException {
+  public synchronized boolean previousRow() {
     // Current strategy is to increment updates, a bit dumb, but fast (in memory) and works
     // correctly
     if (row > 0) {
@@ -240,30 +252,36 @@ public class VirtualScreen implements ScreenContext {
     }
   }
 
-  /** @return true if the buffer is painted */
+  /**
+   * @return true if the buffer is painted
+   */
   public synchronized boolean isPainted() {
     return status == PAINTED;
   }
 
-  /** @return true if the buffer is stale and needs a full repaint */
+  /**
+   * @return true if the buffer is stale and needs a full repaint
+   */
   public synchronized boolean isRefresh() {
     return status == REFRESH;
   }
 
-  /** @return true if the buffer is waiting for input to become painted */
+  /**
+   * @return true if the buffer is waiting for input to become painted
+   */
   public synchronized boolean isPainting() {
     return status == PAINTING;
   }
 
-  public synchronized boolean nextRow() throws IOException {
+  public synchronized boolean nextRow() {
     return scroll(1) == 1;
   }
 
-  public synchronized int nextPage() throws IOException {
+  public synchronized int nextPage() {
     return scroll(height);
   }
 
-  private int scroll(int amount) throws IOException {
+  private int scroll(int amount) {
     if (amount < 0) {
       throw new UnsupportedOperationException("Not implemented for negative operations");
     } else if (amount == 0) {
@@ -323,17 +341,17 @@ public class VirtualScreen implements ScreenContext {
       } else {
         char c = buffer.get(offset).text.charAt(index++);
         if (c == '\n') {
-          return new Pair<Integer, Integer>(offset, index);
+          return new Pair<>(offset, index);
         } else if (c >= 32) {
           if (++count == width) {
-            return new Pair<Integer, Integer>(offset, index);
+            return new Pair<>(offset, index);
           }
         }
       }
     }
   }
 
-  public synchronized boolean update() throws IOException {
+  public synchronized boolean update() {
     int nextWidth = out.getWidth();
     int nextHeight = out.getHeight();
     if (width != nextWidth || height != nextHeight) {

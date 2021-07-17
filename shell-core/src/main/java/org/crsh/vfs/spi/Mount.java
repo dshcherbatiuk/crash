@@ -25,10 +25,8 @@ package org.crsh.vfs.spi;
  */
 public class Mount<H> {
 
-  /** . */
   private final FSDriver<H> driver;
 
-  /** . */
   private final String value;
 
   public Mount(FSDriver<H> driver, String value) {

@@ -20,23 +20,25 @@ package org.crsh.text;
 
 import java.io.IOException;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public abstract class Format {
 
-  /** . */
   public static final Text TEXT = new Text();
 
-  /** . */
   public static final Ansi ANSI = new Ansi();
 
-  /** . */
   public static final PreHtml PRE_HTML = new PreHtml();
 
   public static class Text extends Format {
-    protected Text() {}
+
+    protected Text() {
+    }
 
     @Override
-    public void begin(Appendable to) {}
+    public void begin(Appendable to) {
+    }
 
     @Override
     public void write(CharSequence s, Appendable to) throws IOException {
@@ -46,20 +48,26 @@ public abstract class Format {
     }
 
     @Override
-    public void write(Style style, Appendable to) throws IOException {}
+    public void write(Style style, Appendable to) throws IOException {
+    }
 
     @Override
-    public void cls(Appendable to) throws IOException {}
+    public void cls(Appendable to) throws IOException {
+    }
 
     @Override
-    public void end(Appendable to) throws IOException {}
+    public void end(Appendable to) throws IOException {
+    }
   }
 
   public static class Ansi extends Format {
-    protected Ansi() {}
+
+    protected Ansi() {
+    }
 
     @Override
-    public void begin(Appendable to) {}
+    public void begin(Appendable to) {
+    }
 
     @Override
     public void write(CharSequence s, Appendable to) throws IOException {
@@ -74,14 +82,18 @@ public abstract class Format {
     }
 
     @Override
-    public void cls(Appendable to) throws IOException {}
+    public void cls(Appendable to) throws IOException {
+    }
 
     @Override
-    public void end(Appendable to) throws IOException {}
+    public void end(Appendable to) throws IOException {
+    }
   }
 
   public static class PreHtml extends Format {
-    protected PreHtml() {}
+
+    protected PreHtml() {
+    }
 
     @Override
     public void begin(Appendable to) throws IOException {
@@ -117,10 +129,12 @@ public abstract class Format {
     }
 
     @Override
-    public void write(Style style, Appendable to) throws IOException {}
+    public void write(Style style, Appendable to) throws IOException {
+    }
 
     @Override
-    public void cls(Appendable to) throws IOException {}
+    public void cls(Appendable to) throws IOException {
+    }
 
     @Override
     public void end(Appendable to) throws IOException {

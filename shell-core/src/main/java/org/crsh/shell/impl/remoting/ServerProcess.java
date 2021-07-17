@@ -25,13 +25,10 @@ import org.crsh.shell.ShellProcessContext;
 
 public class ServerProcess implements ShellProcess {
 
-  /** . */
   final ServerAutomaton server;
 
-  /** . */
   final String line;
 
-  /** . */
   private int status;
 
   ServerProcess(ServerAutomaton server, String line) {

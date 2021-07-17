@@ -42,7 +42,7 @@ class RowLineRenderer extends LineRenderer {
   RowLineRenderer(
       RowElement row, BorderStyle separator, int leftCellPadding, int rightCellPadding) {
 
-    List<LineRenderer> cols = new ArrayList<LineRenderer>(row.cols.size());
+    List<LineRenderer> cols = new ArrayList<>(row.cols.size());
     for (Element col : row.cols) {
       cols.add(col.renderer());
     }
@@ -124,10 +124,8 @@ class RowLineRenderer extends LineRenderer {
       readers[i] = reader;
     }
 
-    //
     return new LineReader() {
 
-      /** . */
       private boolean done = false;
 
       public boolean hasLine() {
@@ -139,7 +137,6 @@ class RowLineRenderer extends LineRenderer {
           throw new IllegalStateException();
         }
 
-        //
         if (style != null) {
           to.enterStyle(style);
         }
@@ -176,7 +173,6 @@ class RowLineRenderer extends LineRenderer {
           }
         }
 
-        //
         if (style != null) {
           to.leaveStyle();
         }

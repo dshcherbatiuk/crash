@@ -18,10 +18,11 @@
  */
 package org.crsh.lang.impl.script;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class CommandNotFoundException extends Exception {
 
-  /** . */
   final String name;
 
   public CommandNotFoundException(String name) {

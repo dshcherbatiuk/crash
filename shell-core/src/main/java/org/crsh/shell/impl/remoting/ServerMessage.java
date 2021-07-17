@@ -31,7 +31,6 @@ public class ServerMessage implements Serializable {
 
   public static class Welcome extends ServerMessage {
 
-    /** . */
     public final String value;
 
     public Welcome(String value) {
@@ -41,7 +40,6 @@ public class ServerMessage implements Serializable {
 
   public static class Prompt extends ServerMessage {
 
-    /** . */
     public final String value;
 
     public Prompt(String value) {
@@ -51,7 +49,6 @@ public class ServerMessage implements Serializable {
 
   public static class Completion extends ServerMessage {
 
-    /** . */
     public final CompletionMatch value;
 
     public Completion(CompletionMatch value) {
@@ -59,19 +56,26 @@ public class ServerMessage implements Serializable {
     }
   }
 
-  public static class UseMainBuffer extends ServerMessage {}
+  public static class UseMainBuffer extends ServerMessage {
 
-  public static class UseAlternateBuffer extends ServerMessage {}
+  }
 
-  public static class GetSize extends ServerMessage {}
+  public static class UseAlternateBuffer extends ServerMessage {
 
-  public static class ReadLine extends ServerMessage {}
+  }
+
+  public static class GetSize extends ServerMessage {
+
+  }
+
+  public static class ReadLine extends ServerMessage {
+
+  }
 
   public abstract static class Chunk extends ServerMessage {
 
     public static class Text extends Chunk {
 
-      /** . */
       public final CharSequence payload;
 
       public Text(CharSequence payload) {
@@ -81,7 +85,6 @@ public class ServerMessage implements Serializable {
 
     public static class Style extends Chunk {
 
-      /** . */
       public final org.crsh.text.Style payload;
 
       public Style(org.crsh.text.Style payload) {
@@ -91,11 +94,14 @@ public class ServerMessage implements Serializable {
 
     public static class Cls extends Chunk {
 
-      public Cls() {}
+      public Cls() {
+      }
     }
   }
 
-  public static class Flush extends ServerMessage {}
+  public static class Flush extends ServerMessage {
+
+  }
 
   public static class End extends ServerMessage {
 
@@ -106,7 +112,6 @@ public class ServerMessage implements Serializable {
         throw new NullPointerException("No null response accepted");
       }
 
-      //
       this.response = response;
     }
 

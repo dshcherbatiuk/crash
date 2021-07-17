@@ -22,13 +22,13 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.util.Utils;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class Token {
 
-  /** . */
   public final String value;
 
-  /** . */
   public final Token next;
 
   public Token(String value, Token next) {

@@ -27,16 +27,15 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.util.ClassFactory;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class GroovyClassFactory<T> extends ClassFactory<T> {
 
-  /** . */
   private final ClassLoader baseLoader;
 
-  /** . */
   private final Class<T> baseClass;
 
-  /** . */
   final CompilerConfiguration config;
 
   GroovyClassFactory(
@@ -45,7 +44,6 @@ class GroovyClassFactory<T> extends ClassFactory<T> {
     config.setRecompileGroovySource(true);
     config.setScriptBaseClass(baseScriptClass.getName());
 
-    //
     this.baseLoader = baseLoader;
     this.baseClass = baseClass;
     this.config = config;
@@ -58,9 +56,7 @@ class GroovyClassFactory<T> extends ClassFactory<T> {
       GroovyCodeSource gcs = new GroovyCodeSource(source, name, "/groovy/shell");
       GroovyClassLoader gcl = new GroovyClassLoader(baseLoader, config);
       clazz = gcl.parseClass(gcs, false);
-    } catch (NoClassDefFoundError e) {
-      throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
-    } catch (CompilationFailedException e) {
+    } catch (NoClassDefFoundError | CompilationFailedException e) {
       throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
     }
 

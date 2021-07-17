@@ -43,7 +43,6 @@ import org.crsh.cli.impl.Delimiter;
 
 class CommandCompletion<T> extends Completion {
 
-  /** . */
   private final CommandDescriptor<T> descriptor;
 
   /** . */

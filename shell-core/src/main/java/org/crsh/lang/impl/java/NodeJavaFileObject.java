@@ -30,22 +30,19 @@ import javax.lang.model.element.NestingKind;
 import javax.tools.JavaFileObject;
 import org.crsh.util.InputStreamFactory;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class NodeJavaFileObject implements JavaFileObject {
 
-  /** . */
   final String binaryName;
 
-  /** . */
   private final URI uri;
 
-  /** . */
   private final String name;
 
-  /** . */
   private final long lastModified;
 
-  /** . */
   private final InputStreamFactory stream;
 
   public NodeJavaFileObject(
@@ -73,19 +70,19 @@ class NodeJavaFileObject implements JavaFileObject {
     return stream.open();
   }
 
-  public OutputStream openOutputStream() throws IOException {
+  public OutputStream openOutputStream() {
     throw new UnsupportedOperationException();
   }
 
-  public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
+  public Reader openReader(boolean ignoreEncodingErrors) {
     throw new UnsupportedOperationException();
   }
 
-  public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+  public CharSequence getCharContent(boolean ignoreEncodingErrors) {
     throw new UnsupportedOperationException();
   }
 
-  public Writer openWriter() throws IOException {
+  public Writer openWriter() {
     throw new UnsupportedOperationException();
   }
 

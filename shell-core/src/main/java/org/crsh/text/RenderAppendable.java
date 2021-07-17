@@ -24,10 +24,8 @@ import java.util.LinkedList;
 
 public class RenderAppendable implements ScreenContext {
 
-  /** . */
   private final ScreenContext context;
 
-  /** . */
   private LinkedList<Style.Composite> stack;
 
   public RenderAppendable(ScreenContext context) {

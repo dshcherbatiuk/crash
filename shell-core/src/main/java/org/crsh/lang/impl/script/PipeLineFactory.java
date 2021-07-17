@@ -28,22 +28,19 @@ import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-/** A factory for a pipeline. */
+/**
+ * A factory for a pipeline.
+ */
 public class PipeLineFactory {
 
-  /** . */
   private static final Pattern p = Pattern.compile("^\\s*(\\S+)");
 
-  /** . */
   final String line;
 
-  /** . */
   final String name;
 
-  /** . */
   final String rest;
 
-  /** . */
   final PipeLineFactory next;
 
   /**

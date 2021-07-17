@@ -36,16 +36,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class AbstractProcessorTestCase extends AbstractTestCase {
 
-  /** . */
   protected SyncTerm term;
 
-  /** . */
   protected SyncShell shell;
 
-  /** . */
   protected Processor processor;
 
-  /** . */
   protected Thread thread;
 
   @Override
@@ -118,8 +114,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
         try {
           syncA.await();
           syncB.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
       }
@@ -127,8 +122,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
       public void cancel() {
         try {
           syncB.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
       }
@@ -169,8 +163,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
         try {
           syncA.await();
           syncB.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         String s = context.readLine("hello", true);
@@ -180,8 +173,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
         line.set(s);
         try {
           syncC.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         context.append("foo");
@@ -209,16 +201,14 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
         try {
           syncA.await();
           syncB.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         String s = context.readLine("hello", true);
         line.set(s);
         try {
           syncC.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         context.end(ShellResponse.close());
@@ -242,8 +232,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
       public void run(String request, ShellProcessContext context) throws Exception {
         try {
           syncA.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         String s = context.readLine("hello", true);
@@ -253,8 +242,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
         line.set(s);
         try {
           syncB.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         context.append("foo");
@@ -286,8 +274,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
       public void run(String request, ShellProcessContext context) throws Exception {
         try {
           syncA.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         String s = context.readLine("hello", true);
@@ -297,8 +284,7 @@ public abstract class AbstractProcessorTestCase extends AbstractTestCase {
         line.set(s);
         try {
           syncB.await();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
         context.append("foo");

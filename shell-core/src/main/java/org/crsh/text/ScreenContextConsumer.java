@@ -28,13 +28,13 @@ import org.crsh.stream.Consumer;
  */
 public class ScreenContextConsumer implements Consumer<Object> {
 
-  /** Buffers objects of the same kind. */
-  private final LinkedList<Object> buffer = new LinkedList<Object>();
+  /**
+   * Buffers objects of the same kind.
+   */
+  private final LinkedList<Object> buffer = new LinkedList<>();
 
-  /** . */
   private Renderer renderable = null;
 
-  /** . */
   private final RenderAppendable out;
 
   public ScreenContextConsumer(ScreenContext out) {
@@ -72,7 +72,7 @@ public class ScreenContextConsumer implements Consumer<Object> {
     out.flush();
   }
 
-  public void send() throws IOException {
+  public void send() {
     if (buffer.size() > 0) {
       LineRenderer renderer = renderable.renderer(buffer.iterator());
       renderer.render(out);

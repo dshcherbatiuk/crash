@@ -42,7 +42,6 @@ import org.crsh.shell.impl.command.spi.CommandInvoker;
  */
 public class GroovyRepl implements Repl {
 
-  /** . */
   final GroovyLanguage lang;
 
   public GroovyRepl(GroovyLanguage lang) {
@@ -62,14 +61,12 @@ public class GroovyRepl implements Repl {
   }
 
   public ReplResponse eval(final ShellSession session, final String r2) {
-
     GroovyLineEscaper foo = new GroovyLineEscaper();
     LineParser parser = new LineParser(foo);
     parser.append(r2);
     final String request = foo.buffer.toString();
 
-    //
-    CommandInvoker<Void, Object> invoker =
+    final CommandInvoker<Void, Object> invoker =
         new CommandInvoker<Void, Object>() {
           public void provide(Void element) {
             throw new UnsupportedOperationException("Should not be invoked");
@@ -79,7 +76,8 @@ public class GroovyRepl implements Repl {
             return Void.class;
           }
 
-          public void flush() {}
+          public void flush() {
+          }
 
           public Class<Object> getProducedType() {
             return Object.class;
@@ -104,9 +102,7 @@ public class GroovyRepl implements Repl {
             if (o != null) {
               try {
                 consumer.provide(o);
-              } catch (IOException e) {
-                throw e;
-              } catch (CommandException e) {
+              } catch (IOException | CommandException e) {
                 throw e;
               } catch (Exception e) {
                 throw new CommandException(
@@ -117,6 +113,7 @@ public class GroovyRepl implements Repl {
             }
           }
 
+          @Override
           public void close() throws CommandException {
             try {
               consumer.flush();

@@ -28,40 +28,37 @@ import org.crsh.text.Style;
 /**
  * An editor state machine.
  *
- * <p>todo: - undo - optimize operation with an improvement of {@link org.crsh.console.EditorBuffer}
+ * <p>todo: - undo - optimize operation with an improvement of {@link
+ * org.crsh.console.EditorBuffer}
  *
  * @author Julien Viet
  */
 class Editor extends Plugin {
 
-  /** . */
   final Console console;
 
-  /** . */
   final EditorBuffer buffer;
 
-  /** . */
   final MultiLineVisitor visitor;
 
-  /** The line parser : updated on enter key. */
+  /**
+   * The line parser : updated on enter key.
+   */
   final LineParser lineParser;
 
-  /** . */
   final LinkedList<String> history;
 
-  /** . */
   private Mode mode;
 
-  /** . */
   int historyCursor;
 
-  /** . */
   String historyBuffer;
 
-  /** The buffer that holds what we kill. */
+  /**
+   * The buffer that holds what we kill.
+   */
   final StringBuilder killBuffer;
 
-  /** . */
   private final ArrayList<Runnable> modeListeners;
 
   Editor(Console console) {
@@ -69,11 +66,8 @@ class Editor extends Plugin {
   }
 
   Editor(Console console, boolean echo) {
-
-    //
     EditorBuffer buffer = new EditorBuffer(echo ? console.driver : NULL);
 
-    //
     this.console = console;
     this.buffer = buffer;
     this.visitor = new MultiLineVisitor();
@@ -187,28 +181,36 @@ class Editor extends Plugin {
         }
 
         @Override
-        public void flush() {}
+        public void flush() {
+        }
 
         @Override
-        public void write(CharSequence s) {}
+        public void write(CharSequence s) {
+        }
 
         @Override
-        public void write(CharSequence s, int start, int end) {}
+        public void write(CharSequence s, int start, int end) {
+        }
 
         @Override
-        public void write(char c) {}
+        public void write(char c) {
+        }
 
         @Override
-        public void write(Style d) {}
+        public void write(Style d) {
+        }
 
         @Override
-        public void writeDel() {}
+        public void writeDel() {
+        }
 
         @Override
-        public void writeCRLF() {}
+        public void writeCRLF() {
+        }
 
         @Override
-        public void cls() {}
+        public void cls() {
+        }
 
         @Override
         public boolean moveRight(char c) {
@@ -221,6 +223,7 @@ class Editor extends Plugin {
         }
 
         @Override
-        public void close() {}
+        public void close() {
+        }
       };
 }

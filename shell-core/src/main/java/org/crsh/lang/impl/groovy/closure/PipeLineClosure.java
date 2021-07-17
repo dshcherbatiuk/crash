@@ -38,26 +38,24 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.util.Utils;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class PipeLineClosure extends Closure {
 
-  /** . */
   private static final Object[] EMPTY_ARGS = new Object[0];
 
-  /** . */
   private final InvocationContext<Object> context;
 
-  /** . */
-  private PipeLineElement[] elements;
+  private final PipeLineElement[] elements;
 
   public PipeLineClosure(InvocationContext<Object> context, String name, Command<?> command) {
-    this(context, new CommandElement[] {new CommandElement(name, command, null)});
+    this(context, new CommandElement[]{new CommandElement(name, command, null)});
   }
 
   public PipeLineClosure(InvocationContext<Object> context, PipeLineElement[] elements) {
     super(new Object());
 
-    //
     this.context = context;
     this.elements = elements;
   }
@@ -67,7 +65,7 @@ public class PipeLineClosure extends Closure {
   }
 
   public Object find(Closure closure) {
-    return _gdk("find", new Object[] {closure});
+    return _gdk("find", new Object[]{closure});
   }
 
   private Object _gdk(String name, Object[] args) {
@@ -100,7 +98,7 @@ public class PipeLineClosure extends Closure {
     if (elements.length == 1) {
       CommandElement element = (CommandElement) elements[0];
       if (element.subordinate == null) {
-        return new PipeLineClosure(context, new CommandElement[] {element.subordinate(name)});
+        return new PipeLineClosure(context, new CommandElement[]{element.subordinate(name)});
       }
     }
     return null;
@@ -142,7 +140,7 @@ public class PipeLineClosure extends Closure {
     } else if (arguments instanceof Object[]) {
       return (Object[]) arguments;
     } else {
-      return new Object[] {arguments};
+      return new Object[]{arguments};
     }
   }
 
@@ -160,7 +158,6 @@ public class PipeLineClosure extends Closure {
 
   @Override
   public Object call(Object... args) {
-
     final Closure closure;
     int to = args.length;
     if (to > 0 && args[to - 1] instanceof Closure) {
@@ -197,7 +194,7 @@ public class PipeLineClosure extends Closure {
             }
           }
           // Avoid the case : foo { bar = "juu" } that will make "juu" as an argument
-          closureArgs = use ? new Object[] {ret} : EMPTY_ARGS;
+          closureArgs = use ? new Object[]{ret} : EMPTY_ARGS;
         }
       } else {
         closureArgs = EMPTY_ARGS;
@@ -233,7 +230,6 @@ public class PipeLineClosure extends Closure {
   }
 
   LinkedList<CommandInvoker> resolve2(Object[] args) throws CommandException {
-
     // Resolve options and arguments
     Map<String, Object> invokerOptions = Collections.emptyMap();
     List<Object> invokerArgs = Collections.emptyList();
@@ -265,18 +261,15 @@ public class PipeLineClosure extends Closure {
       }
     }
 
-    //
     CommandElement first = (CommandElement) elements[0];
     PipeLineElement[] a = elements.clone();
     a[0] = first.merge(invokerOptions, invokerArgs);
 
-    //
     LinkedList<CommandInvoker> ret = new LinkedList<CommandInvoker>();
     for (PipeLineElement _elt : a) {
       ret.add(_elt.create());
     }
 
-    //
     return ret;
   }
 

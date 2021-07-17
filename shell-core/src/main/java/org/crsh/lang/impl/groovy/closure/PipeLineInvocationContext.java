@@ -33,12 +33,9 @@ import org.crsh.text.Style;
 
 class PipeLineInvocationContext extends AbstractInvocationContext<Object> {
 
-  /** . */
   final InvocationContext<Object> outter;
 
   PipeLineInvocationContext(InvocationContext<Object> outter) {
-
-    //
     this.outter = outter;
   }
 

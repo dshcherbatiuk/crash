@@ -28,19 +28,14 @@ import java.io.OutputStream;
 
 public abstract class AbstractCommand implements Command, SessionAware {
 
-  /** . */
   protected InputStream in;
 
-  /** . */
   protected OutputStream out;
 
-  /** . */
   protected OutputStream err;
 
-  /** . */
   protected ExitCallback callback;
 
-  /** . */
   protected ServerSession session;
 
   public final void setInputStream(InputStream in) {

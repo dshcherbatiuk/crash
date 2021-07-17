@@ -26,25 +26,20 @@ import org.crsh.util.Pair;
 
 public class LabelElement extends Element {
 
-  /** . */
   final String value;
 
-  /** . */
   final int minWidth;
 
-  /** . */
   final int actualWidth;
 
-  /** . */
   final int actualHeight;
 
-  /** . */
   final CharSlicer slicer;
 
   /**
    * Create a new label element
    *
-   * @param value the label value
+   * @param value    the label value
    * @param minWidth the label minimum width
    * @throws IllegalArgumentException if the minimum width is negative
    */
@@ -53,14 +48,12 @@ public class LabelElement extends Element {
       throw new IllegalArgumentException("No negative min size allowed");
     }
 
-    //
     String s = String.valueOf(value);
 
     // Determine size
     CharSlicer slicer = new CharSlicer(s);
     Pair<Integer, Integer> size = slicer.size();
 
-    //
     this.value = s;
     this.minWidth = Math.min(size.getFirst(), minWidth);
     this.actualWidth = size.getFirst();

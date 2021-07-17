@@ -28,9 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Description;
-import org.crsh.cli.impl.SyntaxException;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.spi.Completer;
 import org.crsh.command.CommandContext;
@@ -45,13 +43,13 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.shell.impl.command.spi.CommandMatch;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ScriptCompiler implements Compiler {
 
-  /** . */
   private static final Set<String> EXT = Collections.singleton("script");
 
-  /** . */
   static final ScriptCompiler instance = new ScriptCompiler();
 
   public static ScriptCompiler getInstance() {
@@ -75,8 +73,6 @@ public class ScriptCompiler implements Compiler {
 
       @Override
       public Command<?> getCommand() throws CommandException {
-
-        //
         final CommandDescriptor<Object> descriptor;
         try {
           descriptor =
@@ -139,7 +135,8 @@ public class ScriptCompiler implements Compiler {
                   private CommandContext<?> consumer;
 
                   @Override
-                  public void provide(Void element) {}
+                  public void provide(Void element) {
+                  }
 
                   @Override
                   public Class<Void> getConsumedType() {
@@ -196,14 +193,12 @@ public class ScriptCompiler implements Compiler {
                       }
                     }
 
-                    //
                     try {
                       consumer.close();
                     } catch (Exception e) {
                       // ?
                     }
 
-                    //
                     this.consumer = null;
                   }
                 };

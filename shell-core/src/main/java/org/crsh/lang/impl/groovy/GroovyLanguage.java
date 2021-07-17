@@ -31,27 +31,24 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.util.ClassCache;
 import org.crsh.util.TimestampedObject;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class GroovyLanguage implements Language {
 
-  /** . */
-  private ClassCache<GroovyScript> scriptCache;
+  private final ClassCache<GroovyScript> scriptCache;
 
-  /** . */
-  private GroovyRepl repl;
+  private final GroovyRepl repl;
 
-  /** . */
-  private GroovyCompiler compiler;
+  private final GroovyCompiler compiler;
 
   public GroovyLanguage(PluginContext context) {
     compiler = new GroovyCompiler(context);
     repl = new GroovyRepl(this);
-    scriptCache =
-        new ClassCache<>(
-            context,
-            new GroovyClassFactory<>(
-                context.getLoader(), GroovyScript.class, GroovyScript.class),
-            ResourceKind.LIFECYCLE);
+    scriptCache = new ClassCache<>(
+        context,
+        new GroovyClassFactory<>(context.getLoader(), GroovyScript.class, GroovyScript.class),
+        ResourceKind.LIFECYCLE);
   }
 
   public String getName() {

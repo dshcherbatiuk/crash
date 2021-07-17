@@ -33,15 +33,15 @@ import org.crsh.vfs.spi.file.FileDriver;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
 import org.crsh.vfs.spi.url.URLDriver;
 
-/** The file system provides a federated view of {@link org.crsh.vfs.spi.FSDriver} mounts. */
+/**
+ * The file system provides a federated view of {@link org.crsh.vfs.spi.FSDriver} mounts.
+ */
 public class FS {
 
   public static class Builder {
 
-    /** . */
     private HashMap<String, FSMountFactory<?>> resolvers;
 
-    /** . */
     private ArrayList<Mount<?>> mounts = new ArrayList<Mount<?>>();
 
     public Builder() {
@@ -51,7 +51,7 @@ public class FS {
     /**
      * Register a resolver.
      *
-     * @param name the registration name
+     * @param name     the registration name
      * @param resolver the resolver implementation
      */
     public Builder register(String name, FSMountFactory<?> resolver) {
@@ -124,11 +124,10 @@ public class FS {
     }
   }
 
-  /** . */
   final List<FSDriver<?>> drivers;
 
   public FS() {
-    this.drivers = new ArrayList<FSDriver<?>>();
+    this.drivers = new ArrayList<>();
   }
 
   public File get(Path path) throws IOException {

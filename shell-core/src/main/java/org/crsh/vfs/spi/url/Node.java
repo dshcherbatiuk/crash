@@ -37,23 +37,23 @@ import org.crsh.util.InputStreamFactory;
 import org.crsh.util.Utils;
 import org.crsh.util.ZipIterator;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public class Node implements Iterable<Resource> {
 
-  /** . */
   private static final File[] EMPTY = new File[0];
 
-  /** . */
   public final String name;
 
-  /** The lazy dires not yet processed. */
+  /**
+   * The lazy dires not yet processed.
+   */
   File[] dirs = EMPTY;
 
-  /** . */
-  HashMap<String, Node> children = new HashMap<String, Node>();
+  HashMap<String, Node> children = new HashMap<>();
 
-  /** . */
-  LinkedList<Resource> resources = new LinkedList<Resource>();
+  LinkedList<Resource> resources = new LinkedList<>();
 
   public Node() {
     this.name = "";
@@ -64,7 +64,6 @@ public class Node implements Iterable<Resource> {
   }
 
   void merge(ClassLoader loader) throws IOException, URISyntaxException {
-
     // Get the root class path files
     for (Enumeration<URL> i = loader.getResources(""); i.hasMoreElements(); ) {
       URL url = i.nextElement();

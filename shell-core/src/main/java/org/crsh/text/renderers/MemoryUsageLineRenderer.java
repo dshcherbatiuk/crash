@@ -62,7 +62,6 @@ class MemoryUsageLineRenderer extends LineRenderer {
   public LineReader reader(final int width, final int height) {
     return new LineReader() {
 
-      /** . */
       private int index = 0;
 
       public boolean hasLine() {
@@ -73,7 +72,6 @@ class MemoryUsageLineRenderer extends LineRenderer {
         if (!hasLine()) {
           throw new IllegalStateException();
         }
-        long range = usage.getMax() - usage.getInit();
         Color previous = null;
 
         if (usage.getMax() > 0) {

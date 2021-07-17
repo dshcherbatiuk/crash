@@ -42,21 +42,18 @@ import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.shell.impl.command.spi.CommandMatch;
 import org.crsh.util.Utils;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Command<Instance<T>> {
 
-  /** . */
   private final Class<T> clazz;
 
-  /** . */
   private final boolean hasExplicitReturn;
 
-  /** . */
   private final CommandDescriptor<Instance<T>> descriptor;
 
   public GroovyScriptShellCommand(Class<T> clazz) throws IntrospectionException {
-
-    //
     CommandFactory factory = new CommandFactory(getClass().getClassLoader());
 
     boolean hasExplicitReturn;
@@ -67,7 +64,6 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
       hasExplicitReturn = false;
     }
 
-    //
     this.clazz = clazz;
     this.descriptor = HelpDescriptor.create(factory.create(clazz));
     this.hasExplicitReturn = hasExplicitReturn;
@@ -113,7 +109,7 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
   }
 
   @Override
-  protected Completer getCompleter(RuntimeContext context) throws CommandException {
+  protected Completer getCompleter(RuntimeContext context) {
     return null;
   }
 
@@ -121,7 +117,6 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
     final T command = createCommand();
     return new CommandInvoker<Void, Object>() {
 
-      /** . */
       private org.crsh.command.InvocationContext<Object> context;
 
       public final Class<Object> getProducedType() {
@@ -132,14 +127,11 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
         return Void.class;
       }
 
-      public void open(CommandContext<? super Object> consumer)
-          throws IOException, CommandException {
-
+      public void open(CommandContext<? super Object> consumer) throws CommandException {
         // Set the context
-        context =
-            new InvocationContextImpl<>(
-                consumer,
-                ShellSafetyFactory.getCurrentThreadShellSafety());
+        context = new InvocationContextImpl<>(
+            consumer,
+            ShellSafetyFactory.getCurrentThreadShellSafety());
 
         // Set up current binding
         Binding binding = new Binding(consumer.getSession());
@@ -147,15 +139,11 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
         // Set the args on the script
         binding.setProperty("args", args);
 
-        //
         command.setBinding(binding);
 
-        //
         command.pushContext(context);
 
-        //
         try {
-          //
           Object ret = command.run();
 
           // Evaluate the closure
@@ -164,7 +152,6 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
             ret = closure.call(args);
           }
 
-          //
           if (ret != null) {
             if (hasExplicitReturn) {
               context.provide(ret);

@@ -28,10 +28,8 @@ import org.crsh.keyboard.KeyType;
  */
 class KeyStroke {
 
-  /** . */
   final Operation operation;
 
-  /** . */
   final int[] sequence;
 
   public KeyStroke(Operation operation, int... sequence) {

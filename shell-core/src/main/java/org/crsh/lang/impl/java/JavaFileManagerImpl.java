@@ -30,20 +30,18 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileManager> {
 
-  /** . */
-  private final LinkedHashMap<String, JavaClassFileObject> classes =
-      new LinkedHashMap<>();
+  private final LinkedHashMap<String, JavaClassFileObject> classes = new LinkedHashMap<>();
 
-  /** . */
   private final ClasspathResolver finder;
 
   JavaFileManagerImpl(StandardJavaFileManager fileManager, ClasspathResolver finder) {
     super(fileManager);
 
-    //
     this.finder = finder;
   }
 
@@ -78,8 +76,7 @@ class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileMana
         return fileManager.list(location, packageName, kinds, recurse);
       } else {
         try {
-          Iterable<JavaFileObject> ret = finder.resolve(packageName, recurse);
-          return ret;
+          return finder.resolve(packageName, recurse);
         } catch (URISyntaxException e) {
           throw new IOException(e);
         }
@@ -101,7 +98,6 @@ class JavaFileManagerImpl extends ForwardingJavaFileManager<StandardJavaFileMana
       throw new IOException("Kind " + kind + " not supported");
     }
 
-    //
     JavaClassFileObject clazz = classes.get(className);
     if (clazz == null) {
       try {

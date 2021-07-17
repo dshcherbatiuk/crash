@@ -34,7 +34,6 @@ import org.crsh.shell.impl.command.spi.CommandResolver;
 /** @author Julien Viet */
 public class SystemResolver implements CommandResolver {
 
-  /** . */
   public static final SystemResolver UNSAFE_INSTANCE = new SystemResolver(false, true, true);
 
   public static final SystemResolver SAFE_INSTANCE = new SystemResolver(true, false, true);
@@ -44,7 +43,6 @@ public class SystemResolver implements CommandResolver {
   public static final SystemResolver SEMI_SAFE_INSTANCE_WITHOUT_MAN =
       new SystemResolver(true, true, false);
 
-  /** . */
   private static final HashMap<String, Class<? extends BaseCommand>> unsafeCommands =
       new HashMap<>();
 
@@ -57,7 +55,6 @@ public class SystemResolver implements CommandResolver {
   private static final HashMap<String, Class<? extends BaseCommand>> semiSafeCommandsWithoutMan =
       new HashMap<>();
 
-  /** . */
   private static final HashMap<String, String> unsafeDescriptions = new HashMap<>();
 
   private static final HashMap<String, String> safeDescriptions = new HashMap<>();

@@ -23,7 +23,11 @@ import java.lang.reflect.Type;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.lang.Instance;
-import org.crsh.command.*;
+import org.crsh.command.BaseCommand;
+import org.crsh.command.CommandContext;
+import org.crsh.command.InvocationContext;
+import org.crsh.command.Pipe;
+import org.crsh.command.ShellSafetyFactory;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.InvocationContextImpl;
@@ -31,23 +35,20 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.text.ScreenContext;
 import org.crsh.util.Utils;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>>
     extends BaseCommandMatch<T, C, P> {
 
-  /** . */
   final Type ret;
 
-  /** . */
   final Class<C> consumedType;
 
-  /** . */
   final Class<P> producedType;
 
-  /** . */
   private final CommandInvoker<Instance<T>, PC> invoker;
 
-  /** . */
   private final String name;
 
   public PipeCommandMatch(
@@ -71,9 +72,7 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>>
   }
 
   @Override
-  BaseInvoker getInvoker(T command) throws CommandException {
-
-    //
+  BaseInvoker getInvoker(T command) {
     return new BaseInvoker(command) {
 
       Pipe<C, P> real;
@@ -104,10 +103,8 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>>
       }
 
       public void open2(final CommandContext<P> consumer) throws CommandException {
-
-        invocationContext =
-            new InvocationContextImpl<P>(
-                consumer, ShellSafetyFactory.getCurrentThreadShellSafety());
+        invocationContext = new InvocationContextImpl<>(
+            consumer, ShellSafetyFactory.getCurrentThreadShellSafety());
 
         // Push context
         command.pushContext(invocationContext);
@@ -155,7 +152,7 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>>
         }
       }
 
-      public void close() throws IOException, CommandException {
+      public void close() throws CommandException {
         try {
           try {
             if (real != null) {

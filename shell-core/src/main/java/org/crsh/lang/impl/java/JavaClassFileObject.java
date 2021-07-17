@@ -25,20 +25,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.tools.SimpleJavaFileObject;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class JavaClassFileObject extends SimpleJavaFileObject {
 
-  /** . */
   private ByteArrayOutputStream baos;
 
-  /** . */
   private final String className;
 
   JavaClassFileObject(String className) throws URISyntaxException {
     super(
         new URI("whatever", null, '/' + className.replace('.', '/') + ".class", null), Kind.CLASS);
 
-    //
     this.className = className;
   }
 

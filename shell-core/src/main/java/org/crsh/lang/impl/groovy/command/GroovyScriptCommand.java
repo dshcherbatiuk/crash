@@ -32,13 +32,16 @@ import org.crsh.text.RenderPrintWriter;
 
 public abstract class GroovyScriptCommand extends Script {
 
-  /** . */
   private LinkedList<InvocationContext<?>> stack;
 
-  /** The current context. */
+  /**
+   * The current context.
+   */
   protected InvocationContext context;
 
-  /** The current output. */
+  /**
+   * The current output.
+   */
   protected RenderPrintWriter out;
 
   protected GroovyScriptCommand() {
@@ -50,9 +53,8 @@ public abstract class GroovyScriptCommand extends Script {
       throw new NullPointerException();
     }
 
-    //
     if (stack == null) {
-      stack = new LinkedList<InvocationContext<?>>();
+      stack = new LinkedList<>();
     }
 
     // Save current context (is null the first time)
@@ -96,8 +98,6 @@ public abstract class GroovyScriptCommand extends Script {
 
   @Override
   public final Object invokeMethod(String name, Object args) {
-
-    //
     try {
       return super.invokeMethod(name, args);
     } catch (MissingMethodException missing) {

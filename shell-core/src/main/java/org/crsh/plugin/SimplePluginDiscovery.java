@@ -23,11 +23,10 @@ import java.util.LinkedHashSet;
 
 public class SimplePluginDiscovery implements PluginDiscovery {
 
-  /** . */
   private final LinkedHashSet<CRaSHPlugin<?>> plugins;
 
   public SimplePluginDiscovery() {
-    this.plugins = new LinkedHashSet<CRaSHPlugin<?>>();
+    this.plugins = new LinkedHashSet<>();
   }
 
   public SimplePluginDiscovery(CRaSHPlugin<?>... plugins) {
@@ -36,6 +35,7 @@ public class SimplePluginDiscovery implements PluginDiscovery {
       add(plugin);
     }
   }
+
   /**
    * Add a plugin.
    *

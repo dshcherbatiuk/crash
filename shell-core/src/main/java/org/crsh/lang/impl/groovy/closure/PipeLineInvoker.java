@@ -26,13 +26,13 @@ import org.crsh.shell.impl.command.pipeline.PipeLine;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class PipeLineInvoker {
 
-  /** . */
   private final PipeLineClosure closure;
 
-  /** . */
   private final Object[] args;
 
   public PipeLineInvoker(PipeLineClosure closure, Object[] args) {
@@ -41,14 +41,11 @@ public class PipeLineInvoker {
   }
 
   public void invoke(InvocationContext<Object> context) throws IOException, CommandException {
-
-    //
     PipeLineInvocationContext inner = new PipeLineInvocationContext(context);
     LinkedList<CommandInvoker> pipe = closure.resolve2(args);
     CommandInvoker[] array = pipe.toArray(new CommandInvoker[pipe.size()]);
     PipeLine pipeLine = new PipeLine(array);
 
-    //
     try {
       pipeLine.open(inner);
       pipeLine.flush();

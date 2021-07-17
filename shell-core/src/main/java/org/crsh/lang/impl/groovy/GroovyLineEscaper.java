@@ -28,7 +28,6 @@ import org.crsh.cli.impl.line.Quoting;
  */
 class GroovyLineEscaper extends LineParser.Visitor {
 
-  /** . */
   final StringBuilder buffer = new StringBuilder();
 
   @Override

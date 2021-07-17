@@ -1,16 +1,12 @@
 package crash.commands.base
 
-import java.util.regex.Pattern;
-import org.crsh.cli.Usage
-import org.crsh.cli.Command
+import org.crsh.cli.*
 import org.crsh.command.InvocationContext
-import org.crsh.cli.Option
-import org.crsh.cli.Man
-import org.crsh.cli.Argument
-
 import org.crsh.command.Pipe
 import org.crsh.text.ui.UIBuilder
 import org.crsh.util.Utils
+
+import java.util.regex.Pattern
 
 @Usage("JVM thread commands")
 @Man("""\
@@ -47,188 +43,190 @@ Interrupted thread Thread[pool-1-thread-2,5,main]
 Interrupted thread Thread[pool-1-thread-3,5,main]
 Interrupted thread Thread[pool-1-thread-4,5,main]
 Interrupted thread Thread[pool-1-thread-5,5,main]""")
-public class thread  {
+class thread {
 
-  /** . */
-  private static final Pattern ANY = Pattern.compile(".*");
+    private static final Pattern ANY = Pattern.compile(".*");
 
-  @Usage("thread top")
-  @Command
-  public void top(
-    @Usage("Filter the threads with a glob expression on their name")
-    @Option(names=["n","name"])
-    String nameFilter,
-    @Usage("Filter the threads with a glob expression on their group")
-    @Option(names=["g","group"])
-    String groupFilter,
-    @Usage("Filter the threads by their status (new,runnable,blocked,waiting,timed_waiting,terminated)")
-    @Option(names=["s","state"])
-    String stateFilter) {
-    def table = new UIBuilder().table(columns:[1]) {
-      header(bold: true, fg: black, bg: white) {
-        label("top");
-      }
-      row {
-        eval {
-          def args = [:];
-          if (nameFilter != null) {
-            args.name = nameFilter
-          }
-          if (stateFilter != null) {
-            args.state = stateFilter;
-          }
-          if (groupFilter != null) {
-            args.group = groupFilter;
-          }
-          // We need to use getProperty otherwise "thread" resolve to this class as a java.lang.Class object
-          getProperty("thread").ls args;
+    @Usage("thread top")
+    @Command
+    void top(
+            @Usage("Filter the threads with a glob expression on their name")
+            @Option(names = ["n", "name"])
+                    String nameFilter,
+            @Usage("Filter the threads with a glob expression on their group")
+            @Option(names = ["g", "group"])
+                    String groupFilter,
+            @Usage("Filter the threads by their status (new,runnable,blocked,waiting,timed_waiting,terminated)")
+            @Option(names = ["s", "state"])
+                    String stateFilter) {
+        def table = new UIBuilder().table(columns: [1]) {
+            header(bold: true, fg: black, bg: white) {
+                label("top");
+            }
+            row {
+                eval {
+                    def args = [:];
+                    if (nameFilter != null) {
+                        args.name = nameFilter
+                    }
+                    if (stateFilter != null) {
+                        args.state = stateFilter;
+                    }
+                    if (groupFilter != null) {
+                        args.group = groupFilter;
+                    }
+                    // We need to use getProperty otherwise "thread" resolve to this class as a java.lang.Class object
+                    getProperty("thread").ls args;
+                }
+            }
         }
-      }
-    }
-    context.takeAlternateBuffer();
-    try {
-      while (!Thread.currentThread().isInterrupted()) {
-        out.cls()
-        out.show(table);
-        out.flush();
+        context.takeAlternateBuffer();
         try {
-          Thread.sleep(1000);
+            while (!Thread.currentThread().isInterrupted()) {
+                out.cls()
+                out.show(table);
+                out.flush();
+                try {
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt()
+                }
+            }
         }
-        catch (InterruptedException e) {
-          Thread.currentThread().interrupt()
+        finally {
+            context.releaseAlternateBuffer();
         }
-      }
-    }
-    finally {
-      context.releaseAlternateBuffer();
-    }
-  }
-
-  @Usage("list the vm threads")
-  @Command
-  public void ls(
-    InvocationContext<Thread> context,
-    @Usage("Filter the threads with a glob expression on their name")
-    @Option(names=["n","name"])
-    String nameFilter,
-    @Usage("Filter the threads with a glob expression on their group")
-    @Option(names=["g","group"])
-    String groupFilter,
-    @Usage("Filter the threads by their status (new,runnable,blocked,waiting,timed_waiting,terminated)")
-    @Option(names=["s","state"])
-    String stateFilter) {
-
-    // Group filter
-    Pattern groupPattern;
-    if (groupFilter != null) {
-      groupPattern = Pattern.compile('^' + Utils.globexToRegex(groupFilter) + '$');
-    } else {
-      groupPattern = ANY;
     }
 
-    // Name filter
-    Pattern namePattern;
-    if (nameFilter != null) {
-      namePattern = Pattern.compile('^' + Utils.globexToRegex(nameFilter) + '$');
-    } else {
-      namePattern = ANY;
-    }
+    @Usage("list the vm threads")
+    @Command
+    void ls(
+            InvocationContext<Thread> context,
+            @Usage("Filter the threads with a glob expression on their name")
+            @Option(names = ["n", "name"])
+                    String nameFilter,
+            @Usage("Filter the threads with a glob expression on their group")
+            @Option(names = ["g", "group"])
+                    String groupFilter,
+            @Usage("Filter the threads by their status (new,runnable,blocked,waiting,timed_waiting,terminated)")
+            @Option(names = ["s", "state"])
+                    String stateFilter) {
 
-    // State filter
-    Thread.State state = null;
-    if (stateFilter != null) {
-      try {
-        state = Thread.State.valueOf(stateFilter.toUpperCase());
-      } catch (IllegalArgumentException iae) {
-        throw new ScriptException("Invalid state filter $stateFilter", iae);
-      }
-    }
-
-    //
-    Map<String, Thread> threads = getThreads();
-    threads.each() {
-      if (it != null) {
-        def nameMatcher = it.value.name =~ namePattern;
-        def groupMatcher = it.value.threadGroup.name =~ groupPattern;
-        def thread = it.value;
-        if (nameMatcher.matches() && groupMatcher.matches() && (state == null || it.value.state == state)) {
-          try {
-            context.provide(thread)
-          }
-          catch (IOException e) {
-            e.printStackTrace()
-          };
+        // Group filter
+        Pattern groupPattern;
+        if (groupFilter != null) {
+            groupPattern = Pattern.compile('^' + Utils.globexToRegex(groupFilter) + '$');
+        } else {
+            groupPattern = ANY;
         }
-      }
-    }
-  }
 
-  @Usage("interrupt vm threads")
-  @Man("Interrup VM threads.")
-  @Command
-  public Pipe<Thread, Thread> interrupt(@Argument @Usage("the thread ids to interrupt") List<Thread> threads) {
-    return new Pipe<Thread, Thread>() {
-      void open() throws org.crsh.command.ScriptException {
-        threads.each(this.&provide)
-      }
-      void provide(Thread element) throws IOException {
-        element.interrupt();
-        context.provide(element);
-      }
-    }
-  }
+        // Name filter
+        Pattern namePattern;
+        if (nameFilter != null) {
+            namePattern = Pattern.compile('^' + Utils.globexToRegex(nameFilter) + '$');
+        } else {
+            namePattern = ANY;
+        }
 
-  @Usage("stop vm threads")
-  @Man("Stop VM threads.")
-  @Command
-  public Pipe<Thread, Thread> stop(@Argument @Usage("the thread ids to stop") List<Thread> threads) {
-    return new Pipe<Thread, Thread>() {
-      void open() throws org.crsh.command.ScriptException {
-        threads.each(this.&provide)
-      }
-      void provide(Thread element) throws IOException {
-        element.stop();
-        context.provide(element);
-      }
-    }
-  }
+        // State filter
+        Thread.State state = null;
+        if (stateFilter != null) {
+            try {
+                state = Thread.State.valueOf(stateFilter.toUpperCase());
+            } catch (IllegalArgumentException iae) {
+                throw new ScriptException("Invalid state filter $stateFilter", iae);
+            }
+        }
 
-  @Usage("dump vm threads")
-  @Man("Dump VM threads.")
-  @Command
-  public Pipe<Thread, Object> dump(@Argument @Usage("the thread ids to dump") List<Thread> threads) {
-    return new Pipe<Thread, Object>() {
-      void open() throws org.crsh.command.ScriptException {
-        threads.each(this.&provide)
-      }
-      void provide(Thread element) throws IOException {
-        Exception e = new Exception("Thread ${element.id} stack trace")
-        e.setStackTrace(element.stackTrace)
-        e.printStackTrace(context.writer)
-      }
+        //
+        Map<String, Thread> threads = getThreads();
+        threads.each() {
+            if (it != null) {
+                def nameMatcher = it.value.name =~ namePattern;
+                def groupMatcher = it.value.threadGroup.name =~ groupPattern;
+                def thread = it.value;
+                if (nameMatcher.matches() && groupMatcher.matches() && (state == null || it.value.state == state)) {
+                    try {
+                        context.provide(thread)
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace()
+                    };
+                }
+            }
+        }
     }
-  }
 
-  static ThreadGroup getRoot() {
-    ThreadGroup group = Thread.currentThread().threadGroup;
-    ThreadGroup parent;
-    while ((parent = group.parent) != null) {
-      group = parent;
-    }
-    return group;
-  }
+    @Usage("interrupt vm threads")
+    @Man("Interrup VM threads.")
+    @Command
+    Pipe<Thread, Thread> interrupt(@Argument @Usage("the thread ids to interrupt") List<Thread> threads) {
+        return new Pipe<Thread, Thread>() {
+            void open() throws org.crsh.command.ScriptException {
+                threads.each(this.&provide)
+            }
 
-  static Map<String, Thread> getThreads() {
-    ThreadGroup root = getRoot();
-    Thread[] threads = new Thread[root.activeCount()];
-    while (root.enumerate(threads, true) == threads.length ) {
-      threads = new Thread[threads.length * 2];
+            void provide(Thread element) throws IOException {
+                element.interrupt();
+                context.provide(element);
+            }
+        }
     }
-    def map = [:];
-    threads.each { thread ->
-      if (thread != null)
-        map["${thread.id}"] = thread
+
+    @Usage("stop vm threads")
+    @Man("Stop VM threads.")
+    @Command
+    Pipe<Thread, Thread> stop(@Argument @Usage("the thread ids to stop") List<Thread> threads) {
+        return new Pipe<Thread, Thread>() {
+            void open() throws org.crsh.command.ScriptException {
+                threads.each(this.&provide)
+            }
+
+            void provide(Thread element) throws IOException {
+                element.stop();
+                context.provide(element);
+            }
+        }
     }
-    return map;
-  }
+
+    @Usage("dump vm threads")
+    @Man("Dump VM threads.")
+    @Command
+    Pipe<Thread, Object> dump(@Argument @Usage("the thread ids to dump") List<Thread> threads) {
+        return new Pipe<Thread, Object>() {
+            void open() throws org.crsh.command.ScriptException {
+                threads.each(this.&provide)
+            }
+
+            void provide(Thread element) throws IOException {
+                Exception e = new Exception("Thread ${element.id} stack trace")
+                e.setStackTrace(element.stackTrace)
+                e.printStackTrace(context.writer)
+            }
+        }
+    }
+
+    static ThreadGroup getRoot() {
+        ThreadGroup group = Thread.currentThread().threadGroup;
+        ThreadGroup parent;
+        while ((parent = group.parent) != null) {
+            group = parent;
+        }
+        return group;
+    }
+
+    static Map<String, Thread> getThreads() {
+        ThreadGroup root = getRoot();
+        Thread[] threads = new Thread[root.activeCount()];
+        while (root.enumerate(threads, true) == threads.length) {
+            threads = new Thread[threads.length * 2];
+        }
+        def map = [:];
+        threads.each { thread ->
+            if (thread != null)
+                map["${thread.id}"] = thread
+        }
+        return map;
+    }
 }

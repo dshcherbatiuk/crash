@@ -24,10 +24,8 @@ import org.crsh.command.RuntimeContext;
 
 public class RuntimeContextImpl implements RuntimeContext {
 
-  /** . */
   private final Map<String, Object> session;
 
-  /** . */
   private final Map<String, Object> attributes;
 
   public RuntimeContextImpl(Map<String, Object> session, Map<String, Object> attributes) {
