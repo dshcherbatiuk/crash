@@ -26,10 +26,8 @@ import org.crsh.cli.impl.tokenizer.Token;
 
 class OptionCompletion<T> extends Completion {
 
-  /** . */
   private final CommandDescriptor<T> descriptor;
 
-  /** . */
   private final Token.Literal.Option prefix;
 
   public OptionCompletion(CommandDescriptor<T> descriptor, Token.Literal.Option prefix) {

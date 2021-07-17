@@ -22,23 +22,19 @@ package org.crsh.cli.impl.completion;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.Delimiter;
-import org.crsh.cli.completers.Completer;
 
 class ParameterCompletion extends Completion {
 
-  /** . */
   private final String prefix;
 
-  /** . */
   private final Delimiter delimiter;
 
-  /** . */
   private final ParameterDescriptor parameter;
 
-  /** . */
   private final Completer completer;
 
   public ParameterCompletion(
@@ -50,8 +46,6 @@ class ParameterCompletion extends Completion {
   }
 
   public CompletionMatch complete() throws CompletionException {
-
-    //
     Class<? extends Completer> completerType = parameter.getCompleterType();
     Completer completer = null;
     if (completerType != EmptyCompleter.class) {
@@ -89,7 +83,6 @@ class ParameterCompletion extends Completion {
       }
     }
 
-    //
     if (completer != null) {
       try {
         return new CompletionMatch(delimiter, completer.complete(parameter, prefix));

@@ -20,15 +20,13 @@
 package org.crsh.cli.impl.completion;
 
 import java.io.Serializable;
-import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.completers.Completion;
+import org.crsh.cli.impl.Delimiter;
 
 public final class CompletionMatch implements Serializable {
 
-  /** . */
   private final Delimiter delimiter;
 
-  /** . */
   private final Completion value;
 
   public CompletionMatch(Delimiter delimiter, Completion value) throws NullPointerException {
@@ -39,7 +37,6 @@ public final class CompletionMatch implements Serializable {
       throw new NullPointerException("No null value accepted");
     }
 
-    //
     this.delimiter = delimiter;
     this.value = value;
   }

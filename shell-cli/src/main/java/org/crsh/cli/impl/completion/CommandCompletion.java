@@ -45,10 +45,8 @@ class CommandCompletion<T> extends Completion {
 
   private final CommandDescriptor<T> descriptor;
 
-  /** . */
   private final String prefix;
 
-  /** . */
   private final Delimiter delimiter;
 
   CommandCompletion(CommandDescriptor<T> descriptor, String prefix, Delimiter delimiter) {
@@ -59,7 +57,8 @@ class CommandCompletion<T> extends Completion {
 
   @Override
   public CompletionMatch complete() throws CompletionException {
-    org.crsh.cli.completers.Completion.Builder builder = org.crsh.cli.completers.Completion.builder(prefix);
+    org.crsh.cli.completers.Completion.Builder builder = org.crsh.cli.completers.Completion
+        .builder(prefix);
     for (CommandDescriptor<?> m : descriptor.getSubordinates().values()) {
       String name = m.getName();
       if (name.startsWith(prefix)) {

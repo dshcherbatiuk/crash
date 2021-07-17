@@ -20,6 +20,7 @@
 package org.crsh.cli.impl.completion;
 
 import java.util.List;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.descriptor.ArgumentDescriptor;
 import org.crsh.cli.descriptor.CommandDescriptor;
@@ -30,12 +31,12 @@ import org.crsh.cli.impl.parser.Mode;
 import org.crsh.cli.impl.parser.Parser;
 import org.crsh.cli.impl.tokenizer.Token;
 import org.crsh.cli.impl.tokenizer.TokenizerImpl;
-import org.crsh.cli.completers.Completer;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public final class CompletionMatcher<T> {
 
-  /** . */
   private final CommandDescriptor<T> descriptor;
 
   public CompletionMatcher(CommandDescriptor<T> descriptor) {
@@ -50,19 +51,18 @@ public final class CompletionMatcher<T> {
     return getCompletion(completer, s).complete();
   }
 
-  private Completion argument(
-      CommandDescriptor<?> method, Completer completer, Delimiter delimiter) {
+  private Completion argument(CommandDescriptor<?> method, Completer completer,
+      Delimiter delimiter) {
     List<? extends ArgumentDescriptor> arguments = method.getArguments();
     if (arguments.isEmpty()) {
       return new EmptyCompletion();
-    } else {
-      ArgumentDescriptor argument = arguments.get(0);
-      return new ParameterCompletion("", delimiter, argument, completer);
     }
+
+    ArgumentDescriptor argument = arguments.get(0);
+    return new ParameterCompletion("", delimiter, argument, completer);
   }
 
-  private Completion getCompletion(Completer completer, String s) throws CompletionException {
-
+  private Completion getCompletion(Completer completer, String s) {
     // Find delimiter
     CommandDescriptor<T> foo = this.descriptor;
 
@@ -75,7 +75,6 @@ public final class CompletionMatcher<T> {
     Event.Separator separator = null;
     Event.Stop stop;
 
-    //
     while (true) {
       Event event = parser.next();
       if (event instanceof Event.Separator) {
@@ -97,53 +96,59 @@ public final class CompletionMatcher<T> {
       }
     }
 
-    //
     if (stop instanceof Event.Stop.Unresolved.NoSuchOption) {
       Event.Stop.Unresolved.NoSuchOption nso = (Event.Stop.Unresolved.NoSuchOption) stop;
       return new OptionCompletion<T>(foo, nso.getToken());
-    } else if (stop instanceof Event.Stop.Unresolved) {
+    }
+
+    if (stop instanceof Event.Stop.Unresolved) {
       if (stop instanceof Event.Stop.Unresolved.TooManyArguments) {
-        Event.Stop.Unresolved.TooManyArguments tma = (Event.Stop.Unresolved.TooManyArguments) stop;
-        return new CommandCompletion<T>(foo, s.substring(stop.getIndex()), delimiter);
-      } else {
-        return new EmptyCompletion();
+        return new CommandCompletion<>(foo, s.substring(stop.getIndex()), delimiter);
       }
-    } else if (stop instanceof Event.Stop.Done) {
+      return new EmptyCompletion();
+    }
+    if (stop instanceof Event.Stop.Done) {
       // to use ?
     }
 
     if (last == null) {
       if (foo.getSubordinates().size() > 0) {
-        return new CommandCompletion<T>(foo, s.substring(stop.getIndex()), Delimiter.EMPTY);
-      } else {
-        List<ArgumentDescriptor> args = foo.getArguments();
-        if (args.size() > 0) {
-          return new ParameterCompletion("", delimiter, args.get(0), completer);
-        } else {
-          return new EmptyCompletion();
-        }
+        return new CommandCompletion<>(foo, s.substring(stop.getIndex()), Delimiter.EMPTY);
       }
-    } else if (last instanceof Event.Option) {
+
+      final List<ArgumentDescriptor> args = foo.getArguments();
+      if (args.size() > 0) {
+        return new ParameterCompletion("", delimiter, args.get(0), completer);
+      }
+
+      return new EmptyCompletion();
+    }
+
+    if (last instanceof Event.Option) {
       Event.Option optionEvent = (Event.Option) last;
       List<Token.Literal.Word> values = optionEvent.getValues();
       OptionDescriptor option = optionEvent.getParameter();
       if (separator == null) {
         if (values.size() == 0) {
           return new SpaceCompletion();
-        } else if (values.size() <= option.getArity()) {
+        }
+
+        if (values.size() <= option.getArity()) {
           Token.Literal.Word word = optionEvent.peekLast();
           return new ParameterCompletion(word.getValue(), delimiter, option, completer);
-        } else {
-          return new EmptyCompletion();
         }
-      } else {
-        if (values.size() < option.getArity()) {
-          return new ParameterCompletion("", delimiter, option, completer);
-        } else {
-          return argument(foo, completer, delimiter);
-        }
+
+        return new EmptyCompletion();
       }
-    } else if (last instanceof Event.Argument) {
+
+      if (values.size() < option.getArity()) {
+        return new ParameterCompletion("", delimiter, option, completer);
+      }
+
+      return argument(foo, completer, delimiter);
+    }
+
+    if (last instanceof Event.Argument) {
       Event.Argument eventArgument = (Event.Argument) last;
       ArgumentDescriptor argument = eventArgument.getParameter();
       if (separator != null) {
@@ -155,26 +160,28 @@ public final class CompletionMatcher<T> {
             if (index < arguments.size()) {
               ArgumentDescriptor nextArg = arguments.get(index);
               return new ParameterCompletion("", delimiter, nextArg, completer);
-            } else {
-              return new EmptyCompletion();
             }
+
+            return new EmptyCompletion();
           case MULTI:
             return new ParameterCompletion("", delimiter, argument, completer);
           default:
             throw new AssertionError();
         }
-      } else {
-        Token.Literal value = eventArgument.peekLast();
-        return new ParameterCompletion(value.getValue(), delimiter, argument, completer);
       }
-    } else if (last instanceof Event.Subordinate) {
+
+      Token.Literal value = eventArgument.peekLast();
+      return new ParameterCompletion(value.getValue(), delimiter, argument, completer);
+    }
+
+    if (last instanceof Event.Subordinate) {
       if (separator != null) {
         return argument(foo, completer, delimiter);
-      } else {
-        return new SpaceCompletion();
       }
-    } else {
-      throw new AssertionError();
+
+      return new SpaceCompletion();
     }
+
+    throw new AssertionError();
   }
 }
