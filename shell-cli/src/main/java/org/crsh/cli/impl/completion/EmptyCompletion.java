@@ -19,12 +19,14 @@
 
 package org.crsh.cli.impl.completion;
 
+import static org.crsh.cli.completers.Completion.create;
+
 import org.crsh.cli.impl.Delimiter;
 
 class EmptyCompletion extends Completion {
 
   @Override
   public CompletionMatch complete() throws CompletionException {
-    return new CompletionMatch(Delimiter.EMPTY, org.crsh.cli.spi.Completion.create());
+    return new CompletionMatch(Delimiter.EMPTY, create());
   }
 }

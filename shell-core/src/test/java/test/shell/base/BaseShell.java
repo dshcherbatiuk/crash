@@ -21,7 +21,7 @@ package test.shell.base;
 import java.io.IOException;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellProcess;
 

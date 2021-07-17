@@ -20,7 +20,7 @@ package org.crsh.lang.impl.java;
 
 import java.util.Map;
 import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import org.crsh.shell.AbstractShellTestCase;
 
 /** @author Julien Viet */

@@ -30,7 +30,7 @@ import org.crsh.cli.impl.parser.Mode;
 import org.crsh.cli.impl.parser.Parser;
 import org.crsh.cli.impl.tokenizer.Token;
 import org.crsh.cli.impl.tokenizer.TokenizerImpl;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public final class CompletionMatcher<T> {

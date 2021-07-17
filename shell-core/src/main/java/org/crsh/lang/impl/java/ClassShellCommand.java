@@ -27,7 +27,7 @@ import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.ObjectCommandInvoker;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
 import org.crsh.command.Pipe;

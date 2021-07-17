@@ -24,8 +24,8 @@ import org.crsh.cli.Command
 import org.crsh.cli.Option
 import org.crsh.cli.Usage
 import org.crsh.cli.descriptor.ParameterDescriptor
-import org.crsh.cli.spi.Completer
-import org.crsh.cli.spi.Completion
+import org.crsh.cli.completers.Completer
+import org.crsh.cli.completers.Completion
 import org.crsh.command.InvocationContext
 import org.crsh.command.ScriptException
 import org.crsh.text.ui.UIBuilder

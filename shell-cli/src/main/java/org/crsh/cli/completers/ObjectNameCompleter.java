@@ -26,30 +26,30 @@ import java.util.Set;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
 import org.crsh.cli.type.ValueType;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ObjectNameCompleter implements Completer {
 
   private static String[] parseKeyValue(String s) {
     int eq = s.indexOf('=');
     if (eq == -1) {
-      return new String[] {s, null};
+      return new String[]{s, null};
     } else {
-      return new String[] {s.substring(0, eq), s.substring(eq + 1, s.length())};
+      return new String[]{s.substring(0, eq), s.substring(eq + 1)};
     }
   }
 
   @Override
   public Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
     if (parameter.getType() == ValueType.OBJECT_NAME) {
-      MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-      int colon = prefix.indexOf(':');
+      final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+      final int colon = prefix.indexOf(':');
       if (colon == -1) {
-        Completion.Builder b = new Completion.Builder(prefix);
-        LinkedHashSet<String> domains = new LinkedHashSet<String>();
+        final Completion.Builder b = new Completion.Builder(prefix);
+        final LinkedHashSet<String> domains = new LinkedHashSet<>();
         for (ObjectName name : server.queryNames(null, null)) {
           domains.add(name.getDomain());
         }
@@ -59,58 +59,60 @@ public class ObjectNameCompleter implements Completer {
           }
         }
         return b.build();
-      } else {
-        String domain = prefix.substring(0, colon);
-        String rest = prefix.substring(colon + 1);
-        int prev = 0;
-        Hashtable<String, String> keyValues = new Hashtable<String, String>();
-        while (true) {
-          int next = rest.indexOf(',', prev);
-          if (next == -1) {
-            String[] keyValue = parseKeyValue(rest.substring(prev));
-            Set<ObjectName> completions = new HashSet<>();
-            for (ObjectName name : server.queryNames(null, null)) {
-              if (name.getDomain().equals(domain)
-                  && name.getKeyPropertyList().entrySet().containsAll(keyValues.entrySet())) {
-                completions.add(name);
-              }
+      }
+
+      final String domain = prefix.substring(0, colon);
+      final String rest = prefix.substring(colon + 1);
+      int prev = 0;
+      final Hashtable<String, String> keyValues = new Hashtable<>();
+      while (true) {
+        final int next = rest.indexOf(',', prev);
+        if (next == -1) {
+          final String[] keyValue = parseKeyValue(rest.substring(prev));
+          final Set<ObjectName> completions = new HashSet<>();
+
+          for (ObjectName name : server.queryNames(null, null)) {
+            if (name.getDomain().equals(domain)
+                && name.getKeyPropertyList().entrySet().containsAll(keyValues.entrySet())) {
+              completions.add(name);
             }
-            if (keyValue[1] == null) {
-              Completion.Builder b = new Completion.Builder(keyValue[0]);
-              for (ObjectName name : completions) {
-                for (String key : name.getKeyPropertyList().keySet()) {
-                  if (!keyValues.containsKey(key) && key.startsWith(keyValue[0])) {
-                    b.add(key.substring(keyValue[0].length()) + "=", false);
-                  }
-                }
-              }
-              return b.build();
-            } else {
-              Completion.Builder b = new Completion.Builder(keyValue[1]);
-              for (ObjectName completion : completions) {
-                String value = completion.getKeyProperty(keyValue[0]);
-                if (value != null && value.startsWith(keyValue[1])) {
-                  Hashtable<String, String> a = completion.getKeyPropertyList();
-                  a.remove(keyValue[0]);
-                  a.keySet().removeAll(keyValues.keySet());
-                  if (a.isEmpty()) {
-                    b.add(value.substring(keyValue[1].length()), true);
-                  } else {
-                    b.add(value.substring(keyValue[1].length()) + ",", false);
-                  }
-                }
-              }
-              return b.build();
-            }
-          } else {
-            String[] keyValue = parseKeyValue(rest.substring(prev, next));
-            keyValues.put(keyValue[0], keyValue[1]);
-            prev = next + 1;
           }
+
+          if (keyValue[1] == null) {
+            final Completion.Builder b = new Completion.Builder(keyValue[0]);
+            for (ObjectName name : completions) {
+              for (String key : name.getKeyPropertyList().keySet()) {
+                if (!keyValues.containsKey(key) && key.startsWith(keyValue[0])) {
+                  b.add(key.substring(keyValue[0].length()) + "=", false);
+                }
+              }
+            }
+            return b.build();
+          }
+
+          final Completion.Builder b = new Completion.Builder(keyValue[1]);
+          for (ObjectName completion : completions) {
+            final String value = completion.getKeyProperty(keyValue[0]);
+            if (value != null && value.startsWith(keyValue[1])) {
+              final Hashtable<String, String> a = completion.getKeyPropertyList();
+              a.remove(keyValue[0]);
+              a.keySet().removeAll(keyValues.keySet());
+              if (a.isEmpty()) {
+                b.add(value.substring(keyValue[1].length()), true);
+              } else {
+                b.add(value.substring(keyValue[1].length()) + ",", false);
+              }
+            }
+          }
+          return b.build();
+        } else {
+          String[] keyValue = parseKeyValue(rest.substring(prev, next));
+          keyValues.put(keyValue[0], keyValue[1]);
+          prev = next + 1;
         }
       }
-    } else {
-      return Completion.create();
     }
+
+    return Completion.create();
   }
 }

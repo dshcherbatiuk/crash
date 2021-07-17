@@ -20,12 +20,9 @@
 package org.crsh.cli.completers;
 
 import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
 
 public class EmptyCompleter implements Completer {
 
-  /** . */
   private static final EmptyCompleter instance = new EmptyCompleter();
 
   /**
@@ -37,7 +34,10 @@ public class EmptyCompleter implements Completer {
     return instance;
   }
 
-  /** Returns the value returned by {@link java.util.Collections#emptyList()}. */
+  /**
+   * Returns the value returned by {@link java.util.Collections#emptyList()}.
+   */
+  @Override
   public Completion complete(ParameterDescriptor parameter, String prefix) {
     return Completion.create();
   }

@@ -25,6 +25,6 @@ class SpaceCompletion extends Completion {
 
   @Override
   public CompletionMatch complete() throws CompletionException {
-    return new CompletionMatch(Delimiter.EMPTY, org.crsh.cli.spi.Completion.create("", true));
+    return new CompletionMatch(Delimiter.EMPTY, org.crsh.cli.completers.Completion.create("", true));
   }
 }

@@ -22,7 +22,9 @@ package org.crsh.cli;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/** Declares if a command parameter is required or not. */
+/**
+ * Declares if a command parameter is required or not.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Required {
 

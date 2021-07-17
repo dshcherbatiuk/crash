@@ -23,7 +23,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.util.Map;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import org.crsh.lang.spi.Language;
 import org.crsh.lang.spi.Repl;
 import org.crsh.lang.spi.ReplResponse;

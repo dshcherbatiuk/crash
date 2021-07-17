@@ -19,20 +19,22 @@
 package org.crsh.cli.completers;
 
 import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public class ThreadCompleter implements Completer {
 
+  @Override
   public Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
-    Completion.Builder b = new Completion.Builder(prefix);
+    final Completion.Builder b = new Completion.Builder(prefix);
     for (Thread t : Thread.getAllStackTraces().keySet()) {
-      String id = Long.toString(t.getId());
+      final String id = Long.toString(t.getId());
       if (id.startsWith(prefix)) {
         b.add(id.substring(prefix.length()), true);
       }
     }
+
     return b.build();
   }
 }

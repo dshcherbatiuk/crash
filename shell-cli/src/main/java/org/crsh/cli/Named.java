@@ -33,6 +33,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Named {
 
-  /** @return the name value */
+  /**
+   * @return the name value
+   */
   String value();
 }

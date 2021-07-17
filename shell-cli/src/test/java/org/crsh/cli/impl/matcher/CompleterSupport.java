@@ -20,8 +20,8 @@
 package org.crsh.cli.impl.matcher;
 
 import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completer;
+import org.crsh.cli.completers.Completion;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>

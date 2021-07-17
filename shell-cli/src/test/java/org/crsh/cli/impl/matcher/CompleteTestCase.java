@@ -33,7 +33,7 @@ import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.impl.completion.CompletionMatcher;
 import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>

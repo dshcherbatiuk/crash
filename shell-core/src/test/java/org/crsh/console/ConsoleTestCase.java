@@ -24,7 +24,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.keyboard.KeyType;
 import org.crsh.shell.ShellProcessContext;

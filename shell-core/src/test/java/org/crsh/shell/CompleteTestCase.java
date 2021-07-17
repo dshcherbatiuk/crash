@@ -21,7 +21,7 @@ package org.crsh.shell;
 
 import java.util.Collections;
 import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import test.command.Commands;
 
 public class CompleteTestCase extends AbstractShellTestCase {

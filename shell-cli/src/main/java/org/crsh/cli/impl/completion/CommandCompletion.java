@@ -59,7 +59,7 @@ class CommandCompletion<T> extends Completion {
 
   @Override
   public CompletionMatch complete() throws CompletionException {
-    org.crsh.cli.spi.Completion.Builder builder = org.crsh.cli.spi.Completion.builder(prefix);
+    org.crsh.cli.completers.Completion.Builder builder = org.crsh.cli.completers.Completion.builder(prefix);
     for (CommandDescriptor<?> m : descriptor.getSubordinates().values()) {
       String name = m.getName();
       if (name.startsWith(prefix)) {

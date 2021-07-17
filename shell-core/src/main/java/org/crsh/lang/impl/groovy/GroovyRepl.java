@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.impl.line.LineParser;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import org.crsh.command.CommandContext;
 import org.crsh.command.ShellSafetyFactory;
 import org.crsh.lang.spi.Language;

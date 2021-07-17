@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
-import org.crsh.cli.spi.Completion;
 
 /** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
 public class PathCompleterTestCase extends TestCase {

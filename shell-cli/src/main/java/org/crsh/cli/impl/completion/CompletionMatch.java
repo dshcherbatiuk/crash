@@ -21,7 +21,7 @@ package org.crsh.cli.impl.completion;
 
 import java.io.Serializable;
 import org.crsh.cli.impl.Delimiter;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 
 public final class CompletionMatch implements Serializable {
 

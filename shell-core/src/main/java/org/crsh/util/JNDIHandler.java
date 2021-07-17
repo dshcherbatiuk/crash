@@ -1,6 +1,9 @@
 package org.crsh.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -9,7 +12,9 @@ import javax.naming.NamingEnumeration;
 import org.crsh.cli.completers.AbstractPathCompleter;
 import org.crsh.text.renderers.BindingRenderer;
 
-/** @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a> */
+/**
+ * @author <a href="mailto:alain.defrance@exoplatform.com">Alain Defrance</a>
+ */
 public class JNDIHandler {
 
   public static List<BindingRenderer.BindingData> lookup(
@@ -85,11 +90,9 @@ public class JNDIHandler {
 
   public static class JNDICompleter extends AbstractPathCompleter<String> {
 
-    private final String[] filters;
-    private List<BindingRenderer.BindingData> bindings;
+    private final List<BindingRenderer.BindingData> bindings;
 
     public JNDICompleter(String... filters) {
-      this.filters = filters;
       bindings = JNDIHandler.lookup(Arrays.asList(filters), null, true);
     }
 
@@ -153,7 +156,7 @@ public class JNDIHandler {
 
     @Override
     protected Collection<String> getChilren(String path) {
-      List<String> l = new ArrayList<String>();
+      List<String> l = new ArrayList<>();
       for (BindingRenderer.BindingData binding : bindings) {
         if (path.equals("/") || binding.name.startsWith(path.substring(1))) {
           String completion = binding.name.substring(path.substring(1).length());

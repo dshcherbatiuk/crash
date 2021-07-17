@@ -27,8 +27,8 @@ import org.crsh.util.Utils
 import javax.naming.InitialContext
 import org.crsh.cli.Argument
 import org.crsh.text.renderers.EntityTypeRenderer
-import org.crsh.cli.spi.Completer
-import org.crsh.cli.spi.Completion
+import org.crsh.cli.completers.Completer
+import org.crsh.cli.completers.Completion
 import org.crsh.cli.descriptor.ParameterDescriptor
 import org.crsh.util.JNDIHandler
 

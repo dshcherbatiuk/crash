@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.crsh.cli.spi;
+package org.crsh.cli.completers;
 
 import java.io.Serializable;
 import java.util.Collections;

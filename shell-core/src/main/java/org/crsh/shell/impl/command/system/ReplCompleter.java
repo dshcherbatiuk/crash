@@ -18,7 +18,7 @@
  */
 package org.crsh.shell.impl.command.system;
 
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 
 /** @author Julien Viet */
 public interface ReplCompleter extends Completer {}

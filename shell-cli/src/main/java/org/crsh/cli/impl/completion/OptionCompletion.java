@@ -39,8 +39,8 @@ class OptionCompletion<T> extends Completion {
 
   @Override
   public CompletionMatch complete() throws CompletionException {
-    org.crsh.cli.spi.Completion.Builder builder =
-        org.crsh.cli.spi.Completion.builder(prefix.getValue());
+    org.crsh.cli.completers.Completion.Builder builder =
+        org.crsh.cli.completers.Completion.builder(prefix.getValue());
     Set<String> optionNames =
         prefix instanceof Token.Literal.Option.Short
             ? descriptor.getShortOptionNames()

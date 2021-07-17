@@ -24,9 +24,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.crsh.cli.completers.EmptyCompleter;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 
-/** An option command parameter. */
+/**
+ * An option command parameter.
+ */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Option {

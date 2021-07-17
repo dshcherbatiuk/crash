@@ -25,7 +25,7 @@ import java.lang.reflect.Modifier;
 import org.crsh.cli.completers.EmptyCompleter;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.Delimiter;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 
 class ParameterCompletion extends Completion {
 
@@ -97,7 +97,7 @@ class ParameterCompletion extends Completion {
         throw new CompletionException(e);
       }
     } else {
-      return new CompletionMatch(delimiter, org.crsh.cli.spi.Completion.create());
+      return new CompletionMatch(delimiter, org.crsh.cli.completers.Completion.create());
     }
   }
 }

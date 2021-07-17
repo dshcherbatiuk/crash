@@ -2,8 +2,8 @@ import ch.qos.logback.classic.LoggerContext
 import org.crsh.cli.*
 import org.crsh.cli.completers.EnumCompleter
 import org.crsh.cli.descriptor.ParameterDescriptor
-import org.crsh.cli.spi.Completer
-import org.crsh.cli.spi.Completion
+import org.crsh.cli.completers.Completer
+import org.crsh.cli.completers.Completion
 import org.crsh.command.InvocationContext
 import org.crsh.command.Pipe
 import org.crsh.text.Color

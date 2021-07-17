@@ -22,8 +22,6 @@ package org.crsh.cli.completers;
 import java.io.File;
 import java.util.Collection;
 import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
 
 public abstract class AbstractPathCompleter<P> implements Completer {
 
@@ -41,8 +39,8 @@ public abstract class AbstractPathCompleter<P> implements Completer {
 
   protected abstract String getName(P path) throws Exception;
 
+  @Override
   public final Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
-
     String sep = File.separator;
 
     // Handle empty dir
@@ -59,10 +57,8 @@ public abstract class AbstractPathCompleter<P> implements Completer {
       }
     }
 
-    //
     P f = getPath(prefix);
 
-    //
     if (exists(f)) {
       if (isDirectory(f)) {
         if (prefix.endsWith(sep)) {

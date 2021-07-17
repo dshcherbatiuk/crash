@@ -21,8 +21,6 @@ package org.crsh.cli.completers;
 
 import java.lang.reflect.Method;
 import org.crsh.cli.descriptor.ParameterDescriptor;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
 import org.crsh.cli.type.ValueType;
 
 public class EnumCompleter implements Completer {
@@ -38,15 +36,16 @@ public class EnumCompleter implements Completer {
     return instance;
   }
 
+  @Override
   public Completion complete(ParameterDescriptor parameter, String prefix) throws Exception {
     if (parameter.getType() == ValueType.ENUM) {
       Completion.Builder builder = null;
-      Class<?> vt = parameter.getDeclaredType();
-      Method valuesM = vt.getDeclaredMethod("values");
-      Method nameM = vt.getMethod("name");
-      Enum<?>[] values = (Enum<?>[]) valuesM.invoke(null);
+      final Class<?> vt = parameter.getDeclaredType();
+      final Method valuesM = vt.getDeclaredMethod("values");
+      final Method nameM = vt.getMethod("name");
+      final Enum<?>[] values = (Enum<?>[]) valuesM.invoke(null);
       for (Enum<?> value : values) {
-        String name = (String) nameM.invoke(value);
+        final String name = (String) nameM.invoke(value);
         if (name.startsWith(prefix)) {
           if (builder == null) {
             builder = Completion.builder(prefix);
@@ -55,8 +54,8 @@ public class EnumCompleter implements Completer {
         }
       }
       return builder != null ? builder.build() : Completion.create();
-    } else {
-      return Completion.create();
     }
+
+    return Completion.create();
   }
 }

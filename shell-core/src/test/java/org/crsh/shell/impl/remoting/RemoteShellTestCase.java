@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.crsh.AbstractTestCase;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completion;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellProcess;

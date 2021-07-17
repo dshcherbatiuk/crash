@@ -28,7 +28,7 @@ import org.crsh.cli.completers.EnumCompleter;
 import org.crsh.cli.completers.FileCompleter;
 import org.crsh.cli.completers.ObjectNameCompleter;
 import org.crsh.cli.completers.ThreadCompleter;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 
 /**
  * Defines a type for values, this is used for transforming a textual value into a type, for command

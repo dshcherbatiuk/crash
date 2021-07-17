@@ -30,7 +30,7 @@ import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 import org.crsh.command.CommandContext;
 import org.crsh.command.RuntimeContext;
 import org.crsh.lang.spi.CommandResolution;

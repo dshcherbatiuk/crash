@@ -26,7 +26,7 @@ import org.crsh.cli.impl.ParameterType;
 import org.crsh.cli.impl.descriptor.IllegalParameterException;
 import org.crsh.cli.impl.descriptor.IllegalValueTypeException;
 import org.crsh.cli.impl.invocation.InvocationException;
-import org.crsh.cli.spi.Completer;
+import org.crsh.cli.completers.Completer;
 
 /** @author Julien Viet */
 class BoundOptionDescriptor extends OptionDescriptor implements Binding {

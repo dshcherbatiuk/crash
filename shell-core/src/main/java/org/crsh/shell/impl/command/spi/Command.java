@@ -32,8 +32,8 @@ import org.crsh.cli.impl.completion.CompletionMatcher;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.InvocationMatcher;
 import org.crsh.cli.impl.lang.Util;
-import org.crsh.cli.spi.Completer;
-import org.crsh.cli.spi.Completion;
+import org.crsh.cli.completers.Completer;
+import org.crsh.cli.completers.Completion;
 import org.crsh.command.RuntimeContext;
 import org.crsh.shell.ErrorKind;
 
