@@ -19,7 +19,7 @@ public class dashboard implements KeyHandler {
 
   @Command
   @Usage("a monitoring dashboard")
-  public void main() {
+  void main() {
     def table = new UIBuilder().table(columns: [1], rows: [1,1]) {
       header {
         table(columns:[1]) {

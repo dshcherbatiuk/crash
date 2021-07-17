@@ -25,10 +25,11 @@ import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.shell.impl.command.spi.CommandMatch;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 abstract class BaseCommandMatch<T extends BaseCommand, C, P> extends CommandMatch<C, P> {
 
-  /** . */
   private final ClassShellCommand<T> baseShellCommand;
 
   public BaseCommandMatch(ClassShellCommand<T> baseShellCommand) {

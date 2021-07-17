@@ -25,10 +25,11 @@ import javax.management.ObjectName;
 import org.crsh.shell.AbstractShellTestCase;
 import test.command.Commands;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class JMXCommandTestCase extends AbstractShellTestCase {
 
-  /** . */
   private ObjectName OPERATING_SYSTEM;
 
   @Override
@@ -37,7 +38,7 @@ public class JMXCommandTestCase extends AbstractShellTestCase {
     OPERATING_SYSTEM = new ObjectName("java.lang:type=OperatingSystem");
   }
 
-  public void testFind() throws Exception {
+  public void testFind() {
     lifeCycle.bindClass("consume", Commands.ConsumeObject.class);
     Commands.list.clear();
     assertOk("jmx query java.lang:* | consume");
@@ -50,7 +51,7 @@ public class JMXCommandTestCase extends AbstractShellTestCase {
     lifeCycle.bindClass("consume", Commands.ConsumeObject.class);
     Commands.list.clear();
     assertOk("jmx query " + OPERATING_SYSTEM + " | jmx get -n MBean -a Version | consume");
-    HashMap<String, Object> expected = new HashMap<String, Object>();
+    HashMap<String, Object> expected = new HashMap<>();
     expected.put("Version", version);
     expected.put("MBean", OPERATING_SYSTEM);
     assertEquals(Collections.<Object>singletonList(expected), Commands.list);

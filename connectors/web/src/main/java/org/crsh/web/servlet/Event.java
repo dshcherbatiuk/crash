@@ -20,16 +20,15 @@ package org.crsh.web.servlet;
 
 import com.google.gson.Gson;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class Event {
 
-  /** . */
   static final Gson gson = new Gson();
 
-  /** . */
   final String type;
 
-  /** . */
   final Object data;
 
   Event(String type) {

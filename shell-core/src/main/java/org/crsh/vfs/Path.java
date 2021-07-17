@@ -93,7 +93,9 @@ public abstract class Path implements Iterable<String> {
 
   private static String[] parseNames(final String s, final int prev, int end, final int count) {
     int next = s.indexOf('/', prev);
-    if (next == -1) next = s.indexOf(File.separatorChar, prev);
+    if (next == -1) {
+      next = s.indexOf(File.separatorChar, prev);
+    }
 
     if (next == -1 || next > end) {
       if (prev < end) {
@@ -112,13 +114,10 @@ public abstract class Path implements Iterable<String> {
     }
   }
 
-  /** . */
   protected final boolean dir;
 
-  /** . */
   protected final String[] names;
 
-  /** . */
   private String value;
 
   private Path(boolean dir, String[] names) {

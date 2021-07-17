@@ -27,7 +27,6 @@ import org.crsh.cli.type.ValueType;
 
 public class EnumCompleter implements Completer {
 
-  /** . */
   private static final EnumCompleter instance = new EnumCompleter();
 
   /**

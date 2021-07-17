@@ -19,16 +19,20 @@
 
 package org.crsh.shell.impl.async;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
-import java.util.concurrent.Callable;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
 import org.crsh.text.Screenable;
 import org.crsh.text.Style;
+import org.slf4j.Logger;
 
 public class AsyncProcess implements ShellProcess {
+
+  private static final Logger LOGGER = getLogger(AsyncProcess.class.getName());
 
   private final String request;
 
@@ -134,7 +138,6 @@ public class AsyncProcess implements ShellProcess {
             }
           }
 
-          //
           caller.end(response);
         }
       };
@@ -151,8 +154,8 @@ public class AsyncProcess implements ShellProcess {
     return callee.getKeyHandler();
   }
 
+  @Override
   public void execute(ShellProcessContext processContext) {
-
     // Constructed -> Queued
     synchronized (lock) {
       if (status != Status.CONSTRUCTED) {
@@ -165,9 +168,9 @@ public class AsyncProcess implements ShellProcess {
       caller = processContext;
     }
 
-    // Create the task
-    Callable<AsyncProcess> task =
-        () -> {
+    synchronized (shell.lock) {
+      if (!shell.closed) {
+        shell.executor.submit(() -> {
           try {
             // Cancelled -> Cancelled
             // Queued -> Evaluating
@@ -189,7 +192,7 @@ public class AsyncProcess implements ShellProcess {
               }
             }
 
-            // Execute the process if we are in evalating state
+            // Execute the process if we are in evaluating state
             if (response == null) {
               // Here the status could already be in status cancelled
               // it is a race condition, execution still happens
@@ -209,21 +212,17 @@ public class AsyncProcess implements ShellProcess {
             try {
               context.end(response);
             } catch (Throwable t) {
-              // Log it
+              LOGGER.debug("Error: ", t);
             }
 
             // We return this but we don't really care for now
-            return AsyncProcess.this;
+            return this;
           } finally {
             synchronized (shell.lock) {
-              shell.processes.remove(AsyncProcess.this);
+              shell.processes.remove(this);
             }
           }
-        };
-
-    synchronized (shell.lock) {
-      if (!shell.closed) {
-        shell.executor.submit(task);
+        });
         shell.processes.add(this);
       } else {
         boolean invokeEnd;
@@ -238,6 +237,7 @@ public class AsyncProcess implements ShellProcess {
     }
   }
 
+  @Override
   public void cancel() {
     // Construcuted -> ISE
     // Evaluating -> Canceled
@@ -264,7 +264,6 @@ public class AsyncProcess implements ShellProcess {
       }
     }
 
-    //
     if (cancel) {
       callee.cancel();
     }

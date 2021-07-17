@@ -19,13 +19,13 @@
 
 package org.crsh.console.jline;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jline.Terminal;
 import jline.console.ConsoleReader;
 import jline.console.KeyMap;
@@ -35,12 +35,12 @@ import org.crsh.console.Console;
 import org.crsh.console.ConsoleDriver;
 import org.crsh.shell.Shell;
 import org.crsh.text.Style;
+import org.slf4j.Logger;
 
 public class JLineProcessor implements Runnable, ConsoleDriver {
 
-  /**
-   * .
-   */
+  private final Logger LOGGER = getLogger(JLineProcessor.class.getName());
+
   private final Console console;
 
   /**
@@ -48,15 +48,12 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
    */
   boolean useAlternate;
 
-  // *********
-
   final CountDownLatch done;
   final Terminal terminal;
   final PrintStream writer;
   final ConsoleReader reader;
   final String lineSeparator;
   final boolean ansi;
-  final Logger logger = Logger.getLogger(JLineProcessor.class.getName());
 
   public JLineProcessor(boolean ansi, Shell shell, ConsoleReader reader, PrintStream out) {
     this(ansi, shell, reader, out, System.getProperty("line.separator"));
@@ -69,7 +66,6 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
       PrintStream out,
       String lineSeparator) {
 
-    //
     this.console = new Console(shell, this);
     this.writer = out;
     this.useAlternate = false;
@@ -87,34 +83,25 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
     console.on(Operation.INTERRUPT);
   }
 
-  // *****
-
   public void closed() throws InterruptedException {
     done.await();
   }
 
   public void run() {
-
-    //
     int escapeTimeout = 100;
 
-    //
     console.init();
     StringBuilder sb = new StringBuilder();
     Stack<Character> pushBackChar = new Stack<Character>();
     while (console.isRunning()) {
       try {
-
-        //
         int c = pushBackChar.isEmpty() ? reader.readCharacter() : pushBackChar.pop();
         if (c == -1) {
           break;
         }
 
-        //
         sb.appendCodePoint(c);
 
-        //
         Object o = reader.getKeys().getBound(sb);
 
         /*
@@ -197,17 +184,16 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
           }
           sb.setLength(0);
 
-          //
           console.on(operation, buffer);
         } else {
-          System.out.println("No operation: " + o);
+          LOGGER.info("No operation: {}", o);
         }
       } catch (InterruptedIOException e) {
         // Suppress warning for "Interrupted at cycle #0 while waiting for data to become available"
-        logger.log(Level.FINE, e.getMessage(), e);
+        LOGGER.debug(e.getMessage(), e);
         return;
       } catch (IOException e) {
-        logger.log(Level.WARNING, e.getMessage(), e);
+        LOGGER.warn(e.getMessage(), e);
         return;
       }
     }

@@ -19,9 +19,10 @@
 
 package org.crsh.auth;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.google.auto.service.AutoService;
 import java.util.Collections;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
@@ -30,10 +31,13 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PropertyDescriptor;
+import org.slf4j.Logger;
 
 @AutoService(CRaSHPlugin.class)
 public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
     implements AuthenticationPlugin<String> {
+
+  private static final Logger LOGGER = getLogger(JaasAuthenticationPlugin.class.getName());
 
   static final PropertyDescriptor<String> JAAS_DOMAIN =
       PropertyDescriptor.create(
@@ -55,9 +59,7 @@ public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
   public AuthInfo authenticate(final String username, final String password) throws Exception {
     String domain = getContext().getProperty(JAAS_DOMAIN);
     if (domain != null) {
-      log.log(
-          Level.FINE,
-          "Will use the JAAS domain '" + domain + "' for authenticating user " + username);
+      LOGGER.debug("Will use the JAAS domain '{}' for authenticating user {}", domain, username);
       LoginContext loginContext =
           new LoginContext(
               domain,
@@ -77,21 +79,17 @@ public class JaasAuthenticationPlugin extends CRaSHPlugin<AuthenticationPlugin>
       try {
         loginContext.login();
         loginContext.logout();
-        log.log(
-            Level.FINE,
-            "Authenticated user " + username + " against the JAAS domain '" + domain + "'");
+        LOGGER.debug("Authenticated user {} against the JAAS domain '{}'", username, domain);
         return AuthInfo.SUCCESSFUL;
       } catch (Exception e) {
-        if (log.isLoggable(Level.FINE)) {
-          log.log(
-              Level.SEVERE,
-              "Exception when authenticating user " + username + " to JAAS domain '" + domain + "'",
-              e);
+        if (LOGGER.isErrorEnabled()) {
+          LOGGER.error("Exception when authenticating user {} to JAAS domain '{}'",
+              username, domain, e);
         }
         return AuthInfo.UNSUCCESSFUL;
       }
     } else {
-      log.log(Level.WARNING, "The JAAS domain property '" + JAAS_DOMAIN.name + "' was not found");
+      LOGGER.warn("The JAAS domain property '{}' was not found", JAAS_DOMAIN.name);
       return AuthInfo.UNSUCCESSFUL;
     }
   }

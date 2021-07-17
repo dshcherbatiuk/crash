@@ -21,7 +21,9 @@ package org.crsh.shell;
 
 import org.crsh.keyboard.KeyHandler;
 
-/** A shell process. */
+/**
+ * A shell process.
+ */
 public interface ShellProcess {
 
   /**

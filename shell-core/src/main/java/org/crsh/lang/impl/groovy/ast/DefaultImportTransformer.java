@@ -19,9 +19,9 @@
 
 package org.crsh.lang.impl.groovy.ast;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.google.auto.service.AutoService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.control.CompilePhase;
@@ -41,12 +41,13 @@ import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.Style;
 import org.crsh.text.ui.BorderStyle;
+import org.slf4j.Logger;
 
 @GroovyASTTransformation(phase = CompilePhase.CONVERSION)
 @AutoService(ASTTransformation.class)
 public class DefaultImportTransformer implements ASTTransformation {
 
-  private static final Logger log = Logger.getLogger(DefaultImportTransformer.class.getName());
+  private static final Logger LOGGER = getLogger(DefaultImportTransformer.class.getName());
 
   private static final Class<?>[] defaultImports = {
       Required.class,
@@ -64,25 +65,22 @@ public class DefaultImportTransformer implements ASTTransformation {
       Color.class, Decoration.class, Style.class, BorderStyle.class
   };
 
+  @Override
   public void visit(ASTNode[] nodes, final SourceUnit source) {
-    log.log(Level.FINE, "Transforming source to add default import package");
+    LOGGER.debug("Transforming source to add default import package");
     for (Class<?> defaultImport : defaultImports) {
-      log.log(Level.FINE, "Adding default import for class " + defaultImport.getName());
+      LOGGER.debug("Adding default import for class {}", defaultImport.getName());
       if (source.getAST().getImport(defaultImport.getSimpleName()) == null) {
         source.getAST().addImport(defaultImport.getSimpleName(), ClassHelper.make(defaultImport));
       }
     }
+
     for (Class<?> defaultStaticImport : defaultStaticImports) {
-      log.log(
-          Level.FINE, "Adding default static import for class " + defaultStaticImport.getName());
-      if (!source
-          .getAST()
-          .getStaticStarImports()
+      LOGGER.debug("Adding default static import for class {}", defaultStaticImport.getName());
+      if (!source.getAST().getStaticStarImports()
           .containsKey(defaultStaticImport.getSimpleName())) {
-        source
-            .getAST()
-            .addStaticStarImport(
-                defaultStaticImport.getSimpleName(), ClassHelper.make(defaultStaticImport));
+        source.getAST().addStaticStarImport(
+            defaultStaticImport.getSimpleName(), ClassHelper.make(defaultStaticImport));
       }
     }
   }

@@ -29,22 +29,16 @@ import java.net.Socket;
 
 public abstract class AbstractSocketServer implements Closeable {
 
-  /** . */
   private final int bindingPort;
 
-  /** . */
   private ServerSocket socketServer;
 
-  /** . */
   private Socket socket;
 
-  /** . */
   private InputStream in;
 
-  /** . */
   private OutputStream out;
 
-  /** . */
   private int port;
 
   public AbstractSocketServer(int bindingPort) {
@@ -63,12 +57,9 @@ public abstract class AbstractSocketServer implements Closeable {
     ServerSocket socketServer = new ServerSocket();
     socketServer.bind(new InetSocketAddress(bindingPort));
     int port = socketServer.getLocalPort();
-
-    //
     this.socketServer = socketServer;
     this.port = port;
 
-    //
     return port;
   }
 
@@ -77,12 +68,10 @@ public abstract class AbstractSocketServer implements Closeable {
       throw new IllegalStateException();
     }
 
-    //
     this.socket = socketServer.accept();
     this.in = socket.getInputStream();
     this.out = socket.getOutputStream();
 
-    //
     handle(in, out);
   }
 

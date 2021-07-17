@@ -21,10 +21,8 @@ package org.crsh.util;
 
 public class TimestampedObject<T> {
 
-  /** . */
   private final long timestamp;
 
-  /** . */
   private final T object;
 
   public TimestampedObject(long timestamp, T object) {

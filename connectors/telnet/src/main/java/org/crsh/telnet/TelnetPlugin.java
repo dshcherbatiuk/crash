@@ -30,10 +30,8 @@ import java.util.logging.Level;
 
 public class TelnetPlugin extends CRaSHPlugin<TelnetPlugin> {
 
-  /** . */
   public static final PropertyDescriptor<Integer> TELNET_PORT = PropertyDescriptor.create("telnet.port", 5000, "The telnet port");
 
-  /** . */
   private TelnetLifeCycle lifeCycle;
 
   @Override
@@ -50,10 +48,8 @@ public class TelnetPlugin extends CRaSHPlugin<TelnetPlugin> {
   public void init() {
     PluginContext context = getContext();
 
-    //
     Resource config = null;
 
-    //
     URL configURL = TelnetPlugin.class.getResource("/crash/telnet.properties");
     if (configURL != null) {
       try {
@@ -72,13 +68,11 @@ public class TelnetPlugin extends CRaSHPlugin<TelnetPlugin> {
       log.log(Level.FINE, "Found telnet config url " + configURL);
     }
 
-    //
     if (configURL == null) {
       log.log(Level.INFO, "Could not boot Telnet due to missing config");
       return;
     }
 
-    //
     TelnetLifeCycle lifeCycle = new TelnetLifeCycle(context);
     lifeCycle.setConfig(config);
     Integer port = context.getProperty(TELNET_PORT);
@@ -87,10 +81,8 @@ public class TelnetPlugin extends CRaSHPlugin<TelnetPlugin> {
     }
     lifeCycle.setPort(port);
 
-    //
     lifeCycle.init();
 
-    //
     this.lifeCycle = lifeCycle;
   }
 

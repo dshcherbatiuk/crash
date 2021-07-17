@@ -22,7 +22,6 @@ package org.crsh.shell;
 import groovy.lang.GroovyShell;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import junit.framework.AssertionFailedError;
 import org.crsh.AbstractTestCase;
 import org.crsh.cli.impl.completion.CompletionMatch;
@@ -36,22 +35,16 @@ import test.shell.base.BaseProcessContext;
 
 public abstract class AbstractShellTestCase extends AbstractTestCase {
 
-  /** . */
-  protected final Logger log = Logger.getLogger(getClass().getName());
-
-  /** . */
   protected Shell shell;
 
-  /** . */
   protected ShellSession session;
 
-  /** . */
   protected GroovyShell groovyShell;
 
-  /** . */
   protected TestPluginLifeCycle lifeCycle;
 
-  protected AbstractShellTestCase() {}
+  protected AbstractShellTestCase() {
+  }
 
   protected AbstractShellTestCase(String name) {
     super(name);
@@ -68,15 +61,12 @@ public abstract class AbstractShellTestCase extends AbstractTestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    //
     List<CRaSHPlugin<?>> plugins = getPlugins();
     TestPluginLifeCycle lifeCycle =
         new TestPluginLifeCycle(plugins.toArray(new CRaSHPlugin[plugins.size()]));
 
-    //
     lifeCycle.start();
 
-    //
     this.shell = lifeCycle.createShell();
     this.session = (ShellSession) shell; // A bit nasty but will do for tests :-)
     this.groovyShell = GroovyCompiler.getGroovyShell((ShellSession) shell);

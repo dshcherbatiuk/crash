@@ -33,8 +33,8 @@ import org.crsh.util.Utils;
  * <li>bold
  * <li>blink </u>
  *
- *     <p>A style is either a composite style or the {@link #reset} style. Styles can be composed
- *     together to form a new style <code>style.merge(other)</code>.
+ * <p>A style is either a composite style or the {@link #reset} style. Styles can be composed
+ * together to form a new style <code>style.merge(other)</code>.
  */
 public abstract class Style implements Serializable {
 
@@ -62,19 +62,14 @@ public abstract class Style implements Serializable {
 
   public static final class Composite extends Style {
 
-    /** . */
     protected final Boolean bold;
 
-    /** . */
     protected final Boolean underline;
 
-    /** . */
     protected final Boolean blink;
 
-    /** . */
     protected final Color foreground;
 
-    /** . */
     protected final Color background;
 
     private Composite(
@@ -253,13 +248,13 @@ public abstract class Style implements Serializable {
     }
   }
 
-  /** . */
   private static final Boolean[] BOOLEANS = {true, false, null};
 
-  /** . */
   private static final Color[] COLORS = Arrays.copyOf(Color.values(), Color.values().length + 1);
 
-  /** [bold][underline][blink][foreground][background]. */
+  /**
+   * [bold][underline][blink][foreground][background].
+   */
   private static final Composite[][][][][] ALL;
 
   static {

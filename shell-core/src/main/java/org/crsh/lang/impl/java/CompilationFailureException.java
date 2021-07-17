@@ -22,10 +22,11 @@ import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class CompilationFailureException extends Exception {
 
-  /** . */
   private final List<Diagnostic<? extends JavaFileObject>> errors;
 
   public CompilationFailureException(List<Diagnostic<? extends JavaFileObject>> errors) {

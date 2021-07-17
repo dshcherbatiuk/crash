@@ -30,10 +30,8 @@ import junit.framework.AssertionFailedError;
 
 public class CommandQueue extends AbstractExecutorService {
 
-  /** . */
-  private final LinkedList<Runnable> queue = new LinkedList<Runnable>();
+  private final LinkedList<Runnable> queue = new LinkedList<>();
 
-  /** . */
   private final ExecutorService delegate = Executors.newSingleThreadExecutor();
 
   public synchronized void execute(Runnable command) {

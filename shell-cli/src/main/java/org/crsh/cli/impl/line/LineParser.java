@@ -26,32 +26,34 @@ package org.crsh.cli.impl.line;
 public final class LineParser {
 
   public abstract static class Visitor {
-    public void onChar(int index, Quoting quoting, boolean backslash, char c) {}
 
-    public void openStrongQuote(int index) {}
+    public void onChar(int index, Quoting quoting, boolean backslash, char c) {
+    }
 
-    public void closeStrongQuote(int index) {}
+    public void openStrongQuote(int index) {
+    }
 
-    public void openWeakQuote(int index) {}
+    public void closeStrongQuote(int index) {
+    }
 
-    public void closeWeakQuote(int index) {}
+    public void openWeakQuote(int index) {
+    }
 
-    public void reset() {}
+    public void closeWeakQuote(int index) {
+    }
+
+    public void reset() {
+    }
   }
 
-  /** . */
   private static final int NORMAL = 0, WEAK_QUOTING = 1, STRONG_QUOTING = 2;
 
-  /** . */
   private int status = NORMAL;
 
-  /** . */
   private boolean escaped = false;
 
-  /** . */
   private int index = 0;
 
-  /** . */
   private final Visitor[] visitors;
 
   public LineParser(Visitor... visitors) {
@@ -65,11 +67,15 @@ public final class LineParser {
     } else {
       switch (status) {
         case WEAK_QUOTING:
-          for (Visitor visitor : visitors) visitor.onChar(index, Quoting.WEAK, false, '\n');
+          for (Visitor visitor : visitors) {
+            visitor.onChar(index, Quoting.WEAK, false, '\n');
+          }
           index++;
           return false;
         case STRONG_QUOTING:
-          for (Visitor visitor : visitors) visitor.onChar(index, Quoting.STRONG, false, '\n');
+          for (Visitor visitor : visitors) {
+            visitor.onChar(index, Quoting.STRONG, false, '\n');
+          }
           index++;
           return false;
         default:
@@ -95,17 +101,23 @@ public final class LineParser {
               escaped = true;
               break;
             case '\"':
-              for (Visitor visitor : visitors) visitor.openWeakQuote(index);
+              for (Visitor visitor : visitors) {
+                visitor.openWeakQuote(index);
+              }
               status = WEAK_QUOTING;
               index++;
               break;
             case '\'':
-              for (Visitor visitor : visitors) visitor.openStrongQuote(index);
+              for (Visitor visitor : visitors) {
+                visitor.openStrongQuote(index);
+              }
               index++;
               status = STRONG_QUOTING;
               break;
             default:
-              for (Visitor visitor : visitors) visitor.onChar(index, null, false, c);
+              for (Visitor visitor : visitors) {
+                visitor.onChar(index, null, false, c);
+              }
               index++;
               break;
           }
@@ -113,7 +125,9 @@ public final class LineParser {
         case WEAK_QUOTING:
           switch (c) {
             case '"':
-              for (Visitor visitor : visitors) visitor.closeWeakQuote(index);
+              for (Visitor visitor : visitors) {
+                visitor.closeWeakQuote(index);
+              }
               index++;
               status = NORMAL;
               break;
@@ -121,7 +135,9 @@ public final class LineParser {
               escaped = true;
               break;
             default:
-              for (Visitor visitor : visitors) visitor.onChar(index, Quoting.WEAK, false, c);
+              for (Visitor visitor : visitors) {
+                visitor.onChar(index, Quoting.WEAK, false, c);
+              }
               index++;
               break;
           }
@@ -129,7 +145,9 @@ public final class LineParser {
         case STRONG_QUOTING:
           switch (c) {
             case '\'':
-              for (Visitor visitor : visitors) visitor.closeStrongQuote(index);
+              for (Visitor visitor : visitors) {
+                visitor.closeStrongQuote(index);
+              }
               index++;
               status = NORMAL;
               break;
@@ -137,7 +155,9 @@ public final class LineParser {
               escaped = true;
               break;
             default:
-              for (Visitor visitor : visitors) visitor.onChar(index, Quoting.STRONG, false, c);
+              for (Visitor visitor : visitors) {
+                visitor.onChar(index, Quoting.STRONG, false, c);
+              }
               index++;
               break;
           }
@@ -146,22 +166,32 @@ public final class LineParser {
     } else {
       switch (status) {
         case NORMAL:
-          for (Visitor visitor : visitors) visitor.onChar(index + 1, null, true, c);
+          for (Visitor visitor : visitors) {
+            visitor.onChar(index + 1, null, true, c);
+          }
           index += 2;
           break;
         case WEAK_QUOTING:
-          for (Visitor visitor : visitors) visitor.onChar(index + 1, Quoting.WEAK, true, c);
+          for (Visitor visitor : visitors) {
+            visitor.onChar(index + 1, Quoting.WEAK, true, c);
+          }
           index += 2;
           break;
         case STRONG_QUOTING:
           if (c == '\'') {
             // Special case
             status = NORMAL;
-            for (Visitor visitor : visitors) visitor.onChar(index, Quoting.STRONG, false, '\\');
-            for (Visitor visitor : visitors) visitor.closeStrongQuote(index + 1);
+            for (Visitor visitor : visitors) {
+              visitor.onChar(index, Quoting.STRONG, false, '\\');
+            }
+            for (Visitor visitor : visitors) {
+              visitor.closeStrongQuote(index + 1);
+            }
             index += 2;
           } else {
-            for (Visitor visitor : visitors) visitor.onChar(index + 1, Quoting.STRONG, true, c);
+            for (Visitor visitor : visitors) {
+              visitor.onChar(index + 1, Quoting.STRONG, true, c);
+            }
             index += 2;
           }
           break;
@@ -175,6 +205,8 @@ public final class LineParser {
     index = 0;
     status = NORMAL;
     escaped = false;
-    for (Visitor visitor : visitors) visitor.reset();
+    for (Visitor visitor : visitors) {
+      visitor.reset();
+    }
   }
 }

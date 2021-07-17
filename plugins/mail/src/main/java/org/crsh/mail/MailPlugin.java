@@ -48,56 +48,56 @@ import java.util.concurrent.Future;
  */
 public class MailPlugin extends CRaSHPlugin<MailPlugin> {
 
-  /** . */
-  public static PropertyDescriptor<String> SMTP_HOST = new PropertyDescriptor<String>(String.class, "mail.smtp.host", "localhost", "The mail server host") {
+  public static PropertyDescriptor<String> SMTP_HOST = new PropertyDescriptor<String>(String.class,
+      "mail.smtp.host", "localhost", "The mail server host") {
     @Override
     protected String doParse(String s) throws Exception {
       return s;
     }
   };
 
-  /** . */
-  public static PropertyDescriptor<Integer> SMTP_PORT = new PropertyDescriptor<Integer>(Integer.class, "mail.smtp.port", 25, "The mail server port") {
+  public static PropertyDescriptor<Integer> SMTP_PORT = new PropertyDescriptor<Integer>(
+      Integer.class, "mail.smtp.port", 25, "The mail server port") {
     @Override
     protected Integer doParse(String s) throws Exception {
       return Integer.parseInt(s);
     }
   };
 
-  /** . */
-  public static PropertyDescriptor<SmtpSecure> SMTP_SECURE = new PropertyDescriptor<SmtpSecure>(SmtpSecure.class, "mail.smtp.secure", SmtpSecure.NONE, "The mail server port") {
+  public static PropertyDescriptor<SmtpSecure> SMTP_SECURE = new PropertyDescriptor<SmtpSecure>(
+      SmtpSecure.class, "mail.smtp.secure", SmtpSecure.NONE, "The mail server port") {
     @Override
     protected SmtpSecure doParse(String s) throws Exception {
       return SmtpSecure.valueOf(s.toUpperCase());
     }
   };
 
-  /** . */
-  public static PropertyDescriptor<String> SMTP_USERNAME = new PropertyDescriptor<String>(String.class, "mail.smtp.username", null, "The mail server user name") {
+  public static PropertyDescriptor<String> SMTP_USERNAME = new PropertyDescriptor<String>(
+      String.class, "mail.smtp.username", null, "The mail server user name") {
     @Override
     protected String doParse(String s) throws Exception {
       return s;
     }
   };
 
-  /** . */
-  public static PropertyDescriptor<String> SMTP_PASSWORD = new PropertyDescriptor<String>(String.class, "mail.smtp.password", null, "The mail server passord", true) {
+  public static PropertyDescriptor<String> SMTP_PASSWORD = new PropertyDescriptor<String>(
+      String.class, "mail.smtp.password", null, "The mail server passord", true) {
     @Override
     protected String doParse(String s) throws Exception {
       return s;
     }
   };
 
-  /** . */
-  public static PropertyDescriptor<String> SMTP_FROM = new PropertyDescriptor<String>(String.class, "mail.smtp.from", null, "The mail sender address") {
+  public static PropertyDescriptor<String> SMTP_FROM = new PropertyDescriptor<String>(String.class,
+      "mail.smtp.from", null, "The mail sender address") {
     @Override
     protected String doParse(String s) throws Exception {
       return s;
     }
   };
 
-  /** . */
-  public static PropertyDescriptor<Boolean> DEBUG = new PropertyDescriptor<Boolean>(Boolean.class, "mail.debug", false, "The mail smtp debug mode") {
+  public static PropertyDescriptor<Boolean> DEBUG = new PropertyDescriptor<Boolean>(Boolean.class,
+      "mail.debug", false, "The mail smtp debug mode") {
     @Override
     protected Boolean doParse(String s) throws Exception {
       return Boolean.parseBoolean(s);
@@ -106,28 +106,22 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
 
   @Override
   protected Iterable<PropertyDescriptor<?>> createConfigurationCapabilities() {
-    return Utils.<PropertyDescriptor<?>>list(SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USERNAME, SMTP_PASSWORD, SMTP_FROM, DEBUG);
+    return Utils.<PropertyDescriptor<?>>list(SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USERNAME,
+        SMTP_PASSWORD, SMTP_FROM, DEBUG);
   }
 
-  /** . */
   private String smtpHost;
 
-  /** . */
   private Integer smtpPort;
 
-  /** . */
   private SmtpSecure smtpSecure;
 
-  /** . */
   private String smtpUsername;
 
-  /** . */
   private String smtpPassword;
 
-  /** . */
   private String smtpFrom;
 
-  /** . */
   private Boolean debug;
 
   @Override
@@ -153,6 +147,7 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
       final DataSource... attachments) throws MessagingException {
     return send(recipients, subject, body, null, attachments);
   }
+
   public Future<Boolean> send(
       Iterable<String> recipients,
       final String subject,
@@ -160,10 +155,8 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
       final String type,
       final DataSource... attachments) throws MessagingException {
 
-    //
     final InternetAddress[] addresses = InternetAddress.parse(Utils.join(recipients, ","));
 
-    //
     Callable<Boolean> f = (new Callable<Boolean>() {
       public Boolean call() throws Exception {
         Properties props = new Properties();
@@ -172,7 +165,6 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
           props.setProperty("mail.smtp.port", Integer.toString(smtpPort));
         }
 
-        //
         final String username = smtpUsername, password = smtpPassword;
         Authenticator authenticator;
         if (username != null && password != null) {
@@ -187,12 +179,10 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
           authenticator = null;
         }
 
-        //
         if (Boolean.TRUE.equals(debug)) {
           props.setProperty("mail.debug", "true");
         }
 
-        //
         if (smtpSecure != null) {
           switch (smtpSecure) {
             case NONE:
@@ -205,22 +195,18 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
           }
         }
 
-        //
         Session session = Session.getInstance(props, authenticator);
         MimeMessage message = new MimeMessage(session);
 
-        //
         if (smtpFrom != null) {
           message.setFrom(new InternetAddress(smtpFrom));
         }
 
-        //
         message.setRecipients(Message.RecipientType.TO, addresses);
         if (subject != null) {
           message.setSubject(subject);
         }
 
-        //
         MimePart bodyPart;
         if (attachments != null && attachments.length > 0) {
           Multipart multipart = new MimeMultipart();
@@ -237,25 +223,21 @@ public class MailPlugin extends CRaSHPlugin<MailPlugin> {
           bodyPart = message;
         }
 
-        //
         if (type != null) {
           bodyPart.setContent(body, type);
         } else {
           bodyPart.setText(body.toString());
         }
 
-        //
         try {
           Transport.send(message);
-        }
-        catch (AuthenticationFailedException e) {
+        } catch (AuthenticationFailedException e) {
           return false;
         }
         return true;
       }
     });
 
-    //
     return getContext().getExecutor().submit(f);
   }
 }

@@ -31,16 +31,15 @@ import org.crsh.shell.impl.command.ShellSession;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class JavaCompiler implements org.crsh.lang.spi.Compiler {
 
-  /** . */
   private static final Set<String> EXT = Collections.singleton("java");
 
-  /** . */
   private final org.crsh.lang.impl.java.Compiler compiler;
 
-  /** . */
   private final ClassLoader loader;
 
   JavaCompiler(ClassLoader loader) {
@@ -99,11 +98,9 @@ public class JavaCompiler implements org.crsh.lang.spi.Compiler {
   }
 
   public void init(ShellSession session) {
-    //
   }
 
   public void destroy(ShellSession session) {
-    //
   }
 
   public String doCallBack(ShellSession session, String name, String defaultValue) {

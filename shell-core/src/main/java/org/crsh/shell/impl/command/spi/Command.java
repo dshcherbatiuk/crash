@@ -37,7 +37,9 @@ import org.crsh.cli.spi.Completion;
 import org.crsh.command.RuntimeContext;
 import org.crsh.shell.ErrorKind;
 
-/** A command as seen by the shell. */
+/**
+ * A command as seen by the shell.
+ */
 public abstract class Command<T> {
 
   /**
@@ -65,11 +67,8 @@ public abstract class Command<T> {
   protected abstract CommandMatch<?, ?> resolve(InvocationMatch<T> match);
 
   public final String describe(final InvocationMatch<T> match, Format format) {
-
-    //
     final CommandMatch<?, ?> commandMatch = resolve(match);
 
-    //
     if (format instanceof Format.Man) {
       final Format.Man man = (Format.Man) format;
       format =
@@ -109,7 +108,7 @@ public abstract class Command<T> {
    * Provide completions for the specified arguments.
    *
    * @param context the command context
-   * @param line the original command line arguments
+   * @param line    the original command line arguments
    * @return the completions
    */
   public final CompletionMatch complete(RuntimeContext context, String line)
@@ -127,7 +126,7 @@ public abstract class Command<T> {
   /**
    * Returns a description of the command or null if none can be found.
    *
-   * @param line the usage line
+   * @param line   the usage line
    * @param format the description format
    * @return the description
    */
@@ -170,10 +169,10 @@ public abstract class Command<T> {
   /**
    * Provides an invoker for the command line specified in a detyped manner.
    *
-   * @param options the base options
-   * @param subordinate the subordinate command name, might null
+   * @param options            the base options
+   * @param subordinate        the subordinate command name, might null
    * @param subordinateOptions the subordinate options
-   * @param arguments arguments
+   * @param arguments          arguments
    * @return the command
    */
   public final CommandMatch<?, ?> resolveCommand(

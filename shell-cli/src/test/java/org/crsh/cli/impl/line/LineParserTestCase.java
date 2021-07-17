@@ -23,23 +23,21 @@ import java.util.Collections;
 import java.util.LinkedList;
 import junit.framework.TestCase;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class LineParserTestCase extends TestCase {
 
-  /** . */
   LineParser o;
 
-  /** . */
   MultiLineVisitor m;
 
-  /** . */
   ValueLineVisitor v;
 
-  /** . */
   LinkedList<Integer> indexes;
 
   @Override
-  public void setUp() throws Exception {
+  public void setUp() {
     LineParser.Visitor indexer =
         new LineParser.Visitor() {
           public void onChar(int index, Quoting quoting, boolean backslash, char c) {
@@ -63,7 +61,7 @@ public class LineParserTestCase extends TestCase {
           }
         };
     o = new LineParser(m = new MultiLineVisitor(), v = new ValueLineVisitor(), indexer);
-    indexes = new LinkedList<Integer>();
+    indexes = new LinkedList<>();
   }
 
   // % a

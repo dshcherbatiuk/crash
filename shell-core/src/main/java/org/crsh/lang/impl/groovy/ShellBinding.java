@@ -35,23 +35,22 @@ import org.crsh.text.RenderPrintWriter;
 import org.crsh.text.Screenable;
 import org.crsh.text.Style;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class ShellBinding extends Binding {
 
-  /** . */
   private final ShellSession session;
 
-  /** . */
   private InvocationContext<Object> current;
 
   public ShellBinding(Map variables, ShellSession session) {
     super(variables);
 
-    //
     this.session = session;
   }
 
-  private InvocationContext<Object> proxy =
+  private final InvocationContext<Object> proxy =
       new AbstractInvocationContext<Object>() {
         public RenderPrintWriter getWriter() {
           if (current == null) {

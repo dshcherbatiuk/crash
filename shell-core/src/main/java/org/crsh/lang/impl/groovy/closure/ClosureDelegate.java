@@ -26,13 +26,13 @@ import org.crsh.lang.impl.groovy.Helper;
 import org.crsh.shell.impl.command.InvocationContextImpl;
 import org.crsh.util.SafeCallable;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class ClosureDelegate extends GroovyObjectSupport {
 
-  /** . */
   private final CommandContext context;
 
-  /** . */
   private final Object owner;
 
   public ClosureDelegate(CommandContext context, Object owner) {

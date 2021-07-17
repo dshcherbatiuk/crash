@@ -43,7 +43,6 @@ public class FileRenderer extends Renderer<File> {
   @Override
   public LineRenderer renderer(Iterator<File> stream) {
 
-    //
     List<File> files = Utils.list(stream);
     Collections.sort(files);
     TableElement table = new TableElement().overflow(Overflow.WRAP).rightCellPadding(1);

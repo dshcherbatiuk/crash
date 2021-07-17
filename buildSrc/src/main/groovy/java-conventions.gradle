@@ -24,6 +24,8 @@ compileJava.options.encoding = 'UTF-8'
 
 ext {
     googleAutoVersion = '1.0'
+    logbackVersion = '1.2.3'
+    slf4jApiVersion = '1.7.30'
 }
 
 dependencies {
@@ -34,6 +36,13 @@ dependencies {
     annotationProcessor "com.google.auto.service:auto-service:${googleAutoVersion}"
     // https://mvnrepository.com/artifact/com.google.auto/auto-common
     implementation "com.google.auto:auto-common:${googleAutoVersion}"
+
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-core
+    implementation "ch.qos.logback:logback-core:${logbackVersion}"
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation "org.slf4j:slf4j-api:${slf4jApiVersion}"
 
     testImplementation 'com.google.truth:truth:0.42'
     testImplementation 'org.testng:testng:6.11'

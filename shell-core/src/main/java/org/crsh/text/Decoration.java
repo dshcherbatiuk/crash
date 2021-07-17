@@ -21,34 +21,25 @@ package org.crsh.text;
 
 public enum Decoration {
 
-  /** . */
   bold(0, true, "1"),
 
-  /** . */
   bold_off(0, false, "22"),
 
-  /** . */
   underline(1, true, "4"),
 
-  /** . */
   underline_off(1, false, "24"),
 
-  /** . */
   blink(2, true, "5"),
 
-  /** . */
   blink_off(2, false, "25");
 
-  /** . */
   final int index;
 
-  /** . */
   final boolean on;
 
-  /** . */
   public final String code;
 
-  private Decoration(int index, boolean on, String code) {
+  Decoration(int index, boolean on, String code) {
     this.index = index;
     this.on = on;
     this.code = code;

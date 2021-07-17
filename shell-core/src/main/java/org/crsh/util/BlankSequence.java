@@ -21,7 +21,9 @@ package org.crsh.util;
 
 import java.io.Serializable;
 
-/** An immutable sequence of white spaces. */
+/**
+ * An immutable sequence of white spaces.
+ */
 public class BlankSequence implements CharSequence, Serializable {
 
   private static final BlankSequence[] CACHE = new BlankSequence[64];
@@ -43,10 +45,8 @@ public class BlankSequence implements CharSequence, Serializable {
     }
   }
 
-  /** . */
   private final int length;
 
-  /** . */
   private String value;
 
   /**
@@ -60,7 +60,6 @@ public class BlankSequence implements CharSequence, Serializable {
       throw new IllegalArgumentException();
     }
 
-    //
     this.length = length;
     this.value = null;
   }

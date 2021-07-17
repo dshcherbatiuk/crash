@@ -27,16 +27,12 @@ import org.crsh.util.Pair;
 
 class LabelReader implements LineReader {
 
-  /** . */
   private final LabelElement element;
 
-  /** . */
   private final Pair<Integer, Integer>[] lines;
 
-  /** . */
   private final int width;
 
-  /** . */
   private final int height;
 
   LabelReader(LabelElement element, Pair<Integer, Integer>[] lines, int width, int height) {
@@ -46,7 +42,6 @@ class LabelReader implements LineReader {
     this.width = width;
   }
 
-  /** . */
   private int index = 0;
 
   public boolean hasLine() {

@@ -33,28 +33,20 @@ import org.crsh.util.Statement;
 
 public class ClientAutomaton implements Runnable {
 
-  /** . */
   final Shell shell;
 
-  /** . */
   final ObjectOutputStream out;
 
-  /** . */
   final ObjectInputStream in;
 
-  /** . */
   ClientProcessContext current;
 
-  /** . */
   final CloseableList listeners;
 
-  /** . */
   Integer width;
 
-  /** . */
   Integer height;
 
-  /** . */
   long last;
 
   public ClientAutomaton(ObjectOutputStream out, ObjectInputStream in, Shell shell) {

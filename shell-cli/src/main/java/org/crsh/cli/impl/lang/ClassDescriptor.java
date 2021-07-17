@@ -74,7 +74,6 @@ class ClassDescriptor<T> extends ObjectCommandDescriptor<T> {
       }
     }
 
-    //
     super.addParameter(parameter);
   }
 

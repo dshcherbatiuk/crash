@@ -26,10 +26,11 @@ import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.Mount;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ClassPathMountFactory implements FSMountFactory<Node> {
 
-  /** . */
   private final ClassLoader loader;
 
   public ClassPathMountFactory(ClassLoader loader) {

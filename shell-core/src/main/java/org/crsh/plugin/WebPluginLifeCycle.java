@@ -19,9 +19,10 @@
 
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -31,22 +32,20 @@ import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.file.FileMountFactory;
 import org.crsh.vfs.spi.servlet.WarMountFactory;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
+import org.slf4j.Logger;
 
 public class WebPluginLifeCycle extends Embedded implements ServletContextListener {
 
-  /** . */
+  private final Logger LOGGER = getLogger(WebPluginLifeCycle.class.getName());
+
   private static final Object lock = new Object();
 
-  /** . */
-  private static final Map<String, PluginContext> contextMap = new HashMap<String, PluginContext>();
+  private static final Map<String, PluginContext> contextMap = new HashMap<>();
 
-  /** . */
   private boolean registered = false;
 
-  /** . */
-  private Map<String, FSMountFactory<?>> mountContexts = new HashMap<String, FSMountFactory<?>>(3);
+  private final Map<String, FSMountFactory<?>> mountContexts = new HashMap<>(3);
 
-  /** . */
   private ServletContext context;
 
   /**
@@ -83,7 +82,7 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
    * Create the service loader discovery, this can be subclassed to provide an implementation, the
    * current implementation returns a {@link ServiceLoaderDiscovery} instance.
    *
-   * @param context the servlet context
+   * @param context     the servlet context
    * @param classLoader the class loader
    * @return the plugin discovery
    */
@@ -103,7 +102,7 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
       mountContexts.put("file", new FileMountFactory(Utils.getCurrentDirectory()));
       mountContexts.put("war", new WarMountFactory(context));
     } catch (Exception e) {
-      log.log(Level.SEVERE, "Coult not initialize classpath driver", e);
+      LOGGER.error("Coult not initialize classpath driver", e);
       return;
     }
 
@@ -141,8 +140,8 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
 
   /**
    * @return the value returned by {@link #resolvePathProperty(String, String)} with the <code>
-   *     crash.mountpointconfig.conf</code> name and the {@link #getDefaultConfMountPointConfig()}
-   *     default value
+   * crash.mountpointconfig.conf</code> name and the {@link #getDefaultConfMountPointConfig()}
+   * default value
    */
   @Override
   protected String resolveConfMountPointConfig() {
@@ -151,20 +150,24 @@ public class WebPluginLifeCycle extends Embedded implements ServletContextListen
 
   /**
    * @return the value returned by {@link #resolvePathProperty(String, String)} with the <code>
-   *     crash.mountpointconfig.cmd</code> name and the {@link #getDefaultCmdMountPointConfig()}
-   *     default value
+   * crash.mountpointconfig.cmd</code> name and the {@link #getDefaultCmdMountPointConfig()} default
+   * value
    */
   @Override
   protected String resolveCmdMountPointConfig() {
     return resolvePathProperty("crash.mountpointconfig.cmd", getDefaultCmdMountPointConfig());
   }
 
-  /** @return <code>war:/WEB-INF/crash/commands/</code> */
+  /**
+   * @return <code>war:/WEB-INF/crash/commands/</code>
+   */
   protected String getDefaultCmdMountPointConfig() {
     return "war:/WEB-INF/crash/commands/";
   }
 
-  /** @return <code>war:/WEB-INF/crash/</code> */
+  /**
+   * @return <code>war:/WEB-INF/crash/</code>
+   */
   protected String getDefaultConfMountPointConfig() {
     return "war:/WEB-INF/crash";
   }

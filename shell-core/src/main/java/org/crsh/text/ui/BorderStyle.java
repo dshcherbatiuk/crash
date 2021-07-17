@@ -24,13 +24,10 @@ public enum BorderStyle {
 
   STAR('*', '*', '*');
 
-  /** . */
   final char horizontal;
 
-  /** . */
   final char vertical;
 
-  /** . */
   final char corner;
 
   private BorderStyle(char horizontal, char vertical, char corner) {

@@ -18,6 +18,8 @@
  */
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,15 +30,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.util.Utils;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.Resource;
+import org.slf4j.Logger;
 
 public final class PluginContext {
 
-  private static final Logger log = Logger.getLogger(PluginContext.class.getName());
+  private static final Logger LOGGER = getLogger(PluginContext.class.getName());
 
   final PluginManager manager;
 
@@ -139,38 +140,36 @@ public final class PluginContext {
       throw new NullPointerException("No null attributes accepted");
     }
 
-    //
-    String version = null;
-    try {
-      Properties props = new Properties();
-      InputStream in =
-          getClass()
-              .getClassLoader()
-              .getResourceAsStream("META-INF/maven/org.crashub/crash.shell/pom.properties");
-      if (in != null) {
-        props.load(in);
-        version = props.getProperty("version");
-      }
-    } catch (Exception e) {
-      log.log(Level.SEVERE, "Could not load maven properties", e);
-    }
-
-    //
-    if (version == null) {
-      log.log(Level.WARNING, "No version found will use unknown value instead");
-      version = "unknown";
-    }
-
-    //
     this.loader = loader;
     this.attributes = attributes;
-    this.version = version;
+    this.version = extractVersion();
     this.started = false;
     this.manager = new PluginManager(this, discovery);
     this.executor = executor;
     this.scanner = scanner;
     this.resourceManager = new ResourceManager(cmdFS, confFS);
     this.propertyManager = new PropertyManager();
+  }
+
+  private String extractVersion() {
+    String version = null;
+    try {
+      Properties props = new Properties();
+      InputStream in = getClass().getClassLoader()
+          .getResourceAsStream("META-INF/maven/org.crashub/crash.shell/pom.properties");
+      if (in != null) {
+        props.load(in);
+        version = props.getProperty("version");
+      }
+    } catch (Exception e) {
+      LOGGER.error("Could not load maven properties", e);
+    }
+
+    if (version == null) {
+      LOGGER.warn("No version found will use unknown value instead");
+      version = "unknown";
+    }
+    return version;
   }
 
   public String getVersion() {
@@ -327,10 +326,9 @@ public final class PluginContext {
       // Init plugins
       manager.getPlugins(Object.class);
 
-      //
       started = true;
     } else {
-      log.log(Level.WARNING, "Attempt to double start");
+      LOGGER.warn("Attempt to double start");
     }
   }
 
@@ -350,7 +348,7 @@ public final class PluginContext {
       // Shutdown executor
       executor.shutdownNow();
     } else {
-      log.log(Level.WARNING, "Attempt to stop when stopped");
+      LOGGER.warn("Attempt to stop when stopped");
     }
   }
 }

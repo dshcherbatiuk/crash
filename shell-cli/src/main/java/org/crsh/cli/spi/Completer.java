@@ -30,7 +30,7 @@ public interface Completer {
    * <p>
    *
    * @param parameter the completed parameter
-   * @param prefix the prefix to complete
+   * @param prefix    the prefix to complete
    * @return the possible suffix map
    * @throws Exception any exception that would prevent completion to perform correctly
    */

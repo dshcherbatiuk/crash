@@ -31,7 +31,6 @@ import org.crsh.vfs.spi.AbstractFSDriver;
 
 public class FileDriver extends AbstractFSDriver<File> {
 
-  /** . */
   private final File root;
 
   /**
@@ -45,7 +44,6 @@ public class FileDriver extends AbstractFSDriver<File> {
       throw new NullPointerException();
     }
 
-    //
     this.root = root;
   }
 
@@ -57,20 +55,20 @@ public class FileDriver extends AbstractFSDriver<File> {
     return handle.getName();
   }
 
-  public boolean isDir(File handle) throws IOException {
+  public boolean isDir(File handle) {
     return handle.isDirectory();
   }
 
   public Iterable<File> children(File handle) throws IOException {
     File[] files = handle.listFiles();
-    return files != null ? Arrays.asList(files) : Collections.<File>emptyList();
+    return files != null ? Arrays.asList(files) : Collections.emptyList();
   }
 
-  public long getLastModified(File handle) throws IOException {
+  public long getLastModified(File handle) {
     return handle.lastModified();
   }
 
   public Iterator<InputStream> open(File handle) throws IOException {
-    return Utils.<InputStream>iterator(new FileInputStream(handle));
+    return Utils.iterator(new FileInputStream(handle));
   }
 }

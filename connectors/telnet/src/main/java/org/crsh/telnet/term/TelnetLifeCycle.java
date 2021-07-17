@@ -38,19 +38,14 @@ import java.util.logging.Logger;
 
 public class TelnetLifeCycle extends TermLifeCycle {
 
-  /** . */
   private final Logger log = Logger.getLogger(TelnetLifeCycle.class.getName());
 
-  /** . */
   private Integer port;
 
-  /** . */
   private List<PortListener> listeners;
 
-  /** . */
   private static final ConcurrentHashMap<ConnectionManager, TelnetLifeCycle> map = new ConcurrentHashMap<ConnectionManager, TelnetLifeCycle>();
 
-  /** . */
   private Resource config;
 
   static TelnetLifeCycle getLifeCycle(Connection conn) {
@@ -82,7 +77,6 @@ public class TelnetLifeCycle extends TermLifeCycle {
     Properties props = new Properties();
     props.load(new ByteArrayInputStream(config.getContent()));
 
-    //
     if (port != null) {
       log.log(Level.FINE, "Explicit telnet port configuration with value " + port);
       props.put("std.port", port.toString());
@@ -90,13 +84,10 @@ public class TelnetLifeCycle extends TermLifeCycle {
       log.log(Level.FINE, "Use default telnet port configuration " + props.getProperty("std.port"));
     }
 
-    //
     ShellManager.createShellManager(props);
 
-    //
     TerminalManager.createTerminalManager(props);
 
-    //
     ArrayList<PortListener> listeners = new ArrayList<PortListener>();
     String[] listnames = StringUtil.split(props.getProperty("listeners"), ",");
     for (String listname : listnames) {
@@ -104,7 +95,6 @@ public class TelnetLifeCycle extends TermLifeCycle {
       listeners.add(listener);
     }
 
-    //
     this.listeners = listeners;
 
     // Start listeners

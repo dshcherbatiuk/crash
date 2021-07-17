@@ -25,16 +25,12 @@ import java.io.Writer;
 
 public class RenderWriter extends Writer implements Screenable {
 
-  /** . */
   final ScreenContext out;
 
-  /** . */
   private final Closeable closeable;
 
-  /** . */
   private boolean closed;
 
-  /** . */
   private boolean empty;
 
   public RenderWriter(ScreenContext out) throws NullPointerException {
@@ -46,7 +42,6 @@ public class RenderWriter extends Writer implements Screenable {
       throw new NullPointerException("No null appendable expected");
     }
 
-    //
     this.out = out;
     this.empty = true;
     this.closeable = closeable;

@@ -26,16 +26,15 @@ import java.util.LinkedList;
 
 public class ScreenBuffer implements Iterable<Object>, Serializable, Screenable {
 
-  /** . */
   private final LinkedList<Object> chunks;
 
-  /** . */
   private Style current;
 
-  /** . */
   private Style next;
 
-  /** Where we flush. */
+  /**
+   * Where we flush.
+   */
   private final ScreenContext out;
 
   public ScreenBuffer() {

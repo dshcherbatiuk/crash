@@ -32,10 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 public class IOHandler extends CRaSHPlugin<TermIOHandler> implements TermIOHandler {
 
-  /** . */
   private final BlockingQueue<IOEvent> eventQueue = new LinkedBlockingQueue<IOEvent>();
 
-  /** . */
   private final BlockingQueue<IOAction> actionQueue = new LinkedBlockingQueue<IOAction>();
 
   @Override

@@ -19,7 +19,9 @@
 
 package org.crsh.shell;
 
-/** The context provided when a {@link ShellProcess} is executed. */
+/**
+ * The context provided when a {@link ShellProcess} is executed.
+ */
 public interface ShellProcessContext extends InteractionContext {
 
   /**

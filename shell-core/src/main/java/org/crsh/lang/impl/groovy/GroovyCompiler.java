@@ -18,13 +18,13 @@
  */
 package org.crsh.lang.impl.groovy;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import groovy.lang.Closure;
 import groovy.lang.GroovyShell;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
@@ -46,17 +46,16 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.ShellSession;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
+import org.slf4j.Logger;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
 
-  /** . */
-  static final Logger log = Logger.getLogger(GroovyCompiler.class.getName());
-
-  /** . */
+  private static final Logger LOGGER = getLogger(GroovyCompiler.class.getName());
   private static final Set<String> EXT = Collections.singleton("groovy");
 
-  /** . */
   private final GroovyClassFactory<Object> objectGroovyClassFactory;
 
   public GroovyCompiler(PluginContext context) {
@@ -95,16 +94,17 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
       GroovyShell shell = getGroovyShell(session);
       Object ret = shell.getContext().getVariable(name);
       if (ret instanceof Closure) {
-        log.log(Level.FINEST, "Invoking " + name + " closure");
-        Closure c = (Closure) ret;
-        ret = c.call();
-      } else if (ret == null) {
-        log.log(Level.FINEST, "No " + name + " will use empty");
-        return def;
+        LOGGER.debug("Invoking {} closure", name);
+        ret = ((Closure<?>) ret).call();
+      } else {
+        if (ret == null) {
+          LOGGER.debug("No {} will use empty", name);
+          return def;
+        }
       }
       return String.valueOf(ret);
     } catch (Exception e) {
-      log.log(Level.SEVERE, "Could not get a " + name + " message, will use empty", e);
+      LOGGER.error("Could not get a {} message, will use empty", name, e);
       return def;
     }
   }
@@ -112,18 +112,12 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
   public CommandResolution compileCommand(final String name, byte[] source)
       throws CommandException, NullPointerException {
 
-    //
     if (source == null) {
       throw new NullPointerException("No null command source allowed");
     }
 
-    //
     final String script;
-    try {
-      script = new String(source, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new CommandException(ErrorKind.INTERNAL, "Could not compile command script " + name, e);
-    }
+    script = new String(source, StandardCharsets.UTF_8);
 
     // Get the description using a partial compilation because it is much faster than compiling the
     // class
@@ -160,7 +154,6 @@ public class GroovyCompiler implements org.crsh.lang.spi.Compiler {
     }
     final String description = resolveDescription;
 
-    //
     return new CommandResolution() {
       Command<?> command;
 

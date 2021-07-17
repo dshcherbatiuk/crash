@@ -1,0 +1,29 @@
+<!--
+  ~ Copyright (c) 2021 Happy Gears, Inc.
+  ~ author: dmytroscherbatuik
+  ~ Date: 6/10/2021
+  -->
+
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- default 20, means drop lower event when has 20% capacity remaining -->
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="CONSOLE"/>
+        <!-- default 256 -->
+        <queueSize>1</queueSize>
+        <!-- default false -->
+        <includeCallerData>false</includeCallerData>
+        <!-- default false, set to true to cause the Appender not block the application and just drop the messages -->
+        <neverBlock>true</neverBlock>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="ASYNC_CONSOLE"/>
+    </root>
+</configuration>

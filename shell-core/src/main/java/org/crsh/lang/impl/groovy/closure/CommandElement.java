@@ -27,25 +27,21 @@ import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class CommandElement extends PipeLineElement {
 
-  /** . */
   final String commandName;
 
-  /** . */
   final Command<?> command;
 
-  /** . */
   final Map<String, Object> options;
 
-  /** . */
   final String subordinate;
 
-  /** . */
   final Map<String, Object> subordinateOptions;
 
-  /** . */
   final List<Object> args;
 
   public CommandElement(String commandName, Command<?> command, Map<String, Object> options) {

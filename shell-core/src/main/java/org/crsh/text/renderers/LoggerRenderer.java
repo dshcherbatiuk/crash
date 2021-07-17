@@ -21,14 +21,13 @@ package org.crsh.text.renderers;
 
 import com.google.auto.service.AutoService;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
 import org.crsh.text.LineRenderer;
 import org.crsh.text.Renderer;
 import org.crsh.text.ui.RowElement;
 import org.crsh.text.ui.TableElement;
+import org.slf4j.Logger;
 
 @AutoService(Renderer.class)
 public class LoggerRenderer extends Renderer<Logger> {
@@ -40,38 +39,35 @@ public class LoggerRenderer extends Renderer<Logger> {
 
   @Override
   public LineRenderer renderer(Iterator<Logger> stream) {
-    TableElement table = new TableElement();
+    final TableElement table = new TableElement();
 
     // Header
-    table.add(
-        new RowElement()
-            .style(Decoration.bold.fg(Color.black).bg(Color.white))
-            .add("NAME", "LEVEL"));
+    table.add(new RowElement()
+        .style(Decoration.bold.fg(Color.black).bg(Color.white))
+        .add("NAME", "LEVEL"));
 
     while (stream.hasNext()) {
-      Logger logger = stream.next();
+      final Logger logger = stream.next();
 
       // Determine level
       String level;
-      if (logger.isLoggable(Level.FINER)) {
+      if (logger.isTraceEnabled()) {
         level = "TRACE";
-      } else if (logger.isLoggable(Level.FINE)) {
+      } else if (logger.isDebugEnabled()) {
         level = "DEBUG";
-      } else if (logger.isLoggable(Level.INFO)) {
+      } else if (logger.isInfoEnabled()) {
         level = "INFO";
-      } else if (logger.isLoggable(Level.WARNING)) {
+      } else if (logger.isWarnEnabled()) {
         level = "WARN";
-      } else if (logger.isLoggable(Level.SEVERE)) {
+      } else if (logger.isErrorEnabled()) {
         level = "ERROR";
       } else {
         level = "UNKNOWN";
       }
 
-      //
       table.row(logger.getName(), level);
     }
 
-    //
     return table.renderer();
   }
 }

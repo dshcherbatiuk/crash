@@ -21,12 +21,13 @@ package org.crsh.lang.spi;
 import org.crsh.shell.ShellResponse;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public abstract class ReplResponse {
 
   public static class Invoke extends ReplResponse {
 
-    /** . */
     public final CommandInvoker<Void, ?> invoker;
 
     public Invoke(CommandInvoker<Void, ?> invoker) {
@@ -36,7 +37,6 @@ public abstract class ReplResponse {
 
   public static class Response extends ReplResponse {
 
-    /** . */
     public final ShellResponse response;
 
     public Response(ShellResponse response) {

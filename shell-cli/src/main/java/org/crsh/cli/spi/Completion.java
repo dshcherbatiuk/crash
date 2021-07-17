@@ -72,9 +72,6 @@ import java.util.Set;
  */
 public final class Completion implements Iterable<Map.Entry<String, Boolean>>, Serializable {
 
-  /**
-   * .
-   */
   private static final Completion EMPTY = create("");
 
   public static Builder builder(String prefix) {
@@ -113,7 +110,6 @@ public final class Completion implements Iterable<Map.Entry<String, Boolean>>, S
       throw new NullPointerException("No null suffixes allowed");
     }
 
-    //
     this.prefix = prefix;
     this.values = values;
   }

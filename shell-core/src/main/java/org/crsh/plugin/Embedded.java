@@ -18,17 +18,21 @@
  */
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.spi.FSMountFactory;
+import org.slf4j.Logger;
 
 /**
  * @author Julien Viet
  */
 public class Embedded extends PluginLifeCycle {
+
+  private final Logger LOGGER = getLogger(Embedded.class.getName());
 
   /**
    * Create the plugin context, allow subclasses to customize it.
@@ -45,7 +49,7 @@ public class Embedded extends PluginLifeCycle {
       cmdFS = createCommandFS();
       confFS = createConfFS();
     } catch (IOException e) {
-      log.log(Level.SEVERE, "Coult not initialize the file system", e);
+      LOGGER.error("Coult not initialize the file system", e);
       return null;
     }
 

@@ -24,10 +24,11 @@ import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.FSMountFactory;
 import org.crsh.vfs.spi.Mount;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class WarMountFactory implements FSMountFactory<String> {
 
-  /** . */
   private final ServletContext context;
 
   public WarMountFactory(ServletContext context) {

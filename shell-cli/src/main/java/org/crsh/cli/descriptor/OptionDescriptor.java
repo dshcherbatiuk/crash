@@ -54,10 +54,8 @@ import org.crsh.cli.type.ValueType;
 
 public class OptionDescriptor extends ParameterDescriptor {
 
-  /** . */
   private static final BitSet A = new BitSet(256);
 
-  /** . */
   private static final BitSet B = new BitSet(256);
 
   static {
@@ -77,10 +75,8 @@ public class OptionDescriptor extends ParameterDescriptor {
     }
   }
 
-  /** . */
   private final int arity;
 
-  /** . */
   private final List<String> names;
 
   public OptionDescriptor(
@@ -95,13 +91,11 @@ public class OptionDescriptor extends ParameterDescriptor {
       throws IllegalValueTypeException, IllegalParameterException {
     super(type, info, required, password, unquote, completerType, annotation);
 
-    //
     if (getMultiplicity() == Multiplicity.MULTI && getType() == ValueType.BOOLEAN) {
       throw new IllegalParameterException();
     }
 
-    //
-    names = new ArrayList<String>(names);
+    names = new ArrayList<>(names);
     for (String name : names) {
       if (name == null) {
         throw new IllegalParameterException("Option name must not be null");
@@ -121,14 +115,12 @@ public class OptionDescriptor extends ParameterDescriptor {
       }
     }
 
-    //
     if (getType() == ValueType.BOOLEAN) {
       arity = 0;
     } else {
       arity = 1;
     }
 
-    //
     this.names = Collections.unmodifiableList(names);
   }
 

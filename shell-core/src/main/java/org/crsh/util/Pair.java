@@ -25,10 +25,8 @@ public class Pair<F, S> {
     return new Pair<F, S>(first, second);
   }
 
-  /** . */
   private final F first;
 
-  /** . */
   private final S second;
 
   public Pair(F first, S second) {

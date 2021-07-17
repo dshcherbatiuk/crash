@@ -21,10 +21,11 @@ package org.crsh.lang.impl.groovy.closure;
 import groovy.lang.Closure;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ClosureElement extends PipeLineElement {
 
-  /** . */
   final Closure closure;
 
   public ClosureElement(Closure closure) {

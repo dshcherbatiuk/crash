@@ -22,12 +22,9 @@ package org.crsh.plugin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 import org.crsh.util.Utils;
 
 public abstract class CRaSHPlugin<P> {
-
-  protected final Logger log = Logger.getLogger(getClass().getName());
 
   public static final int FAILED = -1;
 

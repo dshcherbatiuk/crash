@@ -18,6 +18,8 @@
  */
 package org.crsh.lang.impl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.lang.reflect.Constructor;
 import java.util.concurrent.atomic.AtomicReference;
 import org.crsh.lang.spi.Compiler;
@@ -26,6 +28,7 @@ import org.crsh.lang.spi.Repl;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PluginContext;
 import org.crsh.shell.impl.command.ShellSession;
+import org.slf4j.Logger;
 
 /**
  * A command manager that is able to load a command manager via reflection.
@@ -34,7 +37,9 @@ import org.crsh.shell.impl.command.ShellSession;
  */
 public class LanguageProxy extends CRaSHPlugin<Language> implements Language {
 
-  private final AtomicReference<Language> real = new AtomicReference<Language>();
+  private static final Logger LOGGER = getLogger(LanguageProxy.class.getName());
+
+  private final AtomicReference<Language> real = new AtomicReference<>();
 
   private final String name;
 
@@ -57,10 +62,8 @@ public class LanguageProxy extends CRaSHPlugin<Language> implements Language {
       Constructor<Language> mgrCtor = mgrClass.getConstructor(PluginContext.class);
       Language mgr = mgrCtor.newInstance(getContext());
       real.set(mgr);
-    } catch (Exception e) {
-      log.info("Plugin is inactive");
-    } catch (NoClassDefFoundError e) {
-      log.info("Plugin is inactive");
+    } catch (Exception | NoClassDefFoundError e) {
+      LOGGER.info("Plugin is inactive");
     }
   }
 

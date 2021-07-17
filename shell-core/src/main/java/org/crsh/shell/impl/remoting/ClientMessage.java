@@ -23,13 +23,16 @@ import java.io.Serializable;
 
 public abstract class ClientMessage implements Serializable {
 
-  public static class GetWelcome extends ClientMessage {}
+  public static class GetWelcome extends ClientMessage {
 
-  public static class GetPrompt extends ClientMessage {}
+  }
+
+  public static class GetPrompt extends ClientMessage {
+
+  }
 
   public static class GetCompletion extends ClientMessage {
 
-    /** . */
     public final String prefix;
 
     public GetCompletion(String prefix) {
@@ -39,10 +42,8 @@ public abstract class ClientMessage implements Serializable {
 
   public static class SetSize extends ClientMessage {
 
-    /** . */
     public final int width;
 
-    /** . */
     public final int height;
 
     public SetSize(int width, int height) {
@@ -53,13 +54,10 @@ public abstract class ClientMessage implements Serializable {
 
   public static class Execute extends ClientMessage {
 
-    /** . */
     public final int width;
 
-    /** . */
     public final int height;
 
-    /** . */
     public final String line;
 
     public Execute(int width, int height, String line) {
@@ -69,7 +67,11 @@ public abstract class ClientMessage implements Serializable {
     }
   }
 
-  public static class Cancel extends ClientMessage {}
+  public static class Cancel extends ClientMessage {
 
-  public static class Close extends ClientMessage {}
+  }
+
+  public static class Close extends ClientMessage {
+
+  }
 }

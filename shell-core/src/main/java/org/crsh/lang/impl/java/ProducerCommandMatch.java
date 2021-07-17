@@ -31,19 +31,18 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.InvocationContextImpl;
 import org.crsh.shell.impl.command.spi.CommandException;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T, Void, P> {
 
-  /** . */
   private final CommandInvoker<Instance<T>, ?> invoker;
 
-  /** . */
   private final Class<P> producedType;
 
-  /** . */
   private final String name;
 
-  private ShellSafety shellSafety;
+  private final ShellSafety shellSafety;
 
   public ProducerCommandMatch(
       ClassShellCommand<T> shellCommand,
@@ -52,7 +51,6 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
       ShellSafety shellSafety) {
     super(shellCommand);
 
-    //
     this.invoker = invoker;
     this.producedType = producedType;
     this.name = shellCommand.getDescriptor().getName();
@@ -70,12 +68,10 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
   }
 
   @Override
-  BaseInvoker getInvoker(T command) throws CommandException {
+  BaseInvoker getInvoker(T command) {
 
-    //
     return new BaseInvoker(command) {
 
-      /** . */
       private InvocationContext<P> invocationContext;
 
       public Class<P> getProducedType() {
@@ -111,7 +107,8 @@ class ProducerCommandMatch<T extends BaseCommand, P> extends BaseCommandMatch<T,
         // Drop everything
       }
 
-      public void flush() {}
+      public void flush() {
+      }
 
       public void close() throws IOException, CommandException {
         try {

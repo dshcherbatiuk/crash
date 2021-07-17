@@ -44,19 +44,14 @@ public class Parser2TestCase extends TestCase {
 
   private static class Test {
 
-    /** . */
-    private LinkedList<OptionMatch> sharedOptionMatches;
+    private final LinkedList<OptionMatch> sharedOptionMatches;
 
-    /** . */
-    private LinkedList<OptionMatch> optionMatches;
+    private final LinkedList<OptionMatch> optionMatches;
 
-    /** . */
-    private LinkedList<ArgumentMatch> argumentMatches;
+    private final LinkedList<ArgumentMatch> argumentMatches;
 
-    /** . */
-    private String rest;
+    private final String rest;
 
-    /** . */
     private String methodName;
 
     private <T> Test(Class<T> type, String s) {
@@ -65,17 +60,16 @@ public class Parser2TestCase extends TestCase {
         InvocationMatcher<Instance<T>> parser = command.matcher();
         InvocationMatch<Instance<T>> match = parser.parse(s);
 
-        //
         if (match.owner() == null) {
-          this.sharedOptionMatches = new LinkedList<OptionMatch>();
-          this.optionMatches = new LinkedList<OptionMatch>(match.options());
-          this.argumentMatches = new LinkedList<ArgumentMatch>(match.arguments());
+          this.sharedOptionMatches = new LinkedList<>();
+          this.optionMatches = new LinkedList<>(match.options());
+          this.argumentMatches = new LinkedList<>(match.arguments());
           this.rest = match.getRest();
           this.methodName = null;
         } else {
-          this.sharedOptionMatches = new LinkedList<OptionMatch>(match.owner().options());
-          this.optionMatches = new LinkedList<OptionMatch>(match.options());
-          this.argumentMatches = new LinkedList<ArgumentMatch>(match.arguments());
+          this.sharedOptionMatches = new LinkedList<>(match.owner().options());
+          this.optionMatches = new LinkedList<>(match.options());
+          this.argumentMatches = new LinkedList<>(match.arguments());
           this.rest = match.getRest();
           this.methodName = match.getDescriptor().getName();
         }
@@ -91,7 +85,7 @@ public class Parser2TestCase extends TestCase {
       assertTrue(sharedOptionMatches.size() > 0);
       OptionMatch match = sharedOptionMatches.removeFirst();
       assertEquals(expectedName, match.getName());
-      ArrayList<String> values = new ArrayList<String>();
+      ArrayList<String> values = new ArrayList<>();
       for (LiteralValue value : match.getValues()) {
         values.add(value.getValue());
       }
@@ -103,7 +97,7 @@ public class Parser2TestCase extends TestCase {
       assertTrue(optionMatches.size() > 0);
       OptionMatch match = optionMatches.removeFirst();
       assertEquals(expectedName, match.getName());
-      ArrayList<String> values = new ArrayList<String>();
+      ArrayList<String> values = new ArrayList<>();
       for (LiteralValue value : match.getValues()) {
         values.add(value.getValue());
       }
@@ -116,7 +110,7 @@ public class Parser2TestCase extends TestCase {
       ArgumentMatch match = argumentMatches.removeFirst();
       assertEquals(start, match.getStart());
       assertEquals(end, match.getEnd());
-      ArrayList<String> values = new ArrayList<String>();
+      ArrayList<String> values = new ArrayList<>();
       for (LiteralValue value : match.getValues()) {
         values.add(value.getValue());
       }
@@ -143,16 +137,19 @@ public class Parser2TestCase extends TestCase {
     }
   }
 
-  public void testMixed() throws Exception {
+  public void testMixed() {
     class A {
+
       @Option(names = "o")
       String o;
 
       @Option(names = "p")
       boolean p;
 
-      @Argument String a;
-      @Argument List<String> b;
+      @Argument
+      String a;
+      @Argument
+      List<String> b;
     }
     new Test(A.class, "-o foo bar")
         .assertOption("o", "foo")
@@ -167,18 +164,25 @@ public class Parser2TestCase extends TestCase {
 
   public void testArgument() throws Exception {
     class A {
-      @Argument String a;
+
+      @Argument
+      String a;
     }
     new Test(A.class, "foo").assertArgument(0, 3, "foo").assertDone();
     new Test(A.class, "foo bar").assertArgument(0, 3, "foo").assertDone("bar");
     class B {
-      @Argument List<String> a;
+
+      @Argument
+      List<String> a;
     }
     new Test(B.class, "foo").assertArgument(0, 3, "foo").assertDone();
     new Test(B.class, "foo bar").assertArgument(0, 7, "foo", "bar").assertDone();
     class C {
-      @Argument String a;
-      @Argument List<String> b;
+
+      @Argument
+      String a;
+      @Argument
+      List<String> b;
     }
     new Test(C.class, "foo").assertArgument(0, 3, "foo").assertDone();
     new Test(C.class, "foo bar")
@@ -190,8 +194,11 @@ public class Parser2TestCase extends TestCase {
         .assertArgument(4, 11, "bar", "juu")
         .assertDone();
     class D {
-      @Argument List<String> a;
-      @Argument String b;
+
+      @Argument
+      List<String> a;
+      @Argument
+      String b;
     }
     new Test(D.class, "").assertDone();
     new Test(D.class, "foo").assertArgument(0, 3, "foo").assertDone();
@@ -204,9 +211,13 @@ public class Parser2TestCase extends TestCase {
         .assertArgument(8, 11, "juu")
         .assertDone();
     class E {
-      @Argument String a;
-      @Argument List<String> b;
-      @Argument String c;
+
+      @Argument
+      String a;
+      @Argument
+      List<String> b;
+      @Argument
+      String c;
     }
     new Test(E.class, "").assertDone();
     new Test(E.class, "foo").assertArgument(0, 3, "foo").assertDone();
@@ -226,16 +237,19 @@ public class Parser2TestCase extends TestCase {
         .assertDone();
   }
 
-  public void testEmpty() throws Exception {
-    class A {}
+  public void testEmpty() {
+    class A {
+
+    }
     new Test(A.class, "").assertDone();
     new Test(A.class, "-foo").assertDone("-foo");
     new Test(A.class, "foo").assertDone("foo");
   }
 
-  public void testOptions() throws Exception {
+  public void testOptions() {
 
     class A {
+
       @Option(names = "o")
       String o;
 
@@ -246,7 +260,6 @@ public class Parser2TestCase extends TestCase {
       boolean b;
     }
 
-    //
     new Test(A.class, "-o foo").assertOption("o", "foo").assertDone();
     new Test(A.class, "-p foo -p bar").assertOption("p", "foo", "bar").assertDone();
     new Test(A.class, "-b foo").assertOption("b").assertDone("foo");
@@ -265,34 +278,38 @@ public class Parser2TestCase extends TestCase {
     new Test(A.class, "-p foo").assertOption("p", "foo").assertDone();
   }
 
-  public void testMethod() throws Exception {
+  public void testMethod() {
 
     class A {
-      @Command
-      void m() {}
 
       @Command
-      void dummy() {}
+      void m() {
+      }
+
+      @Command
+      void dummy() {
+      }
     }
 
-    //
     new Test(A.class, "m").assertMethod("m").assertDone();
   }
 
-  public void testMixedMethod() throws Exception {
+  public void testMixedMethod() {
 
     class A {
+
       @Option(names = "s")
       String s;
 
       @Command
-      void m(@Option(names = "o") String o, @Argument String a) {}
+      void m(@Option(names = "o") String o, @Argument String a) {
+      }
 
       @Command
-      void dummy() {}
+      void dummy() {
+      }
     }
 
-    //
     new Test(A.class, "-s foo m -o bar juu")
         .assertSharedOption("s", "foo")
         .assertMethod("m")

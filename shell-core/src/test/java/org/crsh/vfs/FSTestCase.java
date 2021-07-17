@@ -35,7 +35,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class FSTestCase extends AbstractTestCase {
 
-  /** . */
   private java.io.File warFile;
 
   @Override
@@ -73,35 +72,30 @@ public class FSTestCase extends AbstractTestCase {
     ZipExporter exporter = archive.as(ZipExporter.class);
     exporter.exportTo(file, true);
 
-    //
     URLDriver driver = new URLDriver();
     driver.merge(file.toURI().toURL());
     Node root = driver.root();
     assertEquals("", driver.name(root));
     assertTrue(driver.isDir(root));
 
-    //
     Iterator<Node> rootChildren = driver.children(root).iterator();
     Node org = rootChildren.next();
     assertFalse(rootChildren.hasNext());
     assertEquals("org", driver.name(org));
     assertTrue(driver.isDir(org));
 
-    //
     Iterator<Node> orgChildren = driver.children(org).iterator();
     Node crsh = orgChildren.next();
     assertFalse(orgChildren.hasNext());
     assertEquals("crsh", driver.name(crsh));
     assertTrue(driver.isDir(crsh));
 
-    //
     Iterator<Node> vfsChildren = driver.children(crsh).iterator();
     Node vfs = vfsChildren.next();
     assertFalse(vfsChildren.hasNext());
     assertEquals("vfs", driver.name(vfs));
     assertTrue(driver.isDir(vfs));
 
-    //
     Iterator<Node> clazzChildren = driver.children(vfs).iterator();
     Node clazz = clazzChildren.next();
     assertFalse(clazzChildren.hasNext());
@@ -114,8 +108,6 @@ public class FSTestCase extends AbstractTestCase {
   }
 
   public void testNestedJar() throws Exception {
-
-    //
     URLDriver driver = new URLDriver();
     driver.merge(new URL("jar:" + warFile.toURI().toURL() + "!/WEB-INF/"));
     Node root = driver.root();
@@ -128,7 +120,6 @@ public class FSTestCase extends AbstractTestCase {
     byte[] bytes = Utils.readAsBytes(in.next());
     assertFalse(in.hasNext());
 
-    //
     URL url = new URL("jar:jar:" + warFile.toURI().toURL() + "!/WEB-INF/lib/foo.jar!/org/crsh/");
     driver = new URLDriver();
     driver.merge(url);

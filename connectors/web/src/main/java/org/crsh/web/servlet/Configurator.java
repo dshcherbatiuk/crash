@@ -33,11 +33,11 @@ import java.util.regex.Pattern;
  */
 public class Configurator extends ServerEndpointConfig.Configurator {
 
-  /** . */
   private static final Pattern cookiePattern = Pattern.compile("([^=]+)=([^\\;]*);?\\s?");
 
   @Override
-  public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request, HandshakeResponse response) {
+  public void modifyHandshake(ServerEndpointConfig sec, HandshakeRequest request,
+      HandshakeResponse response) {
     Map<String, List<String>> requestHeaders = request.getHeaders();
     List<String> cookieHeaders = requestHeaders.get("cookie");
     String sessionId = null;
@@ -55,7 +55,8 @@ public class Configurator extends ServerEndpointConfig.Configurator {
     }
     if (sessionId == null) {
       sessionId = UUID.randomUUID().toString();
-      response.getHeaders().put("Set-Cookie", Collections.singletonList("CRASHID=" + sessionId + "; Path=/"));
+      response.getHeaders()
+          .put("Set-Cookie", Collections.singletonList("CRASHID=" + sessionId + "; Path=/"));
     } else {
     }
     sec.getUserProperties().put("CRASHID", sessionId);

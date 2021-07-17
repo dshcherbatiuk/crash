@@ -40,16 +40,18 @@ class TableLineRenderer extends LineRenderer {
 
   final Style.Composite style;
 
-  /** Cell padding left. */
+  /**
+   * Cell padding left.
+   */
   final int leftCellPadding;
 
-  /** Cell padding right. */
+  /**
+   * Cell padding right.
+   */
   final int rightCellPadding;
 
-  /** . */
   private TableRowLineRenderer head;
 
-  /** . */
   private TableRowLineRenderer tail;
 
   TableLineRenderer(TableElement table) {
@@ -62,7 +64,6 @@ class TableLineRenderer extends LineRenderer {
     this.leftCellPadding = table.getLeftCellPadding();
     this.rightCellPadding = table.getRightCellPadding();
 
-    //
     for (RowElement row : table.getRows()) {
       if (head == null) {
         head = tail = new TableRowLineRenderer(this, row);
@@ -165,7 +166,6 @@ class TableLineRenderer extends LineRenderer {
         }
       }
 
-      //
       final int[] heights;
       if (height > 0) {
         // Apply vertical layout
@@ -285,72 +285,70 @@ class TableLineRenderer extends LineRenderer {
           }
           switch (status) {
             case 0:
-            case 2:
-              {
+            case 2: {
+              to.styleOff();
+              to.append(border.corner);
+              for (int i = 0; i < widths.length; i++) {
+                if (widths[i] > 0) {
+                  if (separator != null && i > 0) {
+                    to.append(border.horizontal);
+                  }
+                  for (int j = 0; j < widths[i]; j++) {
+                    to.append(border.horizontal);
+                  }
+                }
+              }
+              to.append(border.corner);
+              to.styleOn();
+              for (int i = width - effectiveWidth.get(); i > 0; i--) {
+                to.append(' ');
+              }
+              status++;
+              break;
+            }
+            case 1: {
+              boolean sep = rHead != null && rHead.isSeparator();
+              if (border != null) {
                 to.styleOff();
-                to.append(border.corner);
-                for (int i = 0; i < widths.length; i++) {
-                  if (widths[i] > 0) {
-                    if (separator != null && i > 0) {
-                      to.append(border.horizontal);
-                    }
-                    for (int j = 0; j < widths[i]; j++) {
-                      to.append(border.horizontal);
-                    }
-                  }
-                }
-                to.append(border.corner);
+                to.append(sep ? border.corner : border.vertical);
                 to.styleOn();
-                for (int i = width - effectiveWidth.get(); i > 0; i--) {
-                  to.append(' ');
-                }
-                status++;
-                break;
               }
-            case 1:
-              {
-                boolean sep = rHead != null && rHead.isSeparator();
-                if (border != null) {
-                  to.styleOff();
-                  to.append(sep ? border.corner : border.vertical);
-                  to.styleOn();
-                }
 
-                if (style != null) {
-                  to.enterStyle(style);
-                }
+              if (style != null) {
+                to.enterStyle(style);
+              }
 
-                if (rHead != null) {
-                  // Render row
-                  rHead.renderLine(to);
-                } else {
-                  // Vertical padding
-                  for (int i = 0; i < widths.length; i++) {
-                    if (separator != null && i > 0) {
-                      to.append(separator.vertical);
-                    }
-                    for (int j = 0; j < widths[i]; j++) {
-                      to.append(' ');
-                    }
+              if (rHead != null) {
+                // Render row
+                rHead.renderLine(to);
+              } else {
+                // Vertical padding
+                for (int i = 0; i < widths.length; i++) {
+                  if (separator != null && i > 0) {
+                    to.append(separator.vertical);
+                  }
+                  for (int j = 0; j < widths[i]; j++) {
+                    to.append(' ');
                   }
                 }
-
-                if (style != null) {
-                  to.leaveStyle();
-                }
-
-                if (border != null) {
-                  to.styleOff();
-                  to.append(sep ? border.corner : border.vertical);
-                  to.styleOn();
-                }
-
-                // Padding
-                for (int i = width - effectiveWidth.get(); i > 0; i--) {
-                  to.append(' ');
-                }
-                break;
               }
+
+              if (style != null) {
+                to.leaveStyle();
+              }
+
+              if (border != null) {
+                to.styleOff();
+                to.append(sep ? border.corner : border.vertical);
+                to.styleOn();
+              }
+
+              // Padding
+              for (int i = width - effectiveWidth.get(); i > 0; i--) {
+                to.append(' ');
+              }
+              break;
+            }
             default:
               throw new AssertionError();
           }

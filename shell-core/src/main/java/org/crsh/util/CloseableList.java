@@ -19,21 +19,19 @@
 
 package org.crsh.util;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 public final class CloseableList implements Closeable {
 
-  /** . */
-  final Logger log = Logger.getLogger(CloseableList.class.getName());
+  private final Logger LOGGER = getLogger(CloseableList.class.getName());
 
-  /** . */
   private final ArrayList<Closeable> closeables;
 
-  /** . */
   private final AtomicBoolean closed;
 
   public CloseableList() {
@@ -50,7 +48,7 @@ public final class CloseableList implements Closeable {
    *
    * @param closeable the closeable to add
    * @throws IllegalStateException if the list is already closed
-   * @throws NullPointerException if the argument is null
+   * @throws NullPointerException  if the argument is null
    */
   public void add(Closeable closeable) throws IllegalStateException, NullPointerException {
     if (closed.get()) {
@@ -67,7 +65,7 @@ public final class CloseableList implements Closeable {
   public void close() {
     if (closed.compareAndSet(false, true)) {
       for (Closeable closeable : closeables) {
-        log.log(Level.FINE, "Closing " + closeable.getClass().getSimpleName());
+        LOGGER.debug("Closing {}", closeable.getClass().getSimpleName());
         Utils.close(closeable);
       }
     }

@@ -24,7 +24,6 @@ import org.crsh.text.RenderPrintWriter;
 
 public abstract class AbstractCommand {
 
-  /** . */
   private LinkedList<InvocationContext<?>> stack;
 
   /** The current context : need to find a way to make not that public. */
@@ -43,9 +42,8 @@ public abstract class AbstractCommand {
       throw new NullPointerException();
     }
 
-    //
     if (stack == null) {
-      stack = new LinkedList<InvocationContext<?>>();
+      stack = new LinkedList<>();
     }
 
     // Save current context (is null the first time)

@@ -18,9 +18,11 @@
  */
 package org.crsh.console;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
-import java.util.logging.Logger;
 import org.crsh.util.Utils;
+import org.slf4j.Logger;
 
 /**
  * The current mode of the editor state machine. It decodes a command line operation according to
@@ -31,8 +33,7 @@ import org.crsh.util.Utils;
  */
 public abstract class Mode extends EditorAction {
 
-  /** The logger. */
-  private static final Logger log = Logger.getLogger(Mode.class.getName());
+  private static final Logger LOGGER = getLogger(Mode.class.getName());
 
   public abstract String getKeyMap();
 
@@ -51,14 +52,8 @@ public abstract class Mode extends EditorAction {
    * @return the editor action
    */
   public EditorAction on(KeyStroke keyStroke) {
-    String message =
-        "Operation "
-            + keyStroke.operation
-            + " not mapped in "
-            + getClass().getSimpleName()
-            + " mode "
-            + this;
-    log.warning(message);
+    LOGGER.warn("Operation {} not mapped in {} mode {}",
+        keyStroke.operation, getClass().getSimpleName(), this);
     return null;
   }
 
@@ -443,7 +438,6 @@ public abstract class Mode extends EditorAction {
       return "vi-insert"; // We use insert for ESC
     }
 
-    /** / */
     final int count;
 
     public ChangeChar(int count) {
@@ -482,10 +476,8 @@ public abstract class Mode extends EditorAction {
 
   public static class Digit extends Mode {
 
-    /** . */
-    int count = 0;
+    int count;
 
-    /** . */
     Character to = null; // null | d:delete-to
 
     public Digit(int count) {

@@ -19,6 +19,8 @@
 
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,31 +29,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.File;
 import org.crsh.vfs.Path;
 import org.crsh.vfs.Resource;
+import org.slf4j.Logger;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public class ResourceManager {
 
-  /** . */
   private static final Pattern p = Pattern.compile("([^.]+)\\.[^.]+");
 
-  /** . */
-  private static final Logger log = Logger.getLogger(ResourceManager.class.getName());
+  private static final Logger LOGGER = getLogger(ResourceManager.class.getName());
 
-  /** . */
   private final FS cmdFS;
 
-  /** . */
   private final FS confFS;
 
-  /** . */
   private volatile List<File> dirs;
 
   ResourceManager(FS cmdFS, FS confFS) {
@@ -62,7 +60,7 @@ public class ResourceManager {
   /**
    * Load a resource from the context.
    *
-   * @param resourceId the resource id
+   * @param resourceId   the resource id
    * @param resourceKind the resource kind
    * @return the resource or null if it cannot be found
    */
@@ -105,7 +103,7 @@ public class ResourceManager {
           }
       }
     } catch (IOException e) {
-      log.log(Level.WARNING, "Could not obtain resource " + resourceId, e);
+      LOGGER.warn("Could not obtain resource {}", resourceId, e);
     }
     return Collections.emptyList();
   }
@@ -117,29 +115,27 @@ public class ResourceManager {
    * @return the resource ids
    */
   Iterable<String> listResourceId(ResourceKind kind) {
-    switch (kind) {
-      case COMMAND:
-        SortedSet<String> all = new TreeSet<String>();
-        try {
-          for (File path : dirs) {
-            for (File file : path.children()) {
-              String fileName = file.getName();
-              Matcher matcher = p.matcher(fileName);
-              if (matcher.matches()) {
-                String name = matcher.group(1);
-                if (!"login".equals(name) && !"logout".equals(name)) {
-                  all.add(fileName);
-                }
+    if (kind == ResourceKind.COMMAND) {
+      final SortedSet<String> all = new TreeSet<>();
+      try {
+        for (File path : dirs) {
+          for (File file : path.children()) {
+            String fileName = file.getName();
+            Matcher matcher = p.matcher(fileName);
+            if (matcher.matches()) {
+              String name = matcher.group(1);
+              if (!"login".equals(name) && !"logout".equals(name)) {
+                all.add(fileName);
               }
             }
           }
-        } catch (IOException e) {
-          e.printStackTrace();
         }
-        return all;
-      default:
-        return Collections.emptyList();
+      } catch (IOException e) {
+        LOGGER.error("Error: ", e);
+      }
+      return all;
     }
+    return Collections.emptyList();
   }
 
   /**
@@ -149,7 +145,7 @@ public class ResourceManager {
   void refresh() {
     try {
       File commands = cmdFS.get(Path.get("/"));
-      List<File> newDirs = new ArrayList<File>();
+      List<File> newDirs = new ArrayList<>();
       newDirs.add(commands);
       for (File path : commands.children()) {
         if (path.children().iterator().hasNext()) {
@@ -162,7 +158,6 @@ public class ResourceManager {
     }
   }
 
-  /** . */
   private static final byte[] SEPARATOR = System.getProperty("line.separator").getBytes();
 
   public static Resource loadConf(File file) throws IOException {

@@ -19,15 +19,16 @@
 
 package org.crsh.command;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
-import java.util.logging.Logger;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.slf4j.Logger;
 
 public abstract class BaseCommand extends AbstractCommand {
 
-  /** Need to find a way to make not that public. */
-  public final Logger log = Logger.getLogger(getClass().getName());
+  private final Logger LOGGER = getLogger(getClass().getName());
 
   /**
    * The unmatched text, only valid during an invocation - Need to find a way to make not that

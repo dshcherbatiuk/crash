@@ -21,7 +21,9 @@ package org.crsh.text;
 
 import java.util.Iterator;
 
-/** A line oriented renderer. */
+/**
+ * A line oriented renderer.
+ */
 public abstract class LineRenderer {
 
   public static final LineRenderer NULL =
@@ -66,12 +68,10 @@ public abstract class LineRenderer {
       LineRenderer renderer = i.next();
       if (i.hasNext()) {
         return new Composite(renderers);
-      } else {
-        return renderer;
       }
-    } else {
-      return NULL;
+      return renderer;
     }
+    return NULL;
   }
 
   /**
@@ -111,7 +111,7 @@ public abstract class LineRenderer {
    * returns null. Subclasses should override this method when they want to provide content that can
    * adapts to the specified height.
    *
-   * @param width the width
+   * @param width  the width
    * @param height the height
    * @return the renderer
    */
@@ -149,13 +149,10 @@ public abstract class LineRenderer {
 
   private static class Composite extends LineRenderer {
 
-    /** . */
     private final Iterable<? extends LineRenderer> renderers;
 
-    /** . */
     private final int actualWidth;
 
-    /** . */
     private final int minWidth;
 
     private Composite(Iterable<? extends LineRenderer> renderers) {
@@ -201,13 +198,10 @@ public abstract class LineRenderer {
 
       final Iterator<? extends LineRenderer> i = renderers.iterator();
 
-      //
       return new LineReader() {
 
-        /** . */
         private LineReader current;
 
-        /** . */
         private int index = 0;
 
         public boolean hasLine() {

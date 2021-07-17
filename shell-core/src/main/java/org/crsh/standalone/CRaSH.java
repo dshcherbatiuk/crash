@@ -19,7 +19,7 @@
 
 package org.crsh.standalone;
 
-import static java.util.logging.Logger.getLogger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import com.sun.tools.attach.VirtualMachine;
 import java.io.BufferedOutputStream;
@@ -36,8 +36,6 @@ import java.util.Properties;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import jline.Terminal;
 import jline.TerminalFactory;
@@ -73,6 +71,7 @@ import org.crsh.vfs.spi.Mount;
 import org.crsh.vfs.spi.file.FileMountFactory;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
 import org.fusesource.jansi.AnsiConsole;
+import org.slf4j.Logger;
 
 @Named("crash")
 public class CRaSH {
@@ -89,7 +88,7 @@ public class CRaSH {
     if (src.hasChildren()) {
       if (!dst.exists()) {
         if (dst.mkdir()) {
-          LOGGER.fine("Could not create dir " + dst.getCanonicalPath());
+          LOGGER.debug("Could not create dir {}", dst.getCanonicalPath());
         }
       }
       if (dst.exists() && dst.isDirectory()) {
@@ -101,8 +100,7 @@ public class CRaSH {
       if (!dst.exists()) {
         Resource resource = src.getResource();
         if (resource != null) {
-          LOGGER
-              .info("Copied command " + src.getPath().getValue() + " to " + dst.getCanonicalPath());
+          LOGGER.info("Copied command {} to {}", src.getPath().getValue(), dst.getCanonicalPath());
           Utils.copy(new ByteArrayInputStream(resource.getContent()), new FileOutputStream(dst));
         }
       }
@@ -114,8 +112,7 @@ public class CRaSH {
       if (!dst.exists()) {
         Resource resource = ResourceManager.loadConf(src);
         if (resource != null) {
-          LOGGER.info(
-              "Copied resource " + src.getPath().getValue() + " to " + dst.getCanonicalPath());
+          LOGGER.info("Copied resource {} to {}", src.getPath().getValue(), dst.getCanonicalPath());
           Utils.copy(new ByteArrayInputStream(resource.getContent()), new FileOutputStream(dst));
         }
       }
@@ -195,8 +192,8 @@ public class CRaSH {
       cmdBuilder = createBuilder().mount("file", Path.get(dst));
     }
 
-    LOGGER.log(Level.INFO, "conf mounts: " + confBuilder.toString());
-    LOGGER.log(Level.INFO, "cmd mounts: " + cmdBuilder.toString());
+    LOGGER.info("conf mounts: {}", confBuilder.toString());
+    LOGGER.info("cmd mounts: {}", cmdBuilder.toString());
 
     CloseableList closeable = new CloseableList();
     Shell shell;
@@ -242,7 +239,7 @@ public class CRaSH {
       agentFile.deleteOnExit();
       JarOutputStream out = new JarOutputStream(new FileOutputStream(agentFile), manifest);
       out.close();
-      LOGGER.log(Level.INFO, "Created agent jar " + agentFile.getCanonicalPath());
+      LOGGER.info("Created agent jar {}", agentFile.getCanonicalPath());
 
       // Build the options
       StringBuilder sb = new StringBuilder();
@@ -267,14 +264,13 @@ public class CRaSH {
       if (interactive) {
         RemoteServer server = new RemoteServer(0);
         int port = server.bind();
-        LOGGER.log(Level.INFO, "Callback server set on port " + port);
+        LOGGER.info("Callback server set on port {}", port);
         sb.append(port);
         String options = sb.toString();
         Integer pid = pids.get(0);
         final VirtualMachine vm = VirtualMachine.attach("" + pid);
-        LOGGER.log(
-            Level.INFO,
-            "Loading agent with command " + options + " as agent " + agentFile.getCanonicalPath());
+        LOGGER.info("Loading agent with command {} as agent {}", options,
+            agentFile.getCanonicalPath());
         vm.loadAgent(agentFile.getCanonicalPath(), options);
         server.accept();
         shell = server.getShell();
@@ -286,15 +282,11 @@ public class CRaSH {
             });
       } else {
         for (Integer pid : pids) {
-          LOGGER.log(Level.INFO, "Attaching to remote process " + pid);
+          LOGGER.info("Attaching to remote process {}", pid);
           VirtualMachine vm = VirtualMachine.attach("" + pid);
           String options = sb.toString();
-          LOGGER.log(
-              Level.INFO,
-              "Loading agent with command "
-                  + options
-                  + " as agent "
-                  + agentFile.getCanonicalPath());
+          LOGGER.info("Loading agent with command {} as agent {}", options,
+              agentFile.getCanonicalPath());
           vm.loadAgent(agentFile.getCanonicalPath(), options);
         }
         shell = null;
@@ -324,7 +316,6 @@ public class CRaSH {
         // Should trigger some kind of run interruption
       }));
 
-      // Do bootstrap
       bootstrap.bootstrap();
       Runtime.getRuntime().addShutdownHook(new Thread(bootstrap::shutdown));
 

@@ -31,13 +31,13 @@ import org.crsh.vfs.spi.url.Node;
 import org.crsh.vfs.spi.url.Resource;
 import org.crsh.vfs.spi.url.URLDriver;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class ClasspathResolver {
 
-  /** . */
   final ClassLoader loader;
 
-  /** . */
   final URLDriver driver;
 
   public ClasspathResolver(ClassLoader loader) {
@@ -50,7 +50,6 @@ class ClasspathResolver {
       e.printStackTrace();
     }
 
-    //
     this.loader = loader;
     this.driver = driver;
   }
@@ -94,7 +93,6 @@ class ClasspathResolver {
       }
     }
 
-    //
     List<JavaFileObject> files = new ArrayList<JavaFileObject>();
     resolve(files, current, pkg, recurse);
     return files;

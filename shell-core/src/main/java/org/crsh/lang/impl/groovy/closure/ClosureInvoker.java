@@ -25,16 +25,15 @@ import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ClosureInvoker extends CommandInvoker<Object, Object> {
 
-  /** . */
   private final Closure closure;
 
-  /** . */
   private final Class<?> type;
 
-  /** . */
   private CommandContext<? super Object> consumer;
 
   public ClosureInvoker(Closure closure) {
@@ -48,7 +47,6 @@ public class ClosureInvoker extends CommandInvoker<Object, Object> {
       type = Object.class;
     }
 
-    //
     this.type = type;
     this.closure = closure;
   }

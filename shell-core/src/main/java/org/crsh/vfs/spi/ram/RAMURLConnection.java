@@ -20,25 +20,23 @@
 package org.crsh.vfs.spi.ram;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class RAMURLConnection extends URLConnection {
 
-  /** . */
   private final String file;
 
   public RAMURLConnection(URL url, String file) {
     super(url);
 
-    //
     this.file = file;
   }
 
   @Override
-  public void connect() {}
+  public void connect() {
+  }
 
   @Override
   public InputStream getInputStream() {

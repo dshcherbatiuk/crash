@@ -25,7 +25,6 @@ import org.crsh.util.Pair;
 
 class LabelLineRenderer extends LineRenderer {
 
-  /** . */
   private final LabelElement element;
 
   LabelLineRenderer(LabelElement element) {

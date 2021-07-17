@@ -18,18 +18,19 @@
  */
 package org.crsh.console;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jline.console.Operation;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.keyboard.KeyType;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellProcess;
 import org.crsh.util.Utils;
+import org.slf4j.Logger;
 
 /**
  * A console state machine, which delegates the state machine to the {@link Plugin} implementation.
@@ -38,34 +39,30 @@ import org.crsh.util.Utils;
  */
 public class Console {
 
-  /** The logger. */
-  private static final Logger log = Logger.getLogger(Console.class.getName());
+  private static final Logger LOGGER = getLogger(Console.class.getName());
 
-  /** . */
   static final int RUNNING = 0;
 
-  /** . */
   static final int CLOSING = 1;
 
-  /** . */
   static final int CLOSED = 2;
 
-  /** . */
   final Shell shell;
 
-  /** The current handler. */
+  /**
+   * The current handler.
+   */
   final AtomicReference<Plugin> handler;
 
-  /** The buffer. */
+  /**
+   * The buffer.
+   */
   final BlockingDeque<KeyStroke> buffer;
 
-  /** . */
   final ConsoleDriver driver;
 
-  /** . */
   final Editor editor;
 
-  /** . */
   int status;
 
   public Console(Shell shell, ConsoleDriver driver) throws NullPointerException {
@@ -108,7 +105,9 @@ public class Console {
     return status == RUNNING;
   }
 
-  /** Initiali */
+  /**
+   * Initiali
+   */
   public void init() {
     // Take care of pormpt
     String welcome = shell.getWelcome();
@@ -150,7 +149,6 @@ public class Console {
     }
     buffer.add(keyStroke);
 
-    //
     iterate();
 
     // This was modified by this thread during the loop
@@ -173,7 +171,9 @@ public class Console {
     }
   }
 
-  /** Switch to edit. */
+  /**
+   * Switch to edit.
+   */
   Editor edit() {
     String prompt = shell.getPrompt();
     if (prompt != null && prompt.length() > 0) {
@@ -189,7 +189,9 @@ public class Console {
     return editor;
   }
 
-  /** Process the state machine. */
+  /**
+   * Process the state machine.
+   */
   void iterate() {
     while (status == RUNNING) {
       Plugin current = handler.get();
@@ -236,7 +238,7 @@ public class Console {
                 keyHandler.handle(type, key.sequence);
               } catch (Throwable t) {
                 // Perhaps handle better this and treat error / exception differently
-                log.log(Level.SEVERE, "Key handler " + keyHandler + " failure", t);
+                LOGGER.error("Key handler {} failure", keyHandler, t);
               }
             } else {
               buffer.addFirst(key);

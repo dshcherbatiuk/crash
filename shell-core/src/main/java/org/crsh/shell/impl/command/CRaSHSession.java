@@ -18,12 +18,12 @@
  */
 package org.crsh.shell.impl.command;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.Closeable;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.auth.AuthInfo;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.command.RuntimeContext;
@@ -41,13 +41,12 @@ import org.crsh.shell.ShellResponse;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
+import org.slf4j.Logger;
 
 public class CRaSHSession extends HashMap<String, Object>
     implements Shell, Closeable, RuntimeContext, ShellSession {
 
-  static final Logger log = Logger.getLogger(CRaSHSession.class.getName());
-
-  static final Logger accessLog = Logger.getLogger("org.crsh.shell.access");
+  private static final Logger LOGGER = getLogger(CRaSHSession.class.getName());
 
   public final CRaSH crash;
 
@@ -57,22 +56,19 @@ public class CRaSHSession extends HashMap<String, Object>
 
   final ShellSafety shellSafety;
 
-  /** . */
   private Repl repl = ScriptRepl.getInstance();
 
   CRaSHSession(final CRaSH crash, Principal user, AuthInfo authInfo, ShellSafety shellSafety) {
     // Set variable available to all scripts
     put("crash", crash);
 
-    //
     this.crash = crash;
     this.user = user;
     this.authInfo = authInfo;
     this.shellSafety = shellSafety;
     ShellSafetyFactory.registerShellSafetyForThread(this.shellSafety);
 
-    //
-    ClassLoader previous = setCRaSHLoader();
+    final ClassLoader previous = setCRaSHLoader();
     try {
       for (Language manager : crash.langs) {
         manager.init(this);
@@ -129,8 +125,6 @@ public class CRaSHSession extends HashMap<String, Object>
   }
 
   // Shell implementation
-  // **********************************************************************************************
-
   public String getWelcome() {
     ClassLoader previous = setCRaSHLoader();
     try {
@@ -160,7 +154,7 @@ public class CRaSHSession extends HashMap<String, Object>
   }
 
   public ShellProcess createProcess(String request) {
-    log.log(Level.FINE, "Invoking request " + request);
+    LOGGER.debug("Invoking request {}", request);
     String trimmedRequest = request.trim();
     final StringBuilder msg = new StringBuilder();
     final ShellResponse response;
@@ -180,7 +174,9 @@ public class CRaSHSession extends HashMap<String, Object>
     return new CRaSHResponseProcess(this, request, msg, response);
   }
 
-  /** For now basic implementation */
+  /**
+   * For now basic implementation
+   */
   public CompletionMatch complete(final String prefix) {
     ClassLoader previous = setCRaSHLoader();
     try {

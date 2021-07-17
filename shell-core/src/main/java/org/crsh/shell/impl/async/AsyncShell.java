@@ -67,8 +67,6 @@ public class AsyncShell implements Shell, Closeable {
   }
 
   // Shell implementation
-  // **********************************************************************************************
-
   public String getWelcome() {
     return shell.getWelcome();
   }

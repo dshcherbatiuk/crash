@@ -31,7 +31,9 @@ import org.crsh.util.Utils;
  */
 public abstract class Pipe<C, P> implements Filter<C, P, InvocationContext<P>> {
 
-  /** . */
+  /**
+   * .
+   */
   protected InvocationContext<P> context;
 
   public final Class<P> getProducedType() {
@@ -45,14 +47,17 @@ public abstract class Pipe<C, P> implements Filter<C, P, InvocationContext<P>> {
   public void open(InvocationContext<P> consumer) throws Exception {
     this.context = consumer;
 
-    //
     open();
   }
 
-  /** Open pipe. */
-  public void open() throws Exception {}
+  /**
+   * Open pipe.
+   */
+  public void open() throws Exception {
+  }
 
-  public void provide(C element) throws Exception {}
+  public void provide(C element) throws Exception {
+  }
 
   /**
    * Flush pipe.

@@ -22,32 +22,30 @@ import java.security.SecureClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class LoadingClassLoader extends SecureClassLoader {
 
-  /** . */
   private final Map<String, byte[]> definitions;
 
-  /** . */
   private final HashMap<String, Class<?>> classes;
 
   LoadingClassLoader(ClassLoader parent, Iterable<JavaClassFileObject> files) {
     super(parent);
 
-    //
     HashMap<String, byte[]> definitions = new HashMap<>();
     for (JavaClassFileObject definition : files) {
       definitions.put(definition.getClassName(), definition.getBytes());
     }
 
-    //
     this.definitions = definitions;
-    this.classes = new HashMap<String, Class<?>>();
+    this.classes = new HashMap<>();
   }
 
   LoadingClassLoader(Map<String, byte[]> definitions) {
     this.definitions = definitions;
-    this.classes = new HashMap<String, Class<?>>();
+    this.classes = new HashMap<>();
   }
 
   @Override

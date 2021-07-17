@@ -21,13 +21,13 @@ package org.crsh.console;
 
 import java.io.IOException;
 
-/** Wraps {@link org.crsh.telnet.term.spi.TermIO} and care about CRLF. */
+/**
+ * Wraps {@link org.crsh.telnet.term.spi.TermIO} and care about CRLF.
+ */
 class EditorWriter {
 
-  /** . */
   private boolean previousCR;
 
-  /** . */
   private final ConsoleDriver io;
 
   protected EditorWriter(ConsoleDriver io) {

@@ -19,18 +19,19 @@
 
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 class PropertyManager {
 
-  /** . */
-  private static final Logger log = Logger.getLogger(PropertyManager.class.getName());
+  private static final Logger LOGGER = getLogger(PropertyManager.class.getName());
 
-  /** . */
   private final Map<String, Property<?>> properties;
 
   PropertyManager() {
@@ -41,7 +42,7 @@ class PropertyManager {
    * Returns a property value or null if it cannot be found.
    *
    * @param desc the property descriptor
-   * @param <T> the property parameter type
+   * @param <T>  the property parameter type
    * @return the property value
    * @throws NullPointerException if the descriptor argument is null
    */
@@ -57,7 +58,7 @@ class PropertyManager {
    * Returns a property or null if it cannot be found.
    *
    * @param desc the property descriptor
-   * @param <T> the property parameter type
+   * @param <T>  the property parameter type
    * @return the property object
    * @throws NullPointerException if the descriptor argument is null
    */
@@ -72,8 +73,8 @@ class PropertyManager {
    * Returns a property or null if it cannot be found.
    *
    * @param propertyName the name of the property
-   * @param type the property type
-   * @param <T> the property parameter type
+   * @param type         the property type
+   * @param <T>          the property parameter type
    * @return the property object
    * @throws NullPointerException if any argument is null
    */
@@ -99,9 +100,9 @@ class PropertyManager {
    * Set a context property to a new value. If the provided value is null, then the property is
    * removed.
    *
-   * @param desc the property descriptor
+   * @param desc  the property descriptor
    * @param value the property value
-   * @param <T> the property parameter type
+   * @param <T>   the property parameter type
    * @throws NullPointerException if the descriptor argument is null
    */
   <T> void setProperty(PropertyDescriptor<T> desc, T value) throws NullPointerException {
@@ -109,11 +110,11 @@ class PropertyManager {
       throw new NullPointerException("No null descriptor allowed");
     }
     if (value == null) {
-      log.log(Level.FINE, "Removing property " + desc.name);
+      LOGGER.debug("Removing property {}", desc.name);
       properties.remove(desc.getName());
     } else {
       Property<T> property = new Property<T>(desc, value);
-      log.log(Level.FINE, "Setting property " + desc.name + " to value " + property.getValue());
+      LOGGER.debug("Setting property {} to value {}", desc.name, property.getValue());
       properties.put(desc.getName(), property);
     }
   }
@@ -121,10 +122,10 @@ class PropertyManager {
   /**
    * Set a context property to a new value.
    *
-   * @param desc the property descriptor
+   * @param desc  the property descriptor
    * @param value the property value
-   * @param <T> the property parameter type
-   * @throws NullPointerException if the descriptor argument or the value is null
+   * @param <T>   the property parameter type
+   * @throws NullPointerException     if the descriptor argument or the value is null
    * @throws IllegalArgumentException if the string value cannot be converted to the property type
    */
   <T> void parseProperty(PropertyDescriptor<T> desc, String value)
@@ -136,7 +137,7 @@ class PropertyManager {
       throw new NullPointerException("No null value accepted");
     } else {
       Property<T> property = desc.toProperty(value);
-      log.log(Level.FINE, "Setting property " + desc.name + " to value " + property.getValue());
+      LOGGER.debug("Setting property {} to value {}", desc.name, property.getValue());
       properties.put(desc.getName(), property);
     }
   }

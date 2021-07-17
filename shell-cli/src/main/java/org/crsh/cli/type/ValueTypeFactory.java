@@ -19,15 +19,14 @@
 
 package org.crsh.cli.type;
 
-import static java.util.logging.Level.WARNING;
-import static java.util.logging.Logger.getLogger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  * A factory for value types.
@@ -74,13 +73,13 @@ public class ValueTypeFactory {
 
     final LinkedHashSet<ValueType<?>> types = new LinkedHashSet<>();
     Collections.addAll(types, DEFAULT.types);
-    Iterator<ValueType> sl = ServiceLoader.load(ValueType.class, loader).iterator();
+    final Iterator<ValueType> sl = ServiceLoader.load(ValueType.class, loader).iterator();
     while (sl.hasNext()) {
       try {
         final ValueType<?> type = sl.next();
         types.add(type);
       } catch (ServiceConfigurationError e) {
-        LOGGER.log(WARNING, "Could not load value type factory", e);
+        LOGGER.warn("Could not load value type factory", e);
       }
     }
 

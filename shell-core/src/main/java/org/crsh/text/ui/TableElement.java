@@ -26,7 +26,7 @@ import org.crsh.text.Style;
 
 public class TableElement extends Element {
 
-  ArrayList<RowElement> rows = new ArrayList<RowElement>();
+  ArrayList<RowElement> rows = new ArrayList<>();
 
   protected BorderStyle border;
 
@@ -34,16 +34,24 @@ public class TableElement extends Element {
 
   private Overflow overflow;
 
-  /** The column layout. */
+  /**
+   * The column layout.
+   */
   protected Layout columnLayout;
 
-  /** The optional row row layout. */
+  /**
+   * The optional row row layout.
+   */
   protected Layout rowLayout;
 
-  /** Cell padding left. */
+  /**
+   * Cell padding left.
+   */
   private int leftCellPadding;
 
-  /** Cell padding right. */
+  /**
+   * Cell padding right.
+   */
   private int rightCellPadding;
 
   public TableElement() {

@@ -19,7 +19,7 @@
 
 package org.crsh.cli.impl.lang;
 
-import static java.util.logging.Logger.getLogger;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -31,8 +31,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Named;
@@ -43,6 +41,7 @@ import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.ParameterType;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.type.ValueTypeFactory;
+import org.slf4j.Logger;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -153,9 +152,7 @@ public class CommandFactory {
       if (parameter != null) {
         methodDescriptor.addParameter(parameter);
       } else {
-        LOGGER.log(
-            Level.FINE,
-            "Method argument with index " + i + " of method " + method + " is not annotated");
+        LOGGER.debug("Method argument with index {} of method {} is not annotated", i, method);
       }
     }
     return methodDescriptor;

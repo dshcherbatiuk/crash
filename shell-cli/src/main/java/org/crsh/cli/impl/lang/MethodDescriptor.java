@@ -38,17 +38,14 @@ import org.crsh.cli.impl.invocation.ParameterMatch;
 
 class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
 
-  /** . */
   private final ClassDescriptor<T> owner;
 
-  /** . */
   private final Method method;
 
   public MethodDescriptor(ClassDescriptor<T> owner, Method method, String name, Description info)
       throws IntrospectionException {
     super(name, info);
 
-    //
     this.owner = owner;
     this.method = method;
   }
@@ -86,7 +83,7 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
       Object[] args)
       throws SyntaxException, InvocationException {
     for (ParameterDescriptor parameter : parameters) {
-      ParameterMatch parameterMatch = match.getParameter(parameter);
+      final ParameterMatch parameterMatch = match.getParameter(parameter);
       Object value = parameterMatch != null ? parameterMatch.computeValue() : null;
       if (value == null) {
         if (parameter.getDeclaredType().isPrimitive() || parameter.isRequired()) {
@@ -130,8 +127,7 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
       @Override
       public V invoke(Instance<T> commandInstance) throws InvocationException, SyntaxException {
 
-        //
-        T command = null;
+        T command;
         try {
           command = commandInstance.get();
         } catch (Exception e) {

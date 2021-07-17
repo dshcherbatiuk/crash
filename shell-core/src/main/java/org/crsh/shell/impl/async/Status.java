@@ -20,19 +20,24 @@
 package org.crsh.shell.impl.async;
 
 public enum Status {
-
-  /** The process is instantiated. */
+  /**
+   * The process is instantiated.
+   */
   CONSTRUCTED,
-
-  /** The process is scheduled for execution. */
+  /**
+   * The process is scheduled for execution.
+   */
   QUEUED,
-
-  /** The process is being evaluated. */
+  /**
+   * The process is being evaluated.
+   */
   EVALUATING,
-
-  /** The process is cancelled. */
+  /**
+   * The process is cancelled.
+   */
   CANCELED,
-
-  /** The process is terminated. */
+  /**
+   * The process is terminated.
+   */
   TERMINATED
 }

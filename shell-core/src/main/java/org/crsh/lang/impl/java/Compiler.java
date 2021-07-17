@@ -33,7 +33,6 @@ import javax.tools.ToolProvider;
 /** @author Julien Viet */
 class Compiler {
 
-  /** . */
   private final ClassLoader classLoader;
 
   Compiler() {
@@ -71,7 +70,6 @@ class Compiler {
     JavaCompiler.CompilationTask task =
         compiler.getTask(null, fileManager, diagnostics, null, null, sources);
 
-    //
     Boolean ok = task.call();
     if (!ok) {
       ArrayList<Diagnostic<? extends JavaFileObject>> errors =

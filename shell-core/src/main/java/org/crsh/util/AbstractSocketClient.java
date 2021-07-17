@@ -28,16 +28,12 @@ import java.net.Socket;
 
 public abstract class AbstractSocketClient implements Closeable {
 
-  /** . */
-  private int port;
+  private final int port;
 
-  /** . */
   private Socket socket;
 
-  /** . */
   private InputStream in;
 
-  /** . */
   private OutputStream out;
 
   public AbstractSocketClient(int port) {
@@ -50,12 +46,10 @@ public abstract class AbstractSocketClient implements Closeable {
     InputStream in = socket.getInputStream();
     OutputStream out = socket.getOutputStream();
 
-    //
     this.socket = socket;
     this.in = in;
     this.out = out;
 
-    //
     handle(in, out);
   }
 

@@ -18,13 +18,17 @@
  */
 package org.crsh.shell.impl.command;
 
-import java.util.logging.Level;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ShellProcess;
 import org.crsh.shell.ShellProcessContext;
 import org.crsh.shell.ShellResponse;
+import org.slf4j.Logger;
 
 abstract class CRaSHProcess implements ShellProcess {
+
+  private static final Logger LOGGER = getLogger(CRaSHProcess.class.getName());
 
   protected final CRaSHSession crash;
 
@@ -45,11 +49,9 @@ abstract class CRaSHProcess implements ShellProcess {
       ShellResponse resp;
       thread = Thread.currentThread();
 
-      //
-      String userName = crash.user != null ? crash.user.getName() : "unauthenticated";
-      CRaSHSession.accessLog.log(Level.FINE, "User " + userName + " executes " + request);
+      final String userName = crash.user != null ? crash.user.getName() : "unauthenticated";
+      LOGGER.debug("User {} executes {}", userName, request);
 
-      //
       try {
         try {
           resp = doInvoke(processContext);
@@ -73,14 +75,9 @@ abstract class CRaSHProcess implements ShellProcess {
         ShellResponse.Error error = (ShellResponse.Error) resp;
         Throwable t = error.getThrowable();
         if (t != null) {
-          CRaSHSession.log.log(
-              Level.SEVERE,
-              "Error while evaluating request '" + request + "' " + error.getMessage(),
-              t);
+          LOGGER.error("Error while evaluating request '{}' {}", request, error.getMessage(), t);
         } else {
-          CRaSHSession.log.log(
-              Level.SEVERE,
-              "Error while evaluating request '" + request + "' " + error.getMessage());
+          LOGGER.error("Error while evaluating request '{}' {}", request, error.getMessage());
         }
       }
     } finally {

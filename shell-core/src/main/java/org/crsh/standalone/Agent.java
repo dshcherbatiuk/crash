@@ -18,13 +18,13 @@
  */
 package org.crsh.standalone;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.lang.instrument.Instrumentation;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Option;
@@ -44,27 +44,28 @@ import org.crsh.util.Utils;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.spi.file.FileMountFactory;
 import org.crsh.vfs.spi.url.ClassPathMountFactory;
+import org.slf4j.Logger;
 
 public class Agent {
 
-  private static Logger LOGGER = Logger.getLogger(Agent.class.getName());
+  private static final Logger LOGGER = getLogger(Agent.class.getName());
 
   public static void agentmain(final String agentArgs, final Instrumentation inst) {
-    LOGGER.log(Level.INFO, "CRaSH agent loaded");
+    LOGGER.info("CRaSH agent loaded");
 
     Thread t = new Thread(() -> {
-          try {
-            CommandDescriptor<Instance<Agent>> c = CommandFactory.DEFAULT.create(Agent.class);
-            InvocationMatcher<Instance<Agent>> matcher = c.matcher();
-            InvocationMatch<Instance<Agent>> match = matcher.parse(agentArgs);
-            match.invoke(Util.wrap(new Agent(inst)));
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        });
+      try {
+        CommandDescriptor<Instance<Agent>> c = CommandFactory.DEFAULT.create(Agent.class);
+        InvocationMatcher<Instance<Agent>> matcher = c.matcher();
+        InvocationMatch<Instance<Agent>> match = matcher.parse(agentArgs);
+        match.invoke(Util.wrap(new Agent(inst)));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    });
 
     t.start();
-    LOGGER.log(Level.INFO, "Spawned CRaSH thread " + t.getId() + " for further processing");
+    LOGGER.info("Spawned CRaSH thread {} for further processing", t.getId());
   }
 
   private final Instrumentation instrumentation;
@@ -122,13 +123,12 @@ public class Agent {
     // Do bootstrap
     bootstrap.bootstrap();
 
-    //
     if (port != null) {
       try {
         ShellFactory factory = bootstrap.getContext().getPlugin(ShellFactory.class);
         Shell shell = factory.create(null, null, ShellSafetyFactory.getCurrentThreadShellSafety());
         RemoteClient client = new RemoteClient(port, shell);
-        LOGGER.log(Level.INFO, "Callback back remote on port " + port);
+        LOGGER.info("Callback back remote on port {}", port);
         client.connect();
         client.getRunnable().run();
       } finally {

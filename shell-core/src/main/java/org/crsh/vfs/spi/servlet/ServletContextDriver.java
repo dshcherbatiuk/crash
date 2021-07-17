@@ -35,13 +35,13 @@ import org.crsh.vfs.spi.AbstractFSDriver;
 
 public class ServletContextDriver extends AbstractFSDriver<String> {
 
-  /** A valid path. */
+  /**
+   * A valid path.
+   */
   static final Pattern pathPattern = Pattern.compile("^(?=/).*?((?<=/)[^/]*)?(/?)$");
 
-  /** . */
   private final ServletContext ctx;
 
-  /** . */
   private final String root;
 
   public ServletContextDriver(ServletContext ctx, String root) {
@@ -53,7 +53,6 @@ public class ServletContextDriver extends AbstractFSDriver<String> {
     }
     assertMatch(root);
 
-    //
     this.ctx = ctx;
     this.root = root;
   }
@@ -66,7 +65,7 @@ public class ServletContextDriver extends AbstractFSDriver<String> {
     return assertMatch(file).group(1);
   }
 
-  public boolean isDir(String file) throws IOException {
+  public boolean isDir(String file) {
     Matcher matcher = assertMatch(file);
     String slash = matcher.group(2);
     return "/".equals(slash);
@@ -114,7 +113,7 @@ public class ServletContextDriver extends AbstractFSDriver<String> {
     if (realPath != null) {
       File realFile = new File(realPath);
       if (realFile.exists() && realFile.isFile()) {
-        return Utils.<InputStream>iterator(new FileInputStream(realFile));
+        return Utils.iterator(new FileInputStream(realFile));
       }
     }
     return Utils.iterator(ctx.getResource(handle).openConnection().getInputStream());

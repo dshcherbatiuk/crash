@@ -22,7 +22,9 @@ package org.crsh.shell;
 import java.io.IOException;
 import org.crsh.text.ScreenContext;
 
-/** The interaction context extends the screen context and provides interaction with the client. */
+/**
+ * The interaction context extends the screen context and provides interaction with the client.
+ */
 public interface InteractionContext extends ScreenContext {
 
   /**
@@ -53,12 +55,12 @@ public interface InteractionContext extends ScreenContext {
    * Display a message and read a line on the console, this method call can be blocking until the
    * user provides a value. If no line can be read then null is returned.
    *
-   * @param msg the message to display before reading a line
+   * @param msg  the message to display before reading a line
    * @param echo wether or not the line read should be echoed when typing
    * @return the line read
-   * @throws java.io.IOException any io exception
-   * @throws java.lang.InterruptedException the thread was interrupted while waiting for the user
-   *     value
+   * @throws java.io.IOException             any io exception
+   * @throws java.lang.InterruptedException  the thread was interrupted while waiting for the user
+   *                                         value
    * @throws java.lang.IllegalStateException if reading a line is not at the appropriate time
    */
   String readLine(String msg, boolean echo)

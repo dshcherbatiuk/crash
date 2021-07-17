@@ -19,16 +19,17 @@
 
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.util.Utils;
+import org.slf4j.Logger;
 
 class PluginManager {
 
-  private final Logger log = Logger.getLogger(PluginManager.class.getName());
+  private final Logger LOGGER = getLogger(PluginManager.class.getName());
 
   private final PluginContext context;
 
@@ -44,7 +45,7 @@ class PluginManager {
 
   synchronized Iterable<CRaSHPlugin<?>> getPlugins() {
     if (plugins == null) {
-      List<CRaSHPlugin<?>> plugins = Utils.list(discovery.getPlugins());
+      final List<CRaSHPlugin<?>> plugins = Utils.list(discovery.getPlugins());
       for (CRaSHPlugin<?> plugin : plugins) {
         plugin.context = context;
         plugin.status = CRaSHPlugin.CONSTRUCTED;
@@ -59,7 +60,6 @@ class PluginManager {
 
     List<T> tmp = Collections.emptyList();
 
-    //
     for (CRaSHPlugin<?> plugin : plugins) {
       Class<?> pluginType = plugin.getType();
       if (wantedType.isAssignableFrom(pluginType)) {
@@ -75,10 +75,10 @@ class PluginManager {
             try {
               plugin.status = CRaSHPlugin.INITIALIZING;
               plugin.init();
-              log.log(Level.INFO, "Initialized plugin " + plugin);
+              LOGGER.info("Initialized plugin {}", plugin);
               status = CRaSHPlugin.INITIALIZED;
             } catch (Exception e) {
-              log.log(Level.SEVERE, "Could not initialize plugin " + plugin, e);
+              LOGGER.error("Could not initialize plugin {}", plugin, e);
             } finally {
               plugin.status = status;
             }
@@ -87,18 +87,16 @@ class PluginManager {
             throw new RuntimeException("Circular dependency");
         }
 
-        //
         if (plugin.status == CRaSHPlugin.INITIALIZED) {
           if (tmp.isEmpty()) {
             tmp = new ArrayList<T>();
           }
-          T t = wantedType.cast(plugin.getImplementation());
+          final T t = wantedType.cast(plugin.getImplementation());
           tmp.add(t);
         }
       }
     }
 
-    //
     return tmp;
   }
 

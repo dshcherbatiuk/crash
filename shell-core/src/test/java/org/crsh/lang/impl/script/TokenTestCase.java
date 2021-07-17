@@ -65,7 +65,6 @@ public class TokenTestCase extends TestCase {
 
   private static class TestTokenizer {
 
-    /** . */
     private Token current;
 
     private TestTokenizer(CharSequence s) throws NullPointerException {

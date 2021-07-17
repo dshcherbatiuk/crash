@@ -54,7 +54,6 @@ public abstract class IOAction {
 
   public static class Write extends IOAction {
 
-    /** . */
     public final String s;
 
     public Write(String s) {

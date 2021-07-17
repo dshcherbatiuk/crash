@@ -18,13 +18,15 @@
  */
 package org.crsh.lang.impl.script;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.spi.Completion;
-import org.crsh.lang.spi.*;
+import org.crsh.lang.spi.Language;
+import org.crsh.lang.spi.Repl;
+import org.crsh.lang.spi.ReplResponse;
 import org.crsh.shell.ShellResponse;
 import org.crsh.shell.impl.command.RuntimeContextImpl;
 import org.crsh.shell.impl.command.ShellSession;
@@ -32,21 +34,22 @@ import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
 import org.crsh.util.Utils;
+import org.slf4j.Logger;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ScriptRepl implements Repl {
 
-  /** . */
+  private static final Logger LOGGER = getLogger(ScriptRepl.class.getName());
+
   private static final ScriptRepl instance = new ScriptRepl();
 
-  /** . */
-  static final Logger log = Logger.getLogger(ScriptRepl.class.getName());
 
   public static ScriptRepl getInstance() {
     return instance;
   }
 
-  /** . */
   private final Language lang =
       new Language() {
         @Override
@@ -75,13 +78,16 @@ public class ScriptRepl implements Repl {
         }
 
         @Override
-        public void init(ShellSession session) {}
+        public void init(ShellSession session) {
+        }
 
         @Override
-        public void destroy(ShellSession session) {}
+        public void destroy(ShellSession session) {
+        }
       };
 
-  private ScriptRepl() {}
+  private ScriptRepl() {
+  }
 
   @Override
   public Language getLanguage() {
@@ -110,10 +116,10 @@ public class ScriptRepl implements Repl {
         CommandInvoker<Void, Object> invoker = factory.create(session);
         return new ReplResponse.Invoke(invoker);
       } catch (CommandNotFoundException e) {
-        log.log(Level.FINER, "Could not create command", e);
+        LOGGER.error("Could not create command", e);
         return new ReplResponse.Response(ShellResponse.unknownCommand(e.getName()));
       } catch (CommandException e) {
-        log.log(Level.FINER, "Could not create command", e);
+        LOGGER.error("Could not create command", e);
         return new ReplResponse.Response(ShellResponse.error(e.getErrorKind(), e.getMessage(), e));
       }
     } else {
@@ -121,22 +127,22 @@ public class ScriptRepl implements Repl {
     }
   }
 
+  @Override
   public CompletionMatch complete(ShellSession session, String prefix) {
-    Token ast = Token.parse(prefix);
+    final Token ast = Token.parse(prefix);
     String termPrefix;
     if (ast != null) {
-      Token last = ast.getLast();
+      final Token last = ast.getLast();
       termPrefix = Utils.trimLeft(last.value);
     } else {
       termPrefix = "";
     }
 
-    //
-    log.log(Level.FINE, "Retained term prefix is " + termPrefix);
+    LOGGER.debug("Retained term prefix is {}", termPrefix);
     CompletionMatch completion;
     int pos = termPrefix.indexOf(' ');
     if (pos == -1) {
-      Completion.Builder builder = Completion.builder(termPrefix);
+      final Completion.Builder builder = Completion.builder(termPrefix);
       for (Map.Entry<String, String> command : session.getCommands()) {
         String name = command.getKey();
         if (name.startsWith(termPrefix)) {
@@ -158,12 +164,11 @@ public class ScriptRepl implements Repl {
           completion = new CompletionMatch(Delimiter.EMPTY, Completion.create());
         }
       } catch (CommandException e) {
-        log.log(Level.FINE, "Could not create command for completion of " + prefix, e);
+        LOGGER.error("Could not create command for completion of {}", prefix, e);
         completion = new CompletionMatch(Delimiter.EMPTY, Completion.create());
       }
     }
 
-    //
     return completion;
   }
 }

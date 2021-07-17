@@ -27,10 +27,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.crsh.vfs.spi.AbstractFSDriver;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public class URLDriver extends AbstractFSDriver<Node> {
 
-  /** . */
   private final Node root;
 
   public URLDriver() {
@@ -55,7 +56,7 @@ public class URLDriver extends AbstractFSDriver<Node> {
     return handle.name;
   }
 
-  public boolean isDir(Node handle) throws IOException {
+  public boolean isDir(Node handle) {
     return handle.resources.isEmpty();
   }
 
@@ -63,12 +64,12 @@ public class URLDriver extends AbstractFSDriver<Node> {
     return handle.children();
   }
 
-  public long getLastModified(Node handle) throws IOException {
+  public long getLastModified(Node handle) {
     return handle.resources.isEmpty() ? 0 : handle.resources.peekFirst().lastModified;
   }
 
   public Iterator<InputStream> open(Node handle) throws IOException {
-    ArrayList<InputStream> list = new ArrayList<InputStream>(handle.resources.size());
+    final ArrayList<InputStream> list = new ArrayList<>(handle.resources.size());
     for (Resource resource : handle.resources) {
       list.add(resource.streamFactory.open());
     }

@@ -28,20 +28,24 @@ import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.ObjectCommandInvoker;
 import org.crsh.cli.spi.Completer;
-import org.crsh.command.*;
+import org.crsh.command.BaseCommand;
+import org.crsh.command.InvocationContext;
+import org.crsh.command.Pipe;
+import org.crsh.command.RuntimeContext;
+import org.crsh.command.ShellSafety;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.spi.Command;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandMatch;
 import org.crsh.util.Utils;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class ClassShellCommand<T extends BaseCommand> extends Command<Instance<T>> {
 
-  /** . */
   private final Class<T> clazz;
 
-  /** . */
   private final CommandDescriptor<Instance<T>> descriptor;
 
   private final ShellSafety shellSafety;

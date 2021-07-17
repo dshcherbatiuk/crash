@@ -19,6 +19,8 @@
 
 package org.crsh.standalone;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,29 +28,39 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Logger;
 import org.crsh.plugin.PluginContext;
 import org.crsh.plugin.PluginLifeCycle;
 import org.crsh.plugin.ServiceLoaderDiscovery;
 import org.crsh.vfs.FS;
 import org.crsh.vfs.Path;
 import org.crsh.vfs.spi.FSDriver;
+import org.slf4j.Logger;
 
-/** A boostrap for starting a standalone CRaSH. */
+/**
+ * A boostrap for starting a standalone CRaSH.
+ */
 public class Bootstrap extends PluginLifeCycle {
 
-  protected final Logger log = Logger.getLogger(getClass().getName());
+  protected final Logger LOGGER = getLogger(getClass().getName());
 
-  /** The configuration file system. */
+  /**
+   * The configuration file system.
+   */
   private final FS confFS;
 
-  /** The command file system. */
+  /**
+   * The command file system.
+   */
   private final FS cmdFS;
 
-  /** The base classloader. */
+  /**
+   * The base classloader.
+   */
   private final ClassLoader loader;
 
-  /** The attributes. */
+  /**
+   * The attributes.
+   */
   private Map<String, Object> attributes;
 
   /**
@@ -56,8 +68,8 @@ public class Bootstrap extends PluginLifeCycle {
    * map.
    *
    * @param baseLoader the base classloader crash will use
-   * @param confFS the conf file system
-   * @param cmdFS the cmd file system
+   * @param confFS     the conf file system
+   * @param cmdFS      the cmd file system
    * @throws NullPointerException if any argument is null
    */
   public Bootstrap(ClassLoader baseLoader, FS confFS, FS cmdFS) throws NullPointerException {
@@ -73,7 +85,7 @@ public class Bootstrap extends PluginLifeCycle {
     this.attributes = Collections.emptyMap();
     this.confFS = confFS;
     this.cmdFS = cmdFS;
-    this.loader = new URLClassLoader(new URL[] {}, baseLoader);
+    this.loader = new URLClassLoader(new URL[]{}, baseLoader);
   }
 
   /**
@@ -102,13 +114,13 @@ public class Bootstrap extends PluginLifeCycle {
    * @param driver the configuration driver
    * @return this bootstrap
    * @throws NullPointerException when the driver is null
-   * @throws IOException any io exception
+   * @throws IOException          any io exception
    */
   public Bootstrap addToConfPath(FSDriver<?> driver) throws IOException, NullPointerException {
     if (driver == null) {
       throw new NullPointerException("No null conf driver");
     }
-    log.info("Added " + driver + " driver to conf path");
+    LOGGER.info("Added {} driver to conf path", driver);
     confFS.mount(driver);
     return this;
   }
@@ -119,13 +131,13 @@ public class Bootstrap extends PluginLifeCycle {
    * @param path the configuration path
    * @return this bootstrap
    * @throws NullPointerException when the path argument is null
-   * @throws IOException any io exception
+   * @throws IOException          any io exception
    */
   public Bootstrap addToConfPath(File path) throws NullPointerException, IOException {
     if (path == null) {
       throw new NullPointerException("No null conf path");
     }
-    log.info("Added " + path.getCanonicalPath() + " file to conf path");
+    LOGGER.info("Added {} file to conf path", path.getCanonicalPath());
     confFS.mount(path);
     return this;
   }
@@ -136,15 +148,15 @@ public class Bootstrap extends PluginLifeCycle {
    * @param path the configuration path
    * @return this bootstrap
    * @throws NullPointerException when the path argument is null
-   * @throws IOException any io exception
-   * @throws URISyntaxException any uri syntax exception
+   * @throws IOException          any io exception
+   * @throws URISyntaxException   any uri syntax exception
    */
   public Bootstrap addToConfPath(Path path)
       throws NullPointerException, IOException, URISyntaxException {
     if (path == null) {
       throw new NullPointerException("No null conf path");
     }
-    log.info("Added " + path.getValue() + " path to conf path");
+    LOGGER.info("Added {} path to conf path", path.getValue());
     confFS.mount(loader, path);
     return this;
   }
@@ -155,13 +167,13 @@ public class Bootstrap extends PluginLifeCycle {
    * @param driver the command driver
    * @return this bootstrap
    * @throws NullPointerException when the driver is null
-   * @throws IOException any io exception
+   * @throws IOException          any io exception
    */
   public Bootstrap addToCmdPath(FSDriver<?> driver) throws IOException, NullPointerException {
     if (driver == null) {
       throw new NullPointerException("No null conf driver");
     }
-    log.info("Added " + driver + " driver to command path");
+    LOGGER.info("Added {} driver to command path", driver);
     cmdFS.mount(driver);
     return this;
   }
@@ -172,13 +184,13 @@ public class Bootstrap extends PluginLifeCycle {
    * @param path the command path
    * @return this bootstrap
    * @throws NullPointerException when the path argument is null
-   * @throws IOException any io exception
+   * @throws IOException          any io exception
    */
   public Bootstrap addToCmdPath(File path) throws NullPointerException, IOException {
     if (path == null) {
       throw new NullPointerException("No null command path");
     }
-    log.info("Added " + path.getAbsolutePath() + " file to command path");
+    LOGGER.info("Added {} file to command path", path.getAbsolutePath());
     cmdFS.mount(path);
     return this;
   }
@@ -189,36 +201,31 @@ public class Bootstrap extends PluginLifeCycle {
    * @param path the command path
    * @return this bootstrap
    * @throws NullPointerException when the path argument is null
-   * @throws IOException any io exception
-   * @throws URISyntaxException any uri syntax exception
+   * @throws IOException          any io exception
+   * @throws URISyntaxException   any uri syntax exception
    */
   public Bootstrap addToCmdPath(Path path)
       throws NullPointerException, IOException, URISyntaxException {
     if (path == null) {
       throw new NullPointerException("No null command path");
     }
-    log.info("Added " + path.getValue() + " path to command path");
+    LOGGER.info("Added {} path to command path", path.getValue());
     cmdFS.mount(loader, path);
     return this;
   }
 
   /**
    * Trigger the boostrap.
-   *
-   * @throws Exception any exception that would prevent the bootstrap
    */
-  public void bootstrap() throws Exception {
+  public void bootstrap() {
 
     // The service loader discovery
     ServiceLoaderDiscovery discovery = new ServiceLoaderDiscovery(loader);
 
-    //
     PluginContext context = new PluginContext(discovery, attributes, cmdFS, confFS, loader);
 
-    //
     context.refresh();
 
-    //
     start(context);
   }
 

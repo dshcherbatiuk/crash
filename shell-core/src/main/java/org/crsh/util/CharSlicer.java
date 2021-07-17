@@ -24,10 +24,8 @@ import java.util.NoSuchElementException;
 
 public class CharSlicer {
 
-  /** . */
   private final String value;
 
-  /** . */
   private Pair<Integer, Integer> size;
 
   public CharSlicer(String value) {
@@ -81,10 +79,8 @@ public class CharSlicer {
     }
     return new BaseIterator<Pair<Integer, Integer>>() {
 
-      /** . */
       int index = 0;
 
-      /** . */
       Pair<Integer, Integer> next = null;
 
       public boolean hasNext() {

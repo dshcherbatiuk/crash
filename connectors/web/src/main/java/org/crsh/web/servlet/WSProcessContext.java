@@ -33,28 +33,25 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.logging.Level;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class WSProcessContext implements ShellProcessContext, KeyHandler {
 
-  /** . */
   final ShellProcess process;
 
-  /** . */
   final CRaSHSession session;
 
-  /** . */
   private StringBuilder buffer = new StringBuilder();
 
-  /** . */
   final int width;
 
-  /** . */
   final int height;
 
-  /** . */
   final String command;
 
-  public WSProcessContext(CRaSHSession session, ShellProcess process, String command, int width, int height) {
+  public WSProcessContext(CRaSHSession session, ShellProcess process, String command, int width,
+      int height) {
     this.session = session;
     this.process = process;
     this.width = width;
@@ -69,9 +66,9 @@ public class WSProcessContext implements ShellProcessContext, KeyHandler {
       CRaSHConnector.log.fine("Processing key event " + type + " " + Arrays.toString(sequence));
       try {
         keyHandler.handle(type, sequence);
-      }
-      catch (Exception e) {
-        CRaSHConnector.log.log(Level.SEVERE, "Processing key handler " + keyHandler + " threw an exception", e);
+      } catch (Exception e) {
+        CRaSHConnector.log
+            .log(Level.SEVERE, "Processing key handler " + keyHandler + " threw an exception", e);
       }
     }
   }
@@ -126,7 +123,9 @@ public class WSProcessContext implements ShellProcessContext, KeyHandler {
     COLOR_MAP.put(Color.red, "#AA0000");
   }
 
-  /** . */
+  /**
+   * .
+   */
   private Style style = Style.reset;
 
   @Override
@@ -145,7 +144,7 @@ public class WSProcessContext implements ShellProcessContext, KeyHandler {
       if (style.equals(Style.reset)) {
         buffer.append(csq, start, end);
       } else {
-        Style.Composite composite = (Style.Composite)style;
+        Style.Composite composite = (Style.Composite) style;
         buffer.append("[[");
         if (composite.getUnderline() == Boolean.TRUE) {
           buffer.append('u');

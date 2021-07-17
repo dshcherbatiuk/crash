@@ -18,18 +18,17 @@
  */
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.ArrayList;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 public class ServiceLoaderDiscovery implements PluginDiscovery {
 
-  /** . */
-  private static final Logger log = Logger.getLogger(PluginManager.class.getName());
+  private static final Logger LOGGER = getLogger(PluginManager.class.getName());
 
-  /** . */
   private final ClassLoader classLoader;
 
   /**
@@ -43,25 +42,21 @@ public class ServiceLoaderDiscovery implements PluginDiscovery {
       throw new NullPointerException();
     }
 
-    //
     this.classLoader = classLoader;
   }
 
   public Iterable<CRaSHPlugin<?>> getPlugins() {
-
-    //
-    ArrayList<CRaSHPlugin<?>> plugins = new ArrayList<CRaSHPlugin<?>>();
+    ArrayList<CRaSHPlugin<?>> plugins = new ArrayList<>();
     try {
-      ServiceLoader<CRaSHPlugin> loader = ServiceLoader.load(CRaSHPlugin.class, classLoader);
+      final ServiceLoader<CRaSHPlugin> loader = ServiceLoader.load(CRaSHPlugin.class, classLoader);
       for (CRaSHPlugin<?> plugin : loader) {
-        log.log(Level.INFO, "Loaded plugin " + plugin);
+        LOGGER.info("Loaded plugin {}", plugin);
         plugins.add(plugin);
       }
     } catch (ServiceConfigurationError e) {
-      log.log(Level.SEVERE, "Could not load plugins", e);
+      LOGGER.error("Could not load plugins", e);
     }
 
-    //
     return plugins;
   }
 }

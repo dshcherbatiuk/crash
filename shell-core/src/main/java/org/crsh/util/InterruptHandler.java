@@ -19,18 +19,19 @@
 
 package org.crsh.util;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 public class InterruptHandler {
 
-  private final Runnable runnable;
+  private final Logger LOGGER = getLogger(InterruptHandler.class.getName());
 
-  private final Logger log = Logger.getLogger(InterruptHandler.class.getName());
+  private final Runnable runnable;
 
   private final InvocationHandler handler =
       new InvocationHandler() {
@@ -76,13 +77,13 @@ public class InterruptHandler {
     Object proxy =
         Proxy.newProxyInstance(
             Thread.currentThread().getContextClassLoader(),
-            new Class<?>[] {signalHandlerClass},
+            new Class<?>[]{signalHandlerClass},
             handler);
 
     try {
       handle.invoke(null, INT, proxy);
     } catch (Exception e) {
-      log.log(Level.SEVERE, "Could not install signal handler", e);
+      LOGGER.error("Could not install signal handler", e);
     }
   }
 }

@@ -32,35 +32,28 @@ import org.crsh.text.ScreenContextConsumer;
 import org.crsh.text.Screenable;
 import org.crsh.text.Style;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
     implements Consumer<Object>, Producer<P, CONSUMER>, CommandContext<Object> {
 
-  /** . */
   final CommandInvoker<C, P> command;
 
-  /** . */
   protected CONSUMER consumer;
 
-  /** . */
   private final Class<C> consumedType;
 
-  /** . */
   private final Class<P> producedType;
 
-  /** . */
   private ScreenContextConsumer adapter;
 
-  /** . */
   private ScreenContext screenContext;
 
-  /** . */
   private final boolean charSequenceConsumer;
 
-  /** . */
   private final boolean styleConsumer;
 
-  /** . */
   private final boolean clsConsumer;
 
   CommandInvokerAdapter(
@@ -108,8 +101,6 @@ class CommandInvokerAdapter<C, P, CONSUMER extends CommandContext<? super P>>
   }
 
   public void open(final CONSUMER consumer) throws Exception {
-
-    //
     try {
       command.open(consumer);
     } catch (CommandException e) {

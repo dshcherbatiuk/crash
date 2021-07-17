@@ -34,8 +34,11 @@ import org.crsh.text.Style;
  */
 class ProcessHandler extends Plugin implements ShellProcessContext {
 
-  /** A thread reading a line. */
+  /**
+   * A thread reading a line.
+   */
   class Reader {
+
     final Thread thread;
     final Editor editor;
     final ArrayBlockingQueue<String> line;
@@ -47,19 +50,19 @@ class ProcessHandler extends Plugin implements ShellProcessContext {
     }
   }
 
-  /** . */
   final Console console;
 
-  /** . */
   final ShellProcess process;
 
-  /** Weather or not a thread is reading a line callback. */
+  /**
+   * Weather or not a thread is reading a line callback.
+   */
   final AtomicReference<Reader> editor;
 
   ProcessHandler(Console console, ShellProcess process) {
     this.console = console;
     this.process = process;
-    this.editor = new AtomicReference<Reader>();
+    this.editor = new AtomicReference<>();
   }
 
   @Override
@@ -169,7 +172,6 @@ class ProcessHandler extends Plugin implements ShellProcessContext {
       // Log it
     }
 
-    //
     if (response instanceof ShellResponse.Close) {
       console.close();
     } else {

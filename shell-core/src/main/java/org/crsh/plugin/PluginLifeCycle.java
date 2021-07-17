@@ -19,20 +19,21 @@
 
 package org.crsh.plugin;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.crsh.vfs.Resource;
+import org.slf4j.Logger;
 
 /**
  * The base class for managing the CRaSH life cycle.
  */
 public abstract class PluginLifeCycle {
 
-  protected final Logger log = Logger.getLogger(getClass().getName());
+  private final Logger LOGGER = getLogger(getClass().getName());
 
   private PluginContext context;
 
@@ -63,12 +64,12 @@ public abstract class PluginLifeCycle {
     if (res != null) {
       try {
         config.load(new ByteArrayInputStream(res.getContent()));
-        log.log(Level.FINE, "Loaded properties from " + config);
+        LOGGER.debug("Loaded properties from {}", config);
       } catch (IOException e) {
-        log.log(Level.WARNING, "Could not configure from crash.properties", e);
+        LOGGER.warn("Could not configure from crash.properties", e);
       }
     } else {
-      log.log(Level.FINE, "Could not find crash.properties file");
+      LOGGER.debug("Could not find crash.properties file");
     }
 
     // Override default properties from external config
@@ -88,11 +89,11 @@ public abstract class PluginLifeCycle {
       if (i.hasNext()) {
         while (i.hasNext()) {
           PropertyDescriptor<?> descriptor = i.next();
-          log.fine("Adding plugin " + plugin + " property " + descriptor.getName());
+          LOGGER.debug("Adding plugin {} property {}", plugin, descriptor.getName());
           configureProperty(context, config, descriptor);
         }
       } else {
-        log.fine("Plugin " + plugin + " does not declare any configuration property");
+        LOGGER.debug("Plugin {} does not declare any configuration property", plugin);
       }
     }
 
@@ -117,12 +118,11 @@ public abstract class PluginLifeCycle {
     if (value != null) {
       try {
         if (context.getProperty(desc) == null) {
-          log.log(
-              Level.INFO, "Configuring property " + desc.name + "=" + value + " from properties");
+          LOGGER.info("Configuring property {}={} from properties", desc.name, value);
           context.setProperty(desc, value);
         }
       } catch (IllegalArgumentException e) {
-        log.log(Level.SEVERE, "Could not configure property", e);
+        LOGGER.error("Could not configure property", e);
       }
     }
   }
