@@ -20,12 +20,11 @@ package org.crsh.lang.impl.groovy;
 
 import groovy.lang.GroovyShell;
 import java.io.IOException;
+import org.crsh.cli.completers.Completion;
 import org.crsh.cli.impl.Delimiter;
 import org.crsh.cli.impl.completion.CompletionMatch;
 import org.crsh.cli.impl.line.LineParser;
-import org.crsh.cli.completers.Completion;
 import org.crsh.command.CommandContext;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.lang.spi.Language;
 import org.crsh.lang.spi.Repl;
 import org.crsh.lang.spi.ReplResponse;
@@ -90,9 +89,7 @@ public class GroovyRepl implements Repl {
             this.consumer = consumer;
             GroovyShell shell = GroovyCompiler.getGroovyShell(session);
             ShellBinding binding = (ShellBinding) shell.getContext();
-            binding.setCurrent(
-                new InvocationContextImpl<>(
-                    this.consumer, ShellSafetyFactory.getCurrentThreadShellSafety()));
+            binding.setCurrent(new InvocationContextImpl<>(this.consumer));
             Object o;
             try {
               o = shell.evaluate(request);

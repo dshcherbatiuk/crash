@@ -46,7 +46,7 @@ public class ServiceLoaderDiscovery implements PluginDiscovery {
   }
 
   public Iterable<CRaSHPlugin<?>> getPlugins() {
-    ArrayList<CRaSHPlugin<?>> plugins = new ArrayList<>();
+    final ArrayList<CRaSHPlugin<?>> plugins = new ArrayList<>();
     try {
       final ServiceLoader<CRaSHPlugin> loader = ServiceLoader.load(CRaSHPlugin.class, classLoader);
       for (CRaSHPlugin<?> plugin : loader) {

@@ -21,9 +21,14 @@ package test.command;
 
 import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
-import org.crsh.command.*;
+import org.crsh.command.BaseCommand;
+import org.crsh.command.CommandContext;
+import org.crsh.command.ScriptException;
 import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
 import org.crsh.lang.impl.groovy.command.GroovyScriptShellCommand;
 import org.crsh.lang.impl.java.ClassShellCommand;
@@ -38,10 +43,14 @@ import org.crsh.text.Style;
 
 public class TestInvocationContext<C> extends RuntimeContextImpl implements CommandContext<Object> {
 
-  /** . */
+  /**
+   * .
+   */
   protected List<Object> producedItems;
 
-  /** . */
+  /**
+   * .
+   */
   protected ScreenBuffer reader;
 
   public TestInvocationContext() {
@@ -134,9 +143,11 @@ public class TestInvocationContext<C> extends RuntimeContextImpl implements Comm
     }
   }
 
-  public void flush() throws IOException {}
+  public void flush() throws IOException {
+  }
 
-  public void close() throws IOException {}
+  public void close() throws IOException {
+  }
 
   public CommandInvoker<?, ?> resolve(String s) throws ScriptException, IOException {
     throw new UnsupportedOperationException();
@@ -152,9 +163,7 @@ public class TestInvocationContext<C> extends RuntimeContextImpl implements Comm
 
   public <B extends BaseCommand> String execute(Class<B> commandClass, String... args)
       throws IntrospectionException, IOException, CommandException {
-    return execute(
-        new ClassShellCommand<B>(commandClass, ShellSafetyFactory.getCurrentThreadShellSafety()),
-        args);
+    return execute(new ClassShellCommand<>(commandClass), args);
   }
 
   public <B extends GroovyScriptCommand> String execute2(Class<B> commandClass, String... args)

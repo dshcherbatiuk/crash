@@ -21,7 +21,6 @@ package org.crsh.shell;
 
 import java.security.Principal;
 import org.crsh.auth.AuthInfo;
-import org.crsh.command.ShellSafety;
 
 public interface ShellFactory {
 
@@ -31,5 +30,5 @@ public interface ShellFactory {
    * @param principal the user principal it may be null in case of an unauthenticated user
    * @return the shell instance
    */
-  Shell create(Principal principal, AuthInfo authInfo, ShellSafety shellSafety);
+  Shell create(Principal principal, AuthInfo authInfo);
 }

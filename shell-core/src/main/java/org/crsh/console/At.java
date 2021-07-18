@@ -18,7 +18,9 @@
  */
 package org.crsh.console;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 enum At {
   BEGINNING,
   BEFORE_END,

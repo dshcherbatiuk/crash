@@ -22,8 +22,6 @@ package org.crsh.lang.impl.groovy.closure;
 import java.io.IOException;
 import java.util.Map;
 import org.crsh.command.InvocationContext;
-import org.crsh.command.ShellSafety;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.shell.impl.command.AbstractInvocationContext;
 import org.crsh.shell.impl.command.spi.CommandException;
 import org.crsh.shell.impl.command.spi.CommandInvoker;
@@ -37,11 +35,6 @@ class PipeLineInvocationContext extends AbstractInvocationContext<Object> {
 
   PipeLineInvocationContext(InvocationContext<Object> outter) {
     this.outter = outter;
-  }
-
-  @Override
-  public ShellSafety getShellSafety() {
-    return ShellSafetyFactory.getCurrentThreadShellSafety();
   }
 
   public CommandInvoker<?, ?> resolve(String s) throws CommandException {

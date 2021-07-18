@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.crsh.command.ShellSafety;
 import org.crsh.lang.impl.script.ScriptCompiler;
 import org.crsh.lang.spi.CommandResolution;
 import org.crsh.lang.spi.Compiler;
@@ -42,21 +41,16 @@ import org.crsh.vfs.Resource;
  */
 public class LanguageCommandResolver implements CommandResolver {
 
-  private final Map<String, TimestampedObject<CommandResolution>> commandCache =
-      new ConcurrentHashMap<>();
+  private final Map<String, TimestampedObject<CommandResolution>> commandCache = new ConcurrentHashMap<>();
 
   final HashMap<String, Compiler> activeCompilers = new HashMap<>();
 
   final PluginContext context;
 
-  final boolean isRestricted;
+  public LanguageCommandResolver(PluginContext context) {
 
-  public LanguageCommandResolver(PluginContext context, boolean isRestricted) {
-
-    //
     activeCompilers.put("script", ScriptCompiler.getInstance());
 
-    //
     for (Language lang : context.getPlugins(Language.class)) {
       if (lang.isActive()) {
         Compiler compiler = lang.getCompiler();
@@ -69,7 +63,6 @@ public class LanguageCommandResolver implements CommandResolver {
     }
 
     this.context = context;
-    this.isRestricted = isRestricted;
   }
 
   public Compiler getCompiler(String name) {
@@ -77,7 +70,7 @@ public class LanguageCommandResolver implements CommandResolver {
   }
 
   @Override
-  public Iterable<Map.Entry<String, String>> getDescriptions(ShellSafety shellSafety) {
+  public Iterable<Map.Entry<String, String>> getDescriptions() {
     LinkedHashMap<String, String> commands = new LinkedHashMap<String, String>();
     for (String resourceName : context.listResources(ResourceKind.COMMAND)) {
       int index = resourceName.indexOf('.');
@@ -85,10 +78,8 @@ public class LanguageCommandResolver implements CommandResolver {
       String ext = resourceName.substring(index + 1);
       if (activeCompilers.containsKey(ext)) {
         try {
-          CommandResolution resolution = resolveCommand2(name, shellSafety);
-          if (resolution != null) {
-            commands.put(name, resolution.getDescription());
-          }
+          CommandResolution resolution = resolveCommand2(name);
+          commands.put(name, resolution.getDescription());
         } catch (CommandException e) {
           //
         }
@@ -98,22 +89,18 @@ public class LanguageCommandResolver implements CommandResolver {
   }
 
   @Override
-  public Command<?> resolveCommand(String name, ShellSafety shellSafety)
+  public Command<?> resolveCommand(String name)
       throws CommandException, NullPointerException {
-    CommandResolution resolution = resolveCommand2(name, shellSafety);
+    CommandResolution resolution = resolveCommand2(name);
     return resolution != null ? resolution.getCommand() : null;
   }
 
-  private CommandResolution resolveCommand2(String name, ShellSafety shellSafety)
+  private CommandResolution resolveCommand2(String name)
       throws CommandException, NullPointerException {
-    if (isRestricted && !isCommandAllowed(name, shellSafety)) {
-      return null;
-    }
-
     for (Compiler manager : activeCompilers.values()) {
       for (String ext : manager.getExtensions()) {
-        Iterable<Resource> resources =
-            context.loadResources(name + "." + ext, ResourceKind.COMMAND);
+        Iterable<Resource> resources = context
+            .loadResources(name + "." + ext, ResourceKind.COMMAND);
         for (Resource resource : resources) {
           CommandResolution resolution = resolveCommand(manager, name, resource);
           if (resolution != null) {
@@ -125,16 +112,8 @@ public class LanguageCommandResolver implements CommandResolver {
     return null;
   }
 
-  private boolean isCommandAllowed(String name, ShellSafety shellSafety) {
-    if (name.equals("man") && shellSafety.isAllowManCommand()) {
-      return true;
-    }
-
-    return false;
-  }
-
-  private CommandResolution resolveCommand(
-      org.crsh.lang.spi.Compiler manager, String name, Resource script) throws CommandException {
+  private CommandResolution resolveCommand(org.crsh.lang.spi.Compiler manager, String name,
+      Resource script) throws CommandException {
     TimestampedObject<CommandResolution> ref = commandCache.get(name);
     if (ref != null) {
       if (script.getTimestamp() != ref.getTimestamp()) {
@@ -145,12 +124,13 @@ public class LanguageCommandResolver implements CommandResolver {
     if (ref == null) {
       command = manager.compileCommand(name, script.getContent());
       if (command != null) {
-        commandCache.put(
-            name, new TimestampedObject<>(script.getTimestamp(), command));
+        commandCache
+            .put(name, new TimestampedObject<CommandResolution>(script.getTimestamp(), command));
       }
     } else {
       command = ref.getObject();
     }
     return command;
   }
+
 }

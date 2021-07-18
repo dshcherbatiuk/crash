@@ -23,7 +23,6 @@ import org.crsh.cli.Command;
 import org.crsh.cli.Usage;
 import org.crsh.command.BaseCommand;
 import org.crsh.command.InvocationContext;
-import org.crsh.command.ShellSafety;
 import org.crsh.shell.impl.command.CRaSH;
 import org.crsh.text.Color;
 import org.crsh.text.Decoration;
@@ -31,38 +30,26 @@ import org.crsh.text.Style;
 import org.crsh.text.ui.LabelElement;
 import org.crsh.text.ui.TableElement;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public class help extends BaseCommand {
+
   @Usage("provides basic help")
   @Command
   public void main(InvocationContext<Object> context) throws Exception {
 
-    //
-    ShellSafety shellSafety = context.getShellSafety();
-    boolean safeShell = shellSafety.isSafeShell();
-    boolean standAlone = shellSafety.isStandAlone();
-    boolean internal = shellSafety.isInternal();
-    boolean sshMode = shellSafety.isSshMode();
-    boolean manAllowed = shellSafety.isAllowManCommand();
-
     TableElement table = new TableElement().rightCellPadding(1);
     table.row(
         new LabelElement("NAME").style(Style.style(Decoration.bold)),
-        new LabelElement("DESCRIPTION"));
+        new LabelElement("DESCRIPTION")
+    );
 
     CRaSH crash = (CRaSH) context.getSession().get("crash");
     java.util.ArrayList<Map.Entry<String, String>> commands = new java.util.ArrayList<>();
-    crash.getCommandsSafetyCheck(shellSafety).iterator().forEachRemaining(commands::add);
+    crash.getCommands().iterator().forEachRemaining(commands::add);
     commands.sort(java.util.Comparator.comparing(Map.Entry::getKey));
 
-    Color col =
-        sshMode
-            ? (safeShell ? Color.yellow : Color.red)
-            : standAlone
-                ? (safeShell ? Color.cyan : Color.red)
-                : internal
-                    ? (safeShell ? Color.green : Color.red)
-                    : (safeShell ? Color.red : Color.red);
     for (Map.Entry<String, String> command : commands) {
       try {
         String desc = command.getValue();
@@ -70,22 +57,14 @@ public class help extends BaseCommand {
           desc = "";
         }
         table.row(
-            new LabelElement(command.getKey()).style(Style.style(Decoration.bold, col)),
+            new LabelElement(command.getKey()).style(Style.style(Color.red)),
             new LabelElement(desc));
       } catch (Exception ignore) {
         //
       }
     }
 
-    String safeStr = safeShell ? "SAFE-" : "UNSAFE-";
-    String sshStr = sshMode ? "SSH-" : "";
-    String saStr = standAlone ? "Standalone-" : "";
-    String intStr = internal ? "Internal-" : "";
-    String manStr = manAllowed ? "ManAllowed-" : "";
-    String pref = "[" + safeStr + saStr + intStr + sshStr + manStr + "Shell]: ";
-    context.provide(
-        new LabelElement(pref + "Try one of these commands with the -h or --help switch:\n"));
-
+    context.provide(new LabelElement("Try one of these commands with the -h or --help switch:\n"));
     context.provide(table);
   }
 }

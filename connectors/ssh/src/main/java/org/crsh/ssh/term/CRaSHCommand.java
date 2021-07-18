@@ -28,7 +28,6 @@ import org.apache.sshd.server.Environment;
 import org.crsh.console.jline.JLineProcessor;
 import org.crsh.shell.Shell;
 import org.crsh.auth.AuthInfo;
-import org.crsh.shell.impl.command.system.SystemResolver;
 import org.crsh.util.Utils;
 
 import java.io.IOException;
@@ -47,7 +46,6 @@ public class CRaSHCommand extends AbstractCommand implements Runnable, Terminal 
   protected static final Logger log = Logger.getLogger(CRaSHCommand.class.getName());
 
   private static Set<String> unsafeUsers = null;
-  private static Set<String> manUsers = null;
   private static boolean isInternalSSHConnection = false;
   private static boolean isStandAloneSSHConnection = false;
   private static Object userInfoLock = new Object();
@@ -109,15 +107,12 @@ public class CRaSHCommand extends AbstractCommand implements Runnable, Terminal 
       };
 
       boolean safeUser = !isUserUnsafe(user.getName());
-      boolean manUser = canUserUseMan(user.getName());
 
       ShellSafety shellSafety = ShellSafetyFactory.getCurrentThreadShellSafety();
       shellSafety.setSafeShell(safeUser);
-      shellSafety.setAllowManCommand(manUser);
       shellSafety.setInternal(isInternalSSH());
       shellSafety.setSSH(true);
       shellSafety.setStandAlone(isStandAloneSSH());
-      ShellSafetyFactory.registerShellSafetyForThread(shellSafety);
       Shell shell = factory.shellFactory.create(user, authInfo, shellSafety);
       ConsoleReader reader = new ConsoleReader(in, out, this) {
         @Override
@@ -219,16 +214,6 @@ public class CRaSHCommand extends AbstractCommand implements Runnable, Terminal 
   public static void setUserInfo(Set<String> users, boolean internalSSHShell, boolean standaloneSSHShell) {
     synchronized (userInfoLock) {
       unsafeUsers = users;
-      manUsers = null;
-      isInternalSSHConnection = internalSSHShell;
-      isStandAloneSSHConnection = standaloneSSHShell;
-    }
-  }
-
-  public static void setUserInfoWithManUsers(Set<String> users, Set<String> manUsersSet, boolean internalSSHShell, boolean standaloneSSHShell) {
-    synchronized (userInfoLock) {
-      unsafeUsers = users;
-      manUsers = manUsersSet;
       isInternalSSHConnection = internalSSHShell;
       isStandAloneSSHConnection = standaloneSSHShell;
     }
@@ -237,12 +222,6 @@ public class CRaSHCommand extends AbstractCommand implements Runnable, Terminal 
   public static boolean isUserUnsafe(String username) {
     synchronized (userInfoLock) {
       return unsafeUsers != null && unsafeUsers.contains(username);
-    }
-  }
-
-  public static boolean canUserUseMan(String username) {
-    synchronized (userInfoLock) {
-      return manUsers != null && manUsers.contains(username);
     }
   }
 

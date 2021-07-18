@@ -22,9 +22,6 @@ package org.crsh.standalone;
 import com.google.auto.service.AutoService;
 import org.crsh.cli.impl.bootstrap.CommandProvider;
 
-/**
- * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
- */
 @AutoService(CommandProvider.class)
 public class CRaSHProvider implements CommandProvider {
 

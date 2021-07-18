@@ -93,7 +93,9 @@ import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.ParameterMatch;
 import org.crsh.cli.type.ValueTypeFactory;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public class HelpDescriptor<T> extends CommandDescriptor<T> {
 
   public static <T> HelpDescriptor<T> create(CommandDescriptor<T> descriptor)
@@ -101,7 +103,6 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
     return new HelpDescriptor<T>(descriptor);
   }
 
-  /** . */
   static final OptionDescriptor HELP_OPTION;
 
   static {
@@ -121,13 +122,10 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
     }
   }
 
-  /** . */
   private final HelpDescriptor<T> owner;
 
-  /** . */
   private final CommandDescriptor<T> delegate;
 
-  /** . */
   private final LinkedHashMap<String, HelpDescriptor<T>> subordinates;
 
   public HelpDescriptor(CommandDescriptor<T> delegate) throws IntrospectionException {
@@ -138,7 +136,6 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
       throws IntrospectionException {
     super(delegate.getName(), delegate.getDescription());
 
-    //
     for (ParameterDescriptor parameter : delegate.getParameters()) {
       addParameter(parameter);
     }
@@ -167,7 +164,6 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
       subordinates.put(subordinate.getName(), new HelpDescriptor<T>(this, subordinate));
     }
 
-    //
     this.owner = owner;
     this.delegate = delegate;
     this.subordinates = subordinates;
@@ -179,8 +175,6 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
 
   @Override
   public CommandInvoker<T, ?> getInvoker(final InvocationMatch<T> match) {
-
-    //
     final CommandInvoker<T, ?> invoker = delegate.getInvoker(match);
 
     // Get the option from the top match
@@ -191,10 +185,8 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
       helpDesc = current.getParameter(HELP_OPTION);
     }
 
-    //
     final boolean help = helpDesc != null || invoker == null;
 
-    //
     if (help) {
       return new CommandInvoker<T, Help>(match) {
         @Override
@@ -209,7 +201,7 @@ public class HelpDescriptor<T> extends CommandDescriptor<T> {
 
         @Override
         public Help invoke(T command) throws InvocationException, SyntaxException {
-          return new Help<T>(HelpDescriptor.this);
+          return new Help<>(HelpDescriptor.this);
         }
       };
     } else {

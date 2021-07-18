@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.command.BaseCommand;
-import org.crsh.command.ShellSafety;
 import org.crsh.lang.impl.java.ClassShellCommand;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.shell.AbstractShellTestCase;
@@ -55,16 +54,16 @@ public class CustomCommandResolverTestCase extends AbstractShellTestCase {
     }
 
     @Override
-    public Iterable<Map.Entry<String, String>> getDescriptions(ShellSafety shellSafety) {
+    public Iterable<Map.Entry<String, String>> getDescriptions() {
       return Collections.singletonMap("mycommand", "my command").entrySet();
     }
 
     @Override
-    public Command<?> resolveCommand(String name, ShellSafety shellSafety)
+    public Command<?> resolveCommand(String name)
         throws CommandException, NullPointerException {
       if ("mycommand".equals(name)) {
         try {
-          return new ClassShellCommand<mycommand>(mycommand.class, shellSafety);
+          return new ClassShellCommand<>(mycommand.class);
         } catch (IntrospectionException e) {
           throw new CommandException(ErrorKind.EVALUATION, "Invalid cli annotations", e);
         }

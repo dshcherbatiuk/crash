@@ -32,12 +32,10 @@ import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 
-class ClassDescriptor<T> extends ObjectCommandDescriptor<T> {
+class ClassDescriptor<T> extends CommandDescriptor<Instance<T>> {
 
-  /** . */
   private final Class<T> type;
 
-  /** . */
   private final Map<String, MethodDescriptor<T>> methods;
 
   ClassDescriptor(
@@ -45,31 +43,26 @@ class ClassDescriptor<T> extends ObjectCommandDescriptor<T> {
       throws IntrospectionException {
     super(name, info);
 
-    //
     this.methods = methods;
     this.type = type;
   }
 
   @Override
   protected void addParameter(ParameterDescriptor parameter) throws IntrospectionException {
-
     // Check we can add the option
     if (parameter instanceof OptionDescriptor) {
       OptionDescriptor option = (OptionDescriptor) parameter;
-      Set<String> blah = new HashSet<String>();
+      Set<String> blah = new HashSet<>();
       for (String optionName : option.getNames()) {
         blah.add((optionName.length() == 1 ? "-" : "--") + optionName);
       }
       for (MethodDescriptor<T> method : methods.values()) {
-        Set<String> diff = new HashSet<String>(method.getOptionNames());
+        Set<String> diff = new HashSet<>(method.getOptionNames());
         diff.retainAll(blah);
         if (diff.size() > 0) {
           throw new IntrospectionException(
-              "Cannot add method "
-                  + method.getName()
-                  + " because it has common "
-                  + " options with its class: "
-                  + diff);
+              String.format("Cannot add method %s because it has common options with its class: %s",
+                  method.getName(), diff));
         }
       }
     }
@@ -79,7 +72,6 @@ class ClassDescriptor<T> extends ObjectCommandDescriptor<T> {
 
   @Override
   public ObjectCommandInvoker<T, ?> getInvoker(final InvocationMatch<Instance<T>> match) {
-
     if (Runnable.class.isAssignableFrom(type)) {
       return new ObjectCommandInvoker<T, Void>(match) {
         @Override
@@ -111,7 +103,7 @@ class ClassDescriptor<T> extends ObjectCommandDescriptor<T> {
             throw new InvocationException(e);
           }
           MethodDescriptor.bind(match, getParameters(), command, Util.EMPTY_ARGS);
-          Runnable runnable = Runnable.class.cast(command);
+          final Runnable runnable = Runnable.class.cast(command);
           try {
             runnable.run();
           } catch (Exception e) {
@@ -120,9 +112,9 @@ class ClassDescriptor<T> extends ObjectCommandDescriptor<T> {
           return null;
         }
       };
-    } else {
-      return null;
     }
+
+    return null;
   }
 
   @Override

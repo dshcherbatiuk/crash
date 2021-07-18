@@ -56,7 +56,7 @@ public final class PluginContext {
 
   private boolean started;
 
-  private ScheduledFuture scannerFuture;
+  private ScheduledFuture<?> scannerFuture;
 
   private final ResourceManager resourceManager;
 

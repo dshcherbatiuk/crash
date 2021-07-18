@@ -62,12 +62,13 @@ public final class InvocationMatch<T> {
   }
 
   public InvocationMatch<T> subordinate(String name) {
-    CommandDescriptor<T> subordinate = descriptor.getSubordinate(name);
+    final CommandDescriptor<T> subordinate = descriptor.getSubordinate(name);
+
     if (subordinate != null) {
-      return new InvocationMatch<T>(this, subordinate);
-    } else {
-      return null;
+      return new InvocationMatch<>(this, subordinate);
     }
+
+    return null;
   }
 
   public CommandDescriptor<T> getDescriptor() {
@@ -77,14 +78,14 @@ public final class InvocationMatch<T> {
   public final <D extends ParameterDescriptor> ParameterMatch<D> getParameter(D parameter) {
     if (parameter instanceof OptionDescriptor) {
       return (ParameterMatch<D>) options.get(parameter);
-    } else {
-      for (ArgumentMatch argumentMatch : arguments) {
-        if (argumentMatch.getParameter() == parameter) {
-          return (ParameterMatch<D>) argumentMatch;
-        }
-      }
-      return null;
     }
+
+    for (ArgumentMatch argumentMatch : arguments) {
+      if (argumentMatch.getParameter() == parameter) {
+        return (ParameterMatch<D>) argumentMatch;
+      }
+    }
+    return null;
   }
 
   public CommandInvoker<T, ?> getInvoker() {
@@ -95,9 +96,9 @@ public final class InvocationMatch<T> {
     CommandInvoker<T, ?> invoker = getInvoker();
     if (invoker != null) {
       return invoker.invoke(command);
-    } else {
-      return null;
     }
+
+    return null;
   }
 
   public Collection<OptionMatch> options() {

@@ -71,8 +71,8 @@ public class Console {
     }
     this.driver = driver;
     this.shell = shell;
-    this.buffer = new LinkedBlockingDeque<KeyStroke>(1024);
-    this.handler = new AtomicReference<Plugin>();
+    this.buffer = new LinkedBlockingDeque<>(1024);
+    this.handler = new AtomicReference<>();
     this.editor = new Editor(this);
     this.status = RUNNING;
   }

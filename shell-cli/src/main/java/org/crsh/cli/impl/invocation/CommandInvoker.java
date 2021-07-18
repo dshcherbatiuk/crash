@@ -22,10 +22,11 @@ package org.crsh.cli.impl.invocation;
 import java.lang.reflect.Type;
 import org.crsh.cli.impl.SyntaxException;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+/**
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ */
 public abstract class CommandInvoker<C, V> {
 
-  /** . */
   private final InvocationMatch<C> match;
 
   protected CommandInvoker(InvocationMatch<C> match) {

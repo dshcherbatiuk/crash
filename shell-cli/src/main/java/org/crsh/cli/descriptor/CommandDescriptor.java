@@ -184,18 +184,18 @@ public abstract class CommandDescriptor<T> {
 
   public abstract CommandDescriptor<T> getOwner();
 
-  public final int getDepth() {
-    final CommandDescriptor<T> owner = getOwner();
-    return owner == null ? 0 : 1 + owner.getDepth();
-  }
+//  public final int getDepth() {
+//    final CommandDescriptor<T> owner = getOwner();
+//    return owner == null ? 0 : 1 + owner.getDepth();
+//  }
 
   public final void printUsage(Appendable to) throws IOException {
     print(Format.USAGE, to);
   }
 
-  public final void printMan(Appendable to) throws IOException {
-    print(Format.MAN, to);
-  }
+//  public final void printMan(Appendable to) throws IOException {
+//    print(Format.MAN, to);
+//  }
 
   public final void print(Format format, Appendable to) throws IOException {
     format.print(this, to);
@@ -298,22 +298,22 @@ public abstract class CommandDescriptor<T> {
     return uArguments;
   }
 
-  /**
-   * Returns a a specified argument by its index.
-   *
-   * @param index the argument index
-   * @return the command argument
-   * @throws IllegalArgumentException if the index is not within the bounds
-   */
-  public final ArgumentDescriptor getArgument(int index) throws IllegalArgumentException {
-    if (index < 0) {
-      throw new IllegalArgumentException();
-    }
-    if (index >= arguments.size()) {
-      throw new IllegalArgumentException();
-    }
-    return arguments.get(index);
-  }
+//  /**
+//   * Returns a a specified argument by its index.
+//   *
+//   * @param index the argument index
+//   * @return the command argument
+//   * @throws IllegalArgumentException if the index is not within the bounds
+//   */
+//  public final ArgumentDescriptor getArgument(int index) throws IllegalArgumentException {
+//    if (index < 0) {
+//      throw new IllegalArgumentException();
+//    }
+//    if (index >= arguments.size()) {
+//      throw new IllegalArgumentException();
+//    }
+//    return arguments.get(index);
+//  }
 
   /**
    * Returns the command name.
@@ -346,10 +346,10 @@ public abstract class CommandDescriptor<T> {
   public abstract CommandInvoker<T, ?> getInvoker(InvocationMatch<T> match);
 
   public final InvocationMatcher<T> matcher() {
-    return new InvocationMatcher<T>(this);
+    return new InvocationMatcher<>(this);
   }
 
   public final CompletionMatcher<T> completer() {
-    return new CompletionMatcher<T>(this);
+    return new CompletionMatcher<>(this);
   }
 }

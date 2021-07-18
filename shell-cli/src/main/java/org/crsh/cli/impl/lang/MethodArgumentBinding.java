@@ -21,7 +21,6 @@ package org.crsh.cli.impl.lang;
 
 class MethodArgumentBinding implements Binding {
 
-  /** . */
   private final int index;
 
   MethodArgumentBinding(int index) {

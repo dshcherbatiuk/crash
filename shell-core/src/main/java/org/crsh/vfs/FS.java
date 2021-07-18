@@ -40,12 +40,12 @@ public class FS {
 
   public static class Builder {
 
-    private HashMap<String, FSMountFactory<?>> resolvers;
+    private final HashMap<String, FSMountFactory<?>> resolvers;
 
-    private ArrayList<Mount<?>> mounts = new ArrayList<Mount<?>>();
+    private final ArrayList<Mount<?>> mounts = new ArrayList<Mount<?>>();
 
     public Builder() {
-      this.resolvers = new HashMap<String, FSMountFactory<?>>();
+      this.resolvers = new HashMap<>();
     }
 
     /**

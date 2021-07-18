@@ -27,7 +27,6 @@ import org.crsh.command.BaseCommand;
 import org.crsh.command.CommandContext;
 import org.crsh.command.InvocationContext;
 import org.crsh.command.Pipe;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.keyboard.KeyHandler;
 import org.crsh.shell.ErrorKind;
 import org.crsh.shell.impl.command.InvocationContextImpl;
@@ -103,8 +102,7 @@ class PipeCommandMatch<T extends BaseCommand, C, P, PC extends Pipe<C, P>>
       }
 
       public void open2(final CommandContext<P> consumer) throws CommandException {
-        invocationContext = new InvocationContextImpl<>(
-            consumer, ShellSafetyFactory.getCurrentThreadShellSafety());
+        invocationContext = new InvocationContextImpl<>(consumer);
 
         // Push context
         command.pushContext(invocationContext);

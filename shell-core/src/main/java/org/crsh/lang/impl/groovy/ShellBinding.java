@@ -22,8 +22,6 @@ import groovy.lang.Binding;
 import java.io.IOException;
 import java.util.Map;
 import org.crsh.command.InvocationContext;
-import org.crsh.command.ShellSafety;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.lang.impl.groovy.closure.PipeLineClosure;
 import org.crsh.shell.impl.command.AbstractInvocationContext;
 import org.crsh.shell.impl.command.InvocationContextImpl;
@@ -59,11 +57,6 @@ class ShellBinding extends Binding {
             // Warning we don't proxy the writer, should we ?
             return current.getWriter();
           }
-        }
-
-        @Override
-        public ShellSafety getShellSafety() {
-          return ShellSafetyFactory.getCurrentThreadShellSafety();
         }
 
         public CommandInvoker<?, ?> resolve(String s) throws CommandException {
@@ -233,11 +226,7 @@ class ShellBinding extends Binding {
         try {
           Command<?> cmd = session.getCommand(name);
           if (cmd != null) {
-            return new PipeLineClosure(
-                new InvocationContextImpl<>(
-                    proxy, ShellSafetyFactory.getCurrentThreadShellSafety()),
-                name,
-                cmd);
+            return new PipeLineClosure(new InvocationContextImpl<>(proxy), name, cmd);
           }
         } catch (CommandException ignore) {
           // Really ?

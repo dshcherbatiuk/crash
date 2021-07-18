@@ -27,19 +27,14 @@ import org.crsh.cli.impl.tokenizer.Tokenizer;
 
 public final class Parser<T> implements Iterator<Event> {
 
-  /** . */
   private final Tokenizer tokenizer;
 
-  /** . */
   private final Mode mode;
 
-  /** . */
   private CommandDescriptor<T> command;
 
-  /** . */
   private Status status;
 
-  /** . */
   private final LinkedList<Event> next;
 
   public Parser(Tokenizer tokenizer, CommandDescriptor<T> command, Mode mode) {
@@ -47,7 +42,7 @@ public final class Parser<T> implements Iterator<Event> {
     this.command = command;
     this.status = new Status.ReadingOption();
     this.mode = mode;
-    this.next = new LinkedList<Event>();
+    this.next = new LinkedList<>();
   }
 
   Status getStatus() {

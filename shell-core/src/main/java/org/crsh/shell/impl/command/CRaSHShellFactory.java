@@ -22,7 +22,6 @@ package org.crsh.shell.impl.command;
 import com.google.auto.service.AutoService;
 import java.security.Principal;
 import org.crsh.auth.AuthInfo;
-import org.crsh.command.ShellSafety;
 import org.crsh.plugin.CRaSHPlugin;
 import org.crsh.plugin.PluginContext;
 import org.crsh.shell.Shell;
@@ -33,9 +32,6 @@ import org.crsh.shell.impl.async.AsyncShell;
 public class CRaSHShellFactory extends CRaSHPlugin<ShellFactory> implements ShellFactory {
 
   private CRaSH crash;
-
-  public CRaSHShellFactory() {
-  }
 
   @Override
   public void init() {
@@ -48,18 +44,10 @@ public class CRaSHShellFactory extends CRaSHPlugin<ShellFactory> implements Shel
     return this;
   }
 
-  public Shell create(
-      Principal principal, boolean async, AuthInfo authInfo, ShellSafety shellSafety) {
-    CRaSHSession session = crash.createSession(principal, authInfo, shellSafety);
-    if (async) {
-      return new AsyncShell(getContext().getExecutor(), session);
-    } else {
-      return session;
-    }
-  }
-
   @Override
-  public Shell create(Principal principal, AuthInfo authInfo, ShellSafety shellSafety) {
-    return create(principal, true, authInfo, shellSafety);
+  public Shell create(Principal principal, AuthInfo authInfo) {
+    final CRaSHSession session = crash.createSession(principal, authInfo);
+
+    return new AsyncShell(getContext().getExecutor(), session);
   }
 }

@@ -36,7 +36,6 @@ import org.crsh.cli.impl.invocation.InvocationMatcher;
 import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.Util;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.shell.Shell;
 import org.crsh.shell.ShellFactory;
 import org.crsh.shell.impl.remoting.RemoteClient;
@@ -126,7 +125,7 @@ public class Agent {
     if (port != null) {
       try {
         ShellFactory factory = bootstrap.getContext().getPlugin(ShellFactory.class);
-        Shell shell = factory.create(null, null, ShellSafetyFactory.getCurrentThreadShellSafety());
+        Shell shell = factory.create(null, null);
         RemoteClient client = new RemoteClient(port, shell);
         LOGGER.info("Callback back remote on port {}", port);
         client.connect();

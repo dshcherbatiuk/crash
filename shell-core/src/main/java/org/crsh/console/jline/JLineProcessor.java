@@ -92,7 +92,7 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
 
     console.init();
     StringBuilder sb = new StringBuilder();
-    Stack<Character> pushBackChar = new Stack<Character>();
+    Stack<Character> pushBackChar = new Stack<>();
     while (console.isRunning()) {
       try {
         int c = pushBackChar.isEmpty() ? reader.readCharacter() : pushBackChar.pop();
@@ -294,12 +294,12 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
   }
 
   @Override
-  public void writeDel() throws IOException {
+  public void writeDel() {
     writer.append("\b \b");
   }
 
   @Override
-  public void writeCRLF() throws IOException {
+  public void writeCRLF() {
     writer.append(lineSeparator);
   }
 
@@ -312,13 +312,13 @@ public class JLineProcessor implements Runnable, ConsoleDriver {
   }
 
   @Override
-  public boolean moveRight(char c) throws IOException {
+  public boolean moveRight(char c) {
     writer.append(c);
     return true;
   }
 
   @Override
-  public boolean moveLeft() throws IOException {
+  public boolean moveLeft() {
     writer.append("\b");
     return true;
   }

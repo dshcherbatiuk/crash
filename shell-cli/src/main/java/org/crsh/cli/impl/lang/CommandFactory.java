@@ -22,6 +22,7 @@ package org.crsh.cli.impl.lang;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -31,11 +32,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import org.crsh.cli.Argument;
 import org.crsh.cli.Command;
 import org.crsh.cli.Named;
 import org.crsh.cli.Option;
 import org.crsh.cli.Required;
+import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.descriptor.Description;
 import org.crsh.cli.descriptor.ParameterDescriptor;
 import org.crsh.cli.impl.ParameterType;
@@ -69,13 +72,15 @@ public class CommandFactory {
     this.valueTypeFactory = valueTypeFactory;
   }
 
-  private List<Method> findAllMethods(Class<?> introspected) {
+  // TODO(dshcherbatiuk): get rid of recursion
+  private List<Method> findAllCommandMethods(Class<?> introspected) {
     List<Method> methods;
     final Class<?> superIntrospected = introspected.getSuperclass();
+
     if (superIntrospected == null) {
       methods = new ArrayList<>();
     } else {
-      methods = findAllMethods(superIntrospected);
+      methods = findAllCommandMethods(superIntrospected);
       for (Method method : introspected.getDeclaredMethods()) {
         if (method.getAnnotation(Command.class) != null) {
           methods.add(method);
@@ -85,62 +90,71 @@ public class CommandFactory {
     return methods;
   }
 
-  public <T> ObjectCommandDescriptor<T> create(Class<T> type) throws IntrospectionException {
+  /**
+   * Trying to find all methods annotated by {@linkplain Command} annotation
+   *
+   * @param type
+   * @param <T>
+   * @return
+   * @throws IntrospectionException
+   */
+  public <T> CommandDescriptor<Instance<T>> create(Class<T> type) throws IntrospectionException {
+    final List<Method> commandMethods = findAllCommandMethods(type);
+    final String commandName = getElementName(type, type::getSimpleName);
 
-    // Find all command methods
-    List<Method> methods = findAllMethods(type);
-
-    String commandName;
-    if (type.getAnnotation(Named.class) != null) {
-      commandName = type.getAnnotation(Named.class).value();
-    } else {
-      commandName = type.getSimpleName();
-    }
-
-    if (methods.size() == 1 && methods.get(0).getName().equals("main")) {
-      MethodDescriptor<T> methodDescriptor = create(null, commandName, methods.get(0));
+    if (commandMethods.size() == 1 && commandMethods.get(0).getName().equals("main")) {
+      final MethodDescriptor<T> methodDescriptor = create(null, commandName, commandMethods.get(0));
       for (ParameterDescriptor parameter : parameters(type)) {
         methodDescriptor.addParameter(parameter);
       }
       return methodDescriptor;
-    } else {
-      Map<String, MethodDescriptor<T>> methodMap = new LinkedHashMap<String, MethodDescriptor<T>>();
-      ClassDescriptor<T> classDescriptor =
-          new ClassDescriptor<T>(type, commandName, methodMap, new Description(type));
-      for (Method method : methods) {
-        String methodName;
-        if (method.getAnnotation(Named.class) != null) {
-          methodName = method.getAnnotation(Named.class).value();
-        } else {
-          methodName = method.getName();
-        }
-        MethodDescriptor<T> methodDescriptor = create(classDescriptor, methodName, method);
-        methodMap.put(methodDescriptor.getName(), methodDescriptor);
-      }
-      for (ParameterDescriptor parameter : parameters(type)) {
-        classDescriptor.addParameter(parameter);
-      }
-      return classDescriptor;
     }
+
+    final Map<String, MethodDescriptor<T>> methodMap = new LinkedHashMap<>();
+    final ClassDescriptor<T> classDescriptor =
+        new ClassDescriptor<>(type, commandName, methodMap, new Description(type));
+
+    for (Method method : commandMethods) {
+      final String methodName = getElementName(method, method::getName);
+      final MethodDescriptor<T> methodDescriptor = create(classDescriptor, methodName, method);
+      methodMap.put(methodDescriptor.getName(), methodDescriptor);
+    }
+
+    for (ParameterDescriptor parameter : parameters(type)) {
+      classDescriptor.addParameter(parameter);
+    }
+    return classDescriptor;
+  }
+
+  /**
+   * @return value from {@linkplain Named} or from {@linkplain Supplier}
+   */
+  private String getElementName(final AnnotatedElement type,
+      final Supplier<String> supplier) {
+    if (type.getAnnotation(Named.class) != null) {
+      return type.getAnnotation(Named.class).value();
+    }
+
+    return supplier.get();
   }
 
   private <T> MethodDescriptor<T> create(
-      ClassDescriptor<T> classDescriptor, String name, Method method)
+      final ClassDescriptor<T> classDescriptor, final String name, final Method method)
       throws IntrospectionException {
-    Description info = new Description(method);
-    MethodDescriptor<T> methodDescriptor =
-        new MethodDescriptor<T>(classDescriptor, method, name, info);
+    final Description info = new Description(method);
+    final MethodDescriptor<T> methodDescriptor =
+        new MethodDescriptor<>(classDescriptor, method, name, info);
 
-    Type[] parameterTypes = method.getGenericParameterTypes();
-    Annotation[][] parameterAnnotationMatrix = method.getParameterAnnotations();
+    final Type[] parameterTypes = method.getGenericParameterTypes();
+    final Annotation[][] parameterAnnotationMatrix = method.getParameterAnnotations();
+
     for (int i = 0; i < parameterAnnotationMatrix.length; i++) {
+      final Annotation[] parameterAnnotations = parameterAnnotationMatrix[i];
+      final Type parameterType = parameterTypes[i];
+      final Tuple tuple = get(parameterAnnotations);
 
-      Annotation[] parameterAnnotations = parameterAnnotationMatrix[i];
-      Type parameterType = parameterTypes[i];
-      Tuple tuple = get(parameterAnnotations);
-
-      MethodArgumentBinding binding = new MethodArgumentBinding(i);
-      ParameterDescriptor parameter =
+      final MethodArgumentBinding binding = new MethodArgumentBinding(i);
+      final ParameterDescriptor parameter =
           create(
               binding,
               parameterType,
@@ -263,31 +277,34 @@ public class CommandFactory {
     }
   }
 
-  private List<ParameterDescriptor> parameters(Class<?> introspected)
+  // TODO(dshcherbatiuk): get rid of recursion
+  private List<ParameterDescriptor> parameters(final Class<?> introspected)
       throws IntrospectionException {
-    List<ParameterDescriptor> parameters;
-    Class<?> superIntrospected = introspected.getSuperclass();
+    final List<ParameterDescriptor> parameters;
+    final Class<?> superIntrospected = introspected.getSuperclass();
+
     if (superIntrospected == null) {
       parameters = new ArrayList<>();
     } else {
       parameters = parameters(superIntrospected);
+
       for (Field f : introspected.getDeclaredFields()) {
-        Tuple tuple = get(f.getAnnotations());
-        ClassFieldBinding binding = new ClassFieldBinding(f);
-        ParameterDescriptor parameter =
-            create(
-                binding,
-                f.getGenericType(),
-                tuple.argumentAnn,
-                tuple.optionAnn,
-                tuple.required,
-                tuple.descriptionAnn,
-                tuple.ann);
+        final Tuple tuple = get(f.getAnnotations());
+        final ClassFieldBinding binding = new ClassFieldBinding(f);
+        final ParameterDescriptor parameter = create(
+            binding,
+            f.getGenericType(),
+            tuple.argumentAnn,
+            tuple.optionAnn,
+            tuple.required,
+            tuple.descriptionAnn,
+            tuple.ann);
         if (parameter != null) {
           parameters.add(parameter);
         }
       }
     }
+
     return parameters;
   }
 }

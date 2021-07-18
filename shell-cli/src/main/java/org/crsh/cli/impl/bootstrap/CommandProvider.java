@@ -19,7 +19,13 @@
 
 package org.crsh.cli.impl.bootstrap;
 
-/** @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a> */
+import java.util.ServiceLoader;
+import org.crsh.cli.Command;
+
+/**
+ * Provides classes that contains {@linkplain Command}. {@linkplain CommandProvider} is being loaded
+ * by {@linkplain ServiceLoader}.
+ */
 public interface CommandProvider {
 
   Class<?> getCommandClass();

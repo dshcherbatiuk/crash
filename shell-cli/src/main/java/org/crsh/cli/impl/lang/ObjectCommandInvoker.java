@@ -22,7 +22,9 @@ import java.lang.reflect.Type;
 import org.crsh.cli.impl.invocation.CommandInvoker;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 
-/** @author Julien Viet */
+/**
+ * @author Julien Viet
+ */
 public abstract class ObjectCommandInvoker<T, V> extends CommandInvoker<Instance<T>, V> {
 
   protected ObjectCommandInvoker(InvocationMatch<Instance<T>> match) {

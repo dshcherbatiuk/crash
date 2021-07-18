@@ -36,7 +36,7 @@ import org.crsh.cli.impl.invocation.InvocationException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.ParameterMatch;
 
-class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
+class MethodDescriptor<T> extends CommandDescriptor<Instance<T>> {
 
   private final ClassDescriptor<T> owner;
 
@@ -72,41 +72,12 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
 
   @Override
   public CommandInvoker<Instance<T>, ?> getInvoker(InvocationMatch<Instance<T>> match) {
-    Class<?> type = method.getReturnType();
-    return getInvoker2(match, type);
-  }
+    final Class<?> type = method.getReturnType();
 
-  static void bind(
-      InvocationMatch<?> match,
-      Iterable<ParameterDescriptor> parameters,
-      Object target,
-      Object[] args)
-      throws SyntaxException, InvocationException {
-    for (ParameterDescriptor parameter : parameters) {
-      final ParameterMatch parameterMatch = match.getParameter(parameter);
-      Object value = parameterMatch != null ? parameterMatch.computeValue() : null;
-      if (value == null) {
-        if (parameter.getDeclaredType().isPrimitive() || parameter.isRequired()) {
-          if (parameter instanceof ArgumentDescriptor) {
-            ArgumentDescriptor argument = (ArgumentDescriptor) parameter;
-            throw new SyntaxException("Missing argument " + argument.getName());
-          } else {
-            OptionDescriptor option = (OptionDescriptor) parameter;
-            throw new SyntaxException("Missing option " + option.getNames());
-          }
-        }
-      } else {
-        ((Binding) parameter).set(target, args, value);
-      }
-    }
-  }
-
-  private <V> ObjectCommandInvoker<T, V> getInvoker2(
-      final InvocationMatch<Instance<T>> match, final Class<V> returnType) {
-    return new ObjectCommandInvoker<T, V>(match) {
+    return new ObjectCommandInvoker<T, Object>(match) {
       @Override
-      public Class<V> getReturnType() {
-        return returnType;
+      public Class<Object> getReturnType() {
+        return (Class<Object>) type;
       }
 
       @Override
@@ -125,7 +96,8 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
       }
 
       @Override
-      public V invoke(Instance<T> commandInstance) throws InvocationException, SyntaxException {
+      public Object invoke(Instance<T> commandInstance)
+          throws InvocationException, SyntaxException {
 
         T command;
         try {
@@ -165,7 +137,7 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
         // Perform method invocation
         try {
           Object ret = m.invoke(command, mArgs);
-          return returnType.cast(ret);
+          return type.cast(ret);
         } catch (InvocationTargetException e) {
           Throwable t = e.getTargetException();
           if (t instanceof Error) {
@@ -179,4 +151,30 @@ class MethodDescriptor<T> extends ObjectCommandDescriptor<T> {
       }
     };
   }
+
+  static void bind(
+      InvocationMatch<?> match,
+      Iterable<ParameterDescriptor> parameters,
+      Object target,
+      Object[] args)
+      throws SyntaxException, InvocationException {
+    for (ParameterDescriptor parameter : parameters) {
+      final ParameterMatch parameterMatch = match.getParameter(parameter);
+      Object value = parameterMatch != null ? parameterMatch.computeValue() : null;
+      if (value == null) {
+        if (parameter.getDeclaredType().isPrimitive() || parameter.isRequired()) {
+          if (parameter instanceof ArgumentDescriptor) {
+            ArgumentDescriptor argument = (ArgumentDescriptor) parameter;
+            throw new SyntaxException("Missing argument " + argument.getName());
+          } else {
+            OptionDescriptor option = (OptionDescriptor) parameter;
+            throw new SyntaxException("Missing option " + option.getNames());
+          }
+        }
+      } else {
+        ((Binding) parameter).set(target, args, value);
+      }
+    }
+  }
+
 }

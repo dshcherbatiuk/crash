@@ -28,8 +28,6 @@ import org.slf4j.Logger;
 
 public abstract class BaseCommand extends AbstractCommand {
 
-  private final Logger LOGGER = getLogger(getClass().getName());
-
   /**
    * The unmatched text, only valid during an invocation - Need to find a way to make not that
    * public.

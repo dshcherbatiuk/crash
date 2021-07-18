@@ -22,16 +22,15 @@ import groovy.lang.Binding;
 import groovy.lang.Closure;
 import java.io.IOException;
 import java.util.List;
+import org.crsh.cli.completers.Completer;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.descriptor.HelpDescriptor;
 import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
-import org.crsh.cli.completers.Completer;
 import org.crsh.command.CommandContext;
 import org.crsh.command.RuntimeContext;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.groovy.GroovyCommand;
 import org.crsh.lang.impl.groovy.ast.ScriptLastStatementTransformer;
 import org.crsh.shell.ErrorKind;
@@ -129,9 +128,7 @@ public class GroovyScriptShellCommand<T extends GroovyScriptCommand> extends Com
 
       public void open(CommandContext<? super Object> consumer) throws CommandException {
         // Set the context
-        context = new InvocationContextImpl<>(
-            consumer,
-            ShellSafetyFactory.getCurrentThreadShellSafety());
+        context = new InvocationContextImpl<>(consumer);
 
         // Set up current binding
         Binding binding = new Binding(consumer.getSession());

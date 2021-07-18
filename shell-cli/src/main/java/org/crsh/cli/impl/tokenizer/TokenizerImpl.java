@@ -33,26 +33,24 @@ public class TokenizerImpl extends Tokenizer {
     this.endingDelimiter = Delimiter.EMPTY;
 
     Automaton automaton = new Automaton(s);
-    LineParser.Visitor parser2 =
-        new LineParser.Visitor() {
-          public void openStrongQuote(int index) {
-            endingDelimiter = Delimiter.SINGLE_QUOTE;
-          }
 
-          public void closeStrongQuote(int index) {
-            endingDelimiter = Delimiter.EMPTY;
-          }
+    final LineParser parser = new LineParser(automaton, new LineParser.Visitor() {
+      public void openStrongQuote(int index) {
+        endingDelimiter = Delimiter.SINGLE_QUOTE;
+      }
 
-          public void openWeakQuote(int index) {
-            endingDelimiter = Delimiter.DOUBLE_QUOTE;
-          }
+      public void closeStrongQuote(int index) {
+        endingDelimiter = Delimiter.EMPTY;
+      }
 
-          public void closeWeakQuote(int index) {
-            endingDelimiter = Delimiter.EMPTY;
-          }
-        };
+      public void openWeakQuote(int index) {
+        endingDelimiter = Delimiter.DOUBLE_QUOTE;
+      }
 
-    LineParser parser = new LineParser(automaton, parser2);
+      public void closeWeakQuote(int index) {
+        endingDelimiter = Delimiter.EMPTY;
+      }
+    });
     parser.append(s);
     automaton.close();
 

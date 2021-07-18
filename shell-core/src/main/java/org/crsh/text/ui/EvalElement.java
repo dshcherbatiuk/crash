@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
 import org.crsh.command.InvocationContext;
-import org.crsh.command.ShellSafety;
-import org.crsh.command.ShellSafetyFactory;
 import org.crsh.groovy.GroovyCommand;
 import org.crsh.lang.impl.groovy.command.GroovyScriptCommand;
 import org.crsh.shell.impl.command.AbstractInvocationContext;
@@ -76,11 +74,6 @@ public class EvalElement extends Element {
           private LinkedList<Object> buffer = new LinkedList<>();
 
           private Renderer renderable;
-
-          @Override
-          public ShellSafety getShellSafety() {
-            return ShellSafetyFactory.getCurrentThreadShellSafety();
-          }
 
           public CommandInvoker<?, ?> resolve(String s) throws CommandException {
             return ctx.resolve(s);

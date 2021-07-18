@@ -48,14 +48,12 @@ import org.crsh.cli.Option;
 import org.crsh.cli.Usage;
 import org.crsh.cli.descriptor.CommandDescriptor;
 import org.crsh.cli.impl.Delimiter;
-import org.crsh.cli.impl.descriptor.IntrospectionException;
 import org.crsh.cli.impl.invocation.InvocationMatch;
 import org.crsh.cli.impl.invocation.InvocationMatcher;
 import org.crsh.cli.impl.lang.CommandFactory;
 import org.crsh.cli.impl.lang.Instance;
 import org.crsh.cli.impl.lang.Util;
-import org.crsh.command.ShellSafety;
-import org.crsh.command.ShellSafetyFactory;
+import org.crsh.command.BaseCommand;
 import org.crsh.console.jline.JLineProcessor;
 import org.crsh.plugin.ResourceManager;
 import org.crsh.shell.Shell;
@@ -74,15 +72,9 @@ import org.fusesource.jansi.AnsiConsole;
 import org.slf4j.Logger;
 
 @Named("crash")
-public class CRaSH {
+public class CRaSH extends BaseCommand {
 
   private static final Logger LOGGER = getLogger(CRaSH.class.getName());
-
-  private final CommandDescriptor<Instance<CRaSH>> descriptor;
-
-  public CRaSH() throws IntrospectionException {
-    this.descriptor = CommandFactory.DEFAULT.create(CRaSH.class);
-  }
 
   private void copyCmd(org.crsh.vfs.File src, File dst) throws IOException {
     if (src.hasChildren()) {
@@ -321,9 +313,7 @@ public class CRaSH {
 
       if (interactive) {
         ShellFactory factory = bootstrap.getContext().getPlugin(ShellFactory.class);
-        ShellSafety shellSafety = ShellSafetyFactory.getCurrentThreadShellSafety();
-        shellSafety.setStandAlone(true);
-        shell = factory.create(null, null, shellSafety);
+        shell = factory.create(null, null);
       } else {
         shell = null;
       }
@@ -404,8 +394,10 @@ public class CRaSH {
     }
 
     final CRaSH main = new CRaSH();
-    final InvocationMatcher<Instance<CRaSH>> matcher = main.descriptor.matcher();
+    final CommandDescriptor<Instance<CRaSH>> descriptor =
+        CommandFactory.DEFAULT.create(CRaSH.class);
+    final InvocationMatcher<Instance<CRaSH>> matcher = descriptor.matcher();
     final InvocationMatch<Instance<CRaSH>> match = matcher.parse(line.toString());
-    match.invoke(Util.wrap(main));
+    final Object invoke = match.invoke(Util.wrap(main));
   }
 }

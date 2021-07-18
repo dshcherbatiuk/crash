@@ -56,6 +56,29 @@ public abstract class PluginLifeCycle {
       throw new IllegalStateException("Already started");
     }
 
+    final Properties config = loadProperties(context);
+
+    // Override default properties from plugin defined properties.
+    for (final CRaSHPlugin<?> plugin : context.manager.getPlugins()) {
+      Iterable<PropertyDescriptor<?>> capabilities = plugin.getConfigurationCapabilities();
+      Iterator<PropertyDescriptor<?>> i = capabilities.iterator();
+      if (i.hasNext()) {
+        while (i.hasNext()) {
+          PropertyDescriptor<?> descriptor = i.next();
+          LOGGER.debug("Adding plugin {} property {}", plugin, descriptor.getName());
+          configureProperty(context, config, descriptor);
+        }
+      } else {
+        LOGGER.debug("Plugin {} does not declare any configuration property", plugin);
+      }
+    }
+
+    context.start();
+
+    this.context = context;
+  }
+
+  private Properties loadProperties(PluginContext context) {
     // Get properties from system properties
     Properties config = new Properties();
 
@@ -81,25 +104,7 @@ public abstract class PluginLifeCycle {
     for (PropertyDescriptor<?> desc : PropertyDescriptor.ALL.values()) {
       configureProperty(context, config, desc);
     }
-
-    // Override default properties from plugin defined properties.
-    for (final CRaSHPlugin<?> plugin : context.manager.getPlugins()) {
-      Iterable<PropertyDescriptor<?>> capabilities = plugin.getConfigurationCapabilities();
-      Iterator<PropertyDescriptor<?>> i = capabilities.iterator();
-      if (i.hasNext()) {
-        while (i.hasNext()) {
-          PropertyDescriptor<?> descriptor = i.next();
-          LOGGER.debug("Adding plugin {} property {}", plugin, descriptor.getName());
-          configureProperty(context, config, descriptor);
-        }
-      } else {
-        LOGGER.debug("Plugin {} does not declare any configuration property", plugin);
-      }
-    }
-
-    context.start();
-
-    this.context = context;
+    return config;
   }
 
   public final void stop() throws IllegalStateException {

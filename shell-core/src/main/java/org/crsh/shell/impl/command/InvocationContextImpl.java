@@ -22,7 +22,6 @@ package org.crsh.shell.impl.command;
 import java.io.IOException;
 import java.util.Map;
 import org.crsh.command.CommandContext;
-import org.crsh.command.ShellSafety;
 import org.crsh.lang.impl.script.CommandNotFoundException;
 import org.crsh.lang.impl.script.PipeLineFactory;
 import org.crsh.lang.impl.script.Token;
@@ -48,16 +47,8 @@ public final class InvocationContextImpl<P> extends AbstractInvocationContext<P>
 
   int status;
 
-  ShellSafety shellSafety;
-
-  @Override
-  public ShellSafety getShellSafety() {
-    return shellSafety;
-  }
-
-  public InvocationContextImpl(CommandContext<P> commandContext, ShellSafety shellSafety) {
+  public InvocationContextImpl(CommandContext<P> commandContext) {
     this.commandContext = commandContext;
-    this.shellSafety = shellSafety;
     this.status = FLUSHED;
   }
 
